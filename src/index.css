@@ -51,3 +51,14 @@ body {
   font-family: var(--font-gilroy); /* Sets Gilroy as default everywhere */
   color: var(--color-text-primary);
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

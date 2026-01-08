@@ -22,3 +22,53 @@ export const YBSymbol = (props: SVGProps<SVGSVGElement>) => (
     </defs>
   </svg>
 );
+
+export const HamburgerMenu = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={24}
+    height={16}
+    fill="none"
+    {...props}
+  >
+    <path
+      fill="#4B5563"
+      d="M1.714 0h8.572c.454 0 .89.169 1.212.469.321.3.502.707.502 1.131 0 .424-.18.831-.502 1.131-.322.3-.758.469-1.212.469H1.714c-.454 0-.89-.169-1.212-.469A1.548 1.548 0 0 1 0 1.6C0 1.176.18.769.502.469.824.169 1.26 0 1.714 0Zm12 12.8h8.572c.454 0 .89.169 1.212.469.321.3.502.707.502 1.131 0 .424-.18.831-.502 1.131-.322.3-.758.469-1.212.469h-8.572c-.454 0-.89-.169-1.212-.469A1.548 1.548 0 0 1 12 14.4c0-.424.18-.831.502-1.131.322-.3.758-.469 1.212-.469Zm-12-6.4h20.572c.454 0 .89.169 1.212.469.321.3.502.707.502 1.131 0 .424-.18.831-.502 1.131-.322.3-.758.469-1.212.469H1.714c-.454 0-.89-.169-1.212-.469A1.548 1.548 0 0 1 0 8c0-.424.18-.831.502-1.131.322-.3.758-.469 1.212-.469Z"
+    />
+  </svg>
+);
+
+export const AlertIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+  </svg>
+);
+
+// Play Icon (Solid Fill)
+export const PlaySolid = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    width="16"
+    height="18"
+    viewBox="0 0 16 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M15 7.26795C16.3333 8.03775 16.3333 9.96225 15 10.7321L3 17.6603C1.66667 18.4301 -1.43962e-06 17.4678 -1.37233e-06 15.9282L-7.66723e-07 2.0718C-6.99432e-07 0.532197 1.66667 -0.430054 3 0.339745L15 7.26795Z"
+      fill="currentColor"
+    />
+  </svg>
+);
