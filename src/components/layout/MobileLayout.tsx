@@ -24,10 +24,10 @@ export default function MobileLayout({
       <div
         className="
         w-full h-full 
-        sm:w-full sm:max-w-[350px] 
-        sm:h-[90vh] sm:max-h-[800px] 
+        sm:w-full sm:max-w-87.5 
+        sm:h-[90vh] sm:max-h-200 
         bg-white 
-        sm:rounded-[32px] sm:shadow-2xl sm:border-[8px] border-gray-900/10 
+        sm:rounded-4xl sm:shadow-2xl sm:border-8 border-gray-900/10 
         flex flex-col relative overflow-hidden transition-all duration-300
       "
       >

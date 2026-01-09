@@ -34,7 +34,7 @@ export default function LoginScreen() {
     // Added 'flex flex-col justify-center p-6' to className to center the form vertically
     <MobileLayout className="flex flex-col justify-center p-8">
       {/* Logo Section */}
-      <div className="w-[100px] h-[100px] mx-auto mb-6 flex items-center justify-center ">
+      <div className="w-25 h-25 mx-auto mb-6 flex items-center justify-center ">
         <YBSymbol className="w-full h-full" />
       </div>
 
@@ -55,7 +55,7 @@ export default function LoginScreen() {
             {...register("email")}
             type="email"
             placeholder="Email"
-            className={`h-[50px] rounded-xl px-4 text-[14px] font-gilroy bg-white border-border text-text-primary placeholder:text-text-secondary focus:ring-primary focus:border-primary ${
+            className={`h-12.5 rounded-xl px-4 text-[14px] font-gilroy bg-white border-border text-text-primary placeholder:text-text-secondary focus:ring-primary focus:border-primary ${
               errors.email ? "border-error focus:ring-error" : ""
             }`}
           />
@@ -73,7 +73,7 @@ export default function LoginScreen() {
               {...register("password")}
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={`h-[50px] rounded-xl pl-4 pr-12 text-[14px] font-gilroy bg-white border-border text-text-primary placeholder:text-text-secondary focus:ring-primary focus:border-primary ${
+              className={`h-12.5 rounded-xl pl-4 pr-12 text-[14px] font-gilroy bg-white border-border text-text-primary placeholder:text-text-secondary focus:ring-primary focus:border-primary ${
                 errors.password ? "border-error focus:ring-error" : ""
               }`}
             />
@@ -108,7 +108,7 @@ export default function LoginScreen() {
         {/* Sign In Button */}
         <Button
           type="submit"
-          className="w-full h-[54px] bg-primary hover:opacity-90 text-white text-[16px] font-clash font-bold rounded-xl mt-6 shadow-none transition-opacity"
+          className="w-full h-13.5 bg-primary hover:opacity-90 text-white text-[16px] font-clash font-bold rounded-xl mt-6 shadow-none transition-opacity"
           disabled={isPending}
         >
           {isPending ? <Loader2 className="animate-spin mr-2" /> : "Sign In"}

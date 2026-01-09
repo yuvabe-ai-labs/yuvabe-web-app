@@ -1,30 +1,31 @@
-import { Pause } from 'lucide-react';
-import { useRef, useState, useEffect } from 'react';
-import { PlaySolid } from '../../../lib/utils/customIcons';
-import AudioPlayerModal from './AudioPlayerModal';
+import { Pause } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { PlaySolid } from "../../../lib/utils/customIcons";
+import type { Track } from "../../../types/home.types";
+import AudioPlayerModal from "./AudioPlayerModal";
 
 // Define Tracks (Pointing to PUBLIC folder)
-const tracks = [
+const tracks: Track[] = [
   {
-    id: 'wellness',
-    file: '/audio/MindfullnessExcercise.mp3', // Path relative to public/
-    title: 'Mindfull Meditation',
-    author: 'Dr. Adhitya Varma',
-    thumbnail: '/images/Mindfull_Meditation.png',
+    id: "wellness",
+    file: "/audio/MindfullnessExcercise.mp3",
+    title: "Mindfull Meditation",
+    author: "Dr. Adhitya Varma",
+    thumbnail: "/images/Mindfull_Meditation.png",
   },
   {
-    id: 'selfRealisation',
-    file: '/audio/PQReps.mp3',
-    title: 'PQ Reps',
-    author: 'Dr. Shankar',
-    thumbnail: '/images/PQ_Reps.png',
+    id: "selfRealisation",
+    file: "/audio/PQReps.mp3",
+    title: "PQ Reps",
+    author: "Dr. Shankar",
+    thumbnail: "/images/PQ_Reps.png",
   },
 ];
 
 export default function CalmingAudio() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  
-  const [currentTrack, setCurrentTrack] = useState<any>(null);
+
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -34,27 +35,27 @@ export default function CalmingAudio() {
   // Initialize Audio Object
   useEffect(() => {
     audioRef.current = new Audio();
-    
+
     // Listeners
     const audio = audioRef.current;
-    
+
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
     const onEnded = () => setIsPlaying(false);
 
-    audio.addEventListener('timeupdate', updateTime);
-    audio.addEventListener('loadedmetadata', updateDuration);
-    audio.addEventListener('ended', onEnded);
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", updateDuration);
+    audio.addEventListener("ended", onEnded);
 
     return () => {
       audio.pause();
-      audio.removeEventListener('timeupdate', updateTime);
-      audio.removeEventListener('loadedmetadata', updateDuration);
-      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", updateDuration);
+      audio.removeEventListener("ended", onEnded);
     };
   }, []);
 
-  const playTrack = (track: any) => {
+  const playTrack = (track: Track) => {
     if (!audioRef.current) return;
 
     // If same track, just toggle
@@ -76,42 +77,42 @@ export default function CalmingAudio() {
     }
   };
 
-  const openModal = (track: any) => {
+  const openModal = (track: Track) => {
     // If opening a different track via modal click, play it
     if (currentTrack?.id !== track.id) {
-        playTrack(track);
+      playTrack(track);
     }
     setModalVisible(true);
   };
 
   const handleSeek = (time: number) => {
     if (audioRef.current) {
-        audioRef.current.currentTime = time;
-        setCurrentTime(time);
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
     }
   };
 
   const handleReset = () => {
     if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        setIsPlaying(false);
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
     }
   };
 
   const handleToggleMute = () => {
-      if(audioRef.current) {
-          audioRef.current.muted = !isMuted;
-          setIsMuted(!isMuted);
-      }
-  }
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const formatTimeSimple = (time: number) => {
-      if (!time || isNaN(time)) return '00:00';
-      const m = Math.floor(time / 60);
-      const s = Math.floor(time % 60);
-      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  }
+    if (!time || isNaN(time)) return "00:00";
+    const m = Math.floor(time / 60);
+    const s = Math.floor(time % 60);
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
 
   return (
     <div className="mt-8 pr-4">
@@ -122,45 +123,52 @@ export default function CalmingAudio() {
       <div className="space-y-0">
         {tracks.map((track, index) => {
           const isActive = currentTrack?.id === track.id;
-          
+
           return (
             <div key={track.id}>
               <div className="flex flex-row items-center py-4">
                 {/* Thumbnail */}
-                <img 
-                    src={track.thumbnail} 
-                    alt="thumb" 
-                    className="w-15.75 h-15.75 rounded-xl mr-5 object-cover bg-gray-200"
-                    onError={(e) => {
-                        // Fallback if image missing
-                        e.currentTarget.style.backgroundColor = '#ccc';
-                    }}
+                <img
+                  src={track.thumbnail}
+                  alt="thumb"
+                  className="w-15.75 h-15.75 rounded-xl mr-5 object-cover bg-gray-200"
+                  onError={(e) => {
+                    // Fallback if image missing
+                    e.currentTarget.style.backgroundColor = "#ccc";
+                  }}
                 />
 
                 {/* Text Info (Clickable to open modal) */}
-                <div 
-                    className="flex-1 cursor-pointer"
-                    onClick={() => openModal(track)}
+                <div
+                  className="flex-1 cursor-pointer"
+                  onClick={() => openModal(track)}
                 >
-                  <h3 className="text-[16px] font-bold text-[#2F2F2F] font-gilroy">{track.title}</h3>
-                  <p className="text-[14px] text-[#858585] mt-1 font-gilroy">{track.author}</p>
-                  
+                  <h3 className="text-[16px] font-bold text-[#2F2F2F] font-gilroy">
+                    {track.title}
+                  </h3>
+                  <p className="text-[14px] text-[#858585] mt-1 font-gilroy">
+                    {track.author}
+                  </p>
+
                   {isActive ? (
-                       <p className="text-[12px] text-[#6C6C6C] mt-1 font-gilroy">
-                           {formatTimeSimple(currentTime)} / {formatTimeSimple(duration)}
-                       </p>
+                    <p className="text-[12px] text-[#6C6C6C] mt-1 font-gilroy">
+                      {formatTimeSimple(currentTime)} /{" "}
+                      {formatTimeSimple(duration)}
+                    </p>
                   ) : (
-                      <p className="text-[12px] text-[#6C6C6C] mt-1 font-gilroy">Tap to play</p>
+                    <p className="text-[12px] text-[#6C6C6C] mt-1 font-gilroy">
+                      Tap to play
+                    </p>
                   )}
                 </div>
 
                 {/* Play/Pause Button */}
-                <button 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        playTrack(track);
-                    }}
-                    className="p-2"
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    playTrack(track);
+                  }}
+                  className="p-2"
                 >
                   {isActive && isPlaying ? (
                     <Pause size={26} className="text-primary" strokeWidth={2} />
@@ -169,7 +177,7 @@ export default function CalmingAudio() {
                   )}
                 </button>
               </div>
-              
+
               {/* Separator */}
               {index !== tracks.length - 1 && (
                 <div className="h-px bg-[#e6e6e6]" />
@@ -179,14 +187,16 @@ export default function CalmingAudio() {
         })}
       </div>
 
-      <AudioPlayerModal 
+      <AudioPlayerModal
         visible={modalVisible}
         track={currentTrack || tracks[0]} // Fallback to first track for UI
         onClose={() => setModalVisible(false)}
         isPlaying={isPlaying}
         currentTime={currentTime}
         duration={duration}
-        onPlayPause={() => currentTrack ? playTrack(currentTrack) : playTrack(tracks[0])}
+        onPlayPause={() =>
+          currentTrack ? playTrack(currentTrack) : playTrack(tracks[0])
+        }
         onReset={handleReset}
         isMuted={isMuted}
         onToggleMute={handleToggleMute}

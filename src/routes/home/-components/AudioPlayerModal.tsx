@@ -1,3 +1,4 @@
+import type { Track } from "@/types/home.types";
 import {
   ChevronDown,
   Pause,
@@ -10,7 +11,7 @@ import { useEffect } from "react";
 
 interface Props {
   visible: boolean;
-  track: any | null;
+  track: Track | null;
   onClose: () => void;
   isPlaying: boolean;
   currentTime: number; // in seconds

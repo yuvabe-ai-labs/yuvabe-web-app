@@ -1,12 +1,14 @@
+import AppDrawer from "@/components/layout/AppDrawer";
 import MobileLayout from "@/components/layout/MobileLayout";
-import { AlertIcon, HamburgerMenu, YBSymbol } from "@/lib/utils/customIcons";
+import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/customIcons";
 import { userService } from "@/services/user.service";
 import { useUserStore } from "@/store/user.store";
 import { useEffect, useState } from "react";
-import CalmingAudio from "./CalmingAudio";
+import DrawerContent from "./DrawerContent";
 
 export default function HomeScreen() {
   const { user, setUser } = useUserStore();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Quote State
   const [quote, setQuote] = useState(
@@ -69,43 +71,49 @@ export default function HomeScreen() {
 
   return (
     <MobileLayout>
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 mt-6 mb-4">
-        <button className="p-1">
-          <HamburgerMenu className="text-text-primary" />
-        </button>
+      <AppDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        drawerContent={<DrawerContent onClose={() => setIsDrawerOpen(false)} />}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 mt-6 mb-4">
+          <button className="p-1" onClick={() => setIsDrawerOpen(true)}>
+            <HamburgerMenu className="text-text-primary" />
+          </button>
 
-        <div className="h-8 flex items-center">
-          <YBSymbol className="h-full w-auto" />
+          <div className="h-8 flex items-center">
+            <YBLogo className="h-full w-auto" />
+          </div>
+
+          <button className="p-1">
+            <Alert className="text-text-primary" />
+          </button>
         </div>
 
-        <button className="p-1">
-          <AlertIcon className="text-text-primary" />
-        </button>
-      </div>
+        <div className="px-5 pb-8">
+          {/* Welcome Text */}
+          <h1 className="text-[22px] font-bold text-text-primary mt-4 mb-4 font-gilroy">
+            Welcome, {user?.name?.split(" ")[0] || "User"} !
+          </h1>
 
-      <div className="px-5 pb-8">
-        {/* Welcome Text */}
-        <h1 className="text-[22px] font-bold text-text-primary mt-4 mb-4 font-gilroy">
-          Welcome, {user?.name?.split(" ")[0] || "User"} !
-        </h1>
+          {/* Thought of the Day */}
+          <div className="bg-[#FFFBF0] border border-[#FFCA2D] rounded-xl p-4 mt-4 mb-6 flex flex-col items-center">
+            <h3 className="text-[18px] font-bold text-text-primary mb-2 font-gilroy">
+              Thought of the Day
+            </h3>
+            <p className="text-[16px] font-semibold text-center leading-6 text-text-primary mb-2 font-gilroy">
+              “{quote}“
+            </p>
+            <p className="self-end italic text-[14px] text-text-primary font-gilroy">
+              — {author}
+            </p>
+          </div>
 
-        {/* Thought of the Day */}
-        <div className="bg-[#FFFBF0] border border-[#FFCA2D] rounded-xl p-4 mt-4 mb-6 flex flex-col items-center">
-          <h3 className="text-[18px] font-bold text-text-primary mb-2 font-gilroy">
-            Thought of the Day
-          </h3>
-          <p className="text-[16px] font-semibold text-center leading-6 text-text-primary mb-2 font-gilroy">
-            “{quote}“
-          </p>
-          <p className="self-end italic text-[14px] text-text-primary font-gilroy">
-            — {author}
-          </p>
+          {/* Calming Audio Section */}
+          {/* <CalmingAudio /> */}
         </div>
-
-        {/* Calming Audio Section */}
-        <CalmingAudio />
-      </div>
+      </AppDrawer>
     </MobileLayout>
   );
 }
