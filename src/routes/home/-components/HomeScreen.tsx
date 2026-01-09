@@ -1,6 +1,6 @@
 import AppDrawer from "@/components/layout/AppDrawer";
 import MobileLayout from "@/components/layout/MobileLayout";
-import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/customIcons";
+import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/custom-Icons";
 import { userService } from "@/services/user.service";
 import { useUserStore } from "@/store/user.store";
 import { useEffect, useState } from "react";

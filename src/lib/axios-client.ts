@@ -1,17 +1,19 @@
 // src/lib/axios-client.ts
-import axios from 'axios';
+import { ENV } from "@/config/env";
+import axios from "axios";
 import {
   clearTokens,
   getAccessToken,
   getRefreshToken,
   setTokens,
-} from './storage';
+} from "./storage";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = ENV.VITE_API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
 });
 
 // Automatically attach access token
@@ -37,7 +39,7 @@ api.interceptors.response.use(
       if (!refreshToken) {
         clearTokens();
         // Ideally redirect to login here, but we handle that in the router
-        window.location.href = '/login'; 
+        window.location.href = "/login";
         return Promise.reject(error);
       }
 
@@ -48,17 +50,20 @@ api.interceptors.response.use(
 
         const newAccessToken = res.data.data.access_token;
         const currentRefreshToken = getRefreshToken(); // reuse same refresh token if API doesn't rotate it
-        
+
         // Use the existing refresh token if the API doesn't return a new one, otherwise use new
-        setTokens(newAccessToken, res.data.data.refresh_token || currentRefreshToken!);
+        setTokens(
+          newAccessToken,
+          res.data.data.refresh_token || currentRefreshToken!
+        );
 
         // Retry failed request with new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('Refresh token failed:', refreshError);
+        console.error("Refresh token failed:", refreshError);
         clearTokens();
-        window.location.href = '/login';
+        window.location.href = "/login";
       }
     }
 

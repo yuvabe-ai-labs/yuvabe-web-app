@@ -1,7 +1,7 @@
 import { Pause } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { PlaySolid } from "../../../lib/utils/customIcons";
-import type { Track } from "../../../types/home.types";
+import { PlaySolid } from "@/lib/utils/custom-Icons";
+import type { Track } from "@/types/home.types";
 import AudioPlayerModal from "./AudioPlayerModal";
 
 // Define Tracks (Pointing to PUBLIC folder)

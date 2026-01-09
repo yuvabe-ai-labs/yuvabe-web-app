@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import api from "../lib/axios-client";
-import { type SignInSchemaType } from "../schemas/auth.schemas";
+import { type SignInSchemaType } from "../schemas/auth.schema";
 
 export const authService = {
   login: async (credentials: SignInSchemaType) => {
