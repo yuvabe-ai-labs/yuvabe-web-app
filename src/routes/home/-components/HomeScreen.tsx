@@ -1,75 +1,26 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/custom-Icons";
-import { userService } from "@/services/user.service";
 import { useUserStore } from "@/store/user.store";
 import { useEffect, useState } from "react";
 import DrawerContent from "./DrawerContent";
 
 // Shadcn Sheet Imports
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useDailyQuote, useUserProfile } from "@/hooks/useHomeQueries";
 
 export default function HomeScreen() {
   const { user, setUser } = useUserStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Quote State
-  const [quote, setQuote] = useState(
-    "The only way to do great work is to love what you do."
-  );
-  const [author, setAuthor] = useState("Steve Jobs");
+  const { data: quoteData } = useDailyQuote();
 
-  // Fetch Quote Logic
+  const { data: profileData } = useUserProfile();
+
   useEffect(() => {
-    const fetchQuote = async () => {
-      const today = new Date().toISOString().split("T")[0];
-      const stored = localStorage.getItem("daily_quote");
-
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.date === today) {
-          setQuote(parsed.quote);
-          setAuthor(parsed.author);
-          return;
-        }
-      }
-
-      try {
-        const res = await fetch(
-          "https://motivational-spark-api.vercel.app/api/quotes/random"
-        );
-        const data = await res.json();
-
-        setQuote(data.quote);
-        setAuthor(data.author);
-
-        localStorage.setItem(
-          "daily_quote",
-          JSON.stringify({
-            quote: data.quote,
-            author: data.author,
-            date: today,
-          })
-        );
-      } catch (err) {
-        console.log("Quote fetch error", err);
-      }
-    };
-
-    fetchQuote();
-  }, []);
-
-  // Fetch Profile Details on mount
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const res = await userService.fetchProfileDetails();
-        if (res.data) setUser(res.data);
-      } catch (e) {
-        console.error("Failed to load profile", e);
-      }
-    };
-    loadProfile();
-  }, [setUser]);
+    if (profileData?.data) {
+      setUser(profileData.data);
+    }
+  }, [profileData, setUser]);
 
   const TRANSITION_CLASSES = "duration-300 ease-in-out";
 
@@ -120,10 +71,13 @@ export default function HomeScreen() {
               Thought of the Day
             </h3>
             <p className="text-[16px] font-semibold text-center leading-6 text-text-primary mb-2 font-gilroy">
-              “{quote}“
+              “
+              {quoteData?.quote ||
+                "The only way to do great work is to love what you do."}
+              “
             </p>
             <p className="self-end italic text-[14px] text-text-primary font-gilroy">
-              — {author}
+              — {quoteData?.author || "Steve Jobs"}
             </p>
           </div>
         </div>
