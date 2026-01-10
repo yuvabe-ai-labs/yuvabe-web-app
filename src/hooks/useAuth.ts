@@ -1,5 +1,6 @@
 import { setItem, setTokens } from "@/lib/storage";
 import { authService } from "@/services/auth.service";
+import { userService } from "@/services/user.service";
 import { useUserStore } from "@/store/user.store";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
@@ -27,7 +28,7 @@ export const useLogin = () => {
       setIsVerified(data.user.is_verified);
 
       try {
-        const userData = await authService.fetchUser();
+        const userData = await userService.fetchUser();
         setUser(userData.user);
 
         if (!data.user.is_verified) {

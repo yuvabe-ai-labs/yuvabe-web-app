@@ -1,10 +1,12 @@
-import AppDrawer from "@/components/layout/AppDrawer";
 import MobileLayout from "@/components/layout/MobileLayout";
 import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/custom-Icons";
 import { userService } from "@/services/user.service";
 import { useUserStore } from "@/store/user.store";
 import { useEffect, useState } from "react";
 import DrawerContent from "./DrawerContent";
+
+// Shadcn Sheet Imports
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 export default function HomeScreen() {
   const { user, setUser } = useUserStore();
@@ -69,12 +71,29 @@ export default function HomeScreen() {
     loadProfile();
   }, [setUser]);
 
+  const TRANSITION_CLASSES = "duration-300 ease-in-out";
+
   return (
-    <MobileLayout>
-      <AppDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        drawerContent={<DrawerContent onClose={() => setIsDrawerOpen(false)} />}
+    <MobileLayout className="overflow-hidden bg-white">
+      <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen} modal={true}>
+        <SheetContent
+          side="left"
+          className={`
+            w-[75%] p-0 border-none shadow-none [&>button]:hidden bg-transparent
+            data-[state=open]:duration-300 data-[state=closed]:duration-300
+            ${TRANSITION_CLASSES}
+          `}
+        >
+          <DrawerContent onClose={() => setIsDrawerOpen(false)} />
+        </SheetContent>
+      </Sheet>
+
+      <div
+        className={`
+          flex flex-col h-full bg-white 
+          transition-transform ${TRANSITION_CLASSES} will-change-transform
+          ${isDrawerOpen ? "translate-x-[75%]" : "translate-x-0"}
+        `}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 mt-6 mb-4">
@@ -92,12 +111,10 @@ export default function HomeScreen() {
         </div>
 
         <div className="px-5 pb-8">
-          {/* Welcome Text */}
           <h1 className="text-[22px] font-bold text-text-primary mt-4 mb-4 font-gilroy">
             Welcome, {user?.name?.split(" ")[0] || "User"} !
           </h1>
 
-          {/* Thought of the Day */}
           <div className="bg-[#FFFBF0] border border-[#FFCA2D] rounded-xl p-4 mt-4 mb-6 flex flex-col items-center">
             <h3 className="text-[18px] font-bold text-text-primary mb-2 font-gilroy">
               Thought of the Day
@@ -109,11 +126,23 @@ export default function HomeScreen() {
               — {author}
             </p>
           </div>
-
-          {/* Calming Audio Section */}
-          {/* <CalmingAudio /> */}
         </div>
-      </AppDrawer>
+
+        <div
+          className={`
+            absolute inset-0 bg-black/10 z-50 pointer-events-none transition-opacity ${TRANSITION_CLASSES}
+            ${isDrawerOpen ? "opacity-100" : "opacity-0"}
+          `}
+        />
+
+        {/* Click listener to close drawer if tapping the pushed content */}
+        {isDrawerOpen && (
+          <div
+            className="absolute inset-0 z-50 cursor-pointer"
+            onClick={() => setIsDrawerOpen(false)}
+          />
+        )}
+      </div>
     </MobileLayout>
   );
 }

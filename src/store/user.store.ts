@@ -1,7 +1,22 @@
 // src/store/user.store.ts
 
-import type { UserStore } from "@/types/user.types";
+import type { User } from "@/types/user.types";
 import { create } from "zustand";
+
+export type UserStore = {
+  userDetails: string | null;
+  user: User | null;
+  isLoggedIn: boolean;
+  isVerified: boolean;
+  isLogoutLoading: boolean;
+  authChecked: boolean;
+  setUser: (userData: User) => void;
+  setIsLoggedIn: (status: boolean) => void;
+  setAuthChecked: (value: boolean) => void;
+  setIsVerified: (status: boolean) => void;
+  setLogoutLoading: (value: boolean) => void;
+  resetUser: () => void;
+};
 
 export const useUserStore = create<UserStore>()((set) => ({
   user: null,
@@ -31,6 +46,5 @@ export const useUserStore = create<UserStore>()((set) => ({
       user: null,
       isLoggedIn: false,
       isVerified: false,
-      authChecked: true,
     }),
 }));

@@ -20,8 +20,5 @@ export const authService = {
     }
   },
 
-  fetchUser: async () => {
-    const response = await api.get("/auth/home");
-    return response.data.data;
-  },
+  
 };

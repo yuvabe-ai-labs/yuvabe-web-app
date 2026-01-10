@@ -1,5 +1,5 @@
 // useAuthBootstrap.ts
-import { authService } from "@/services/auth.service";
+import { userService } from "@/services/user.service";
 import { useUserStore } from "@/store/user.store";
 import { useEffect } from "react";
 
@@ -9,7 +9,7 @@ export const useAuthBootstrap = () => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const user = await authService.fetchUser(); 
+        const user = await userService.fetchUser();
         setUser(user);
       } catch {
         resetUser();

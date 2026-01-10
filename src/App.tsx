@@ -8,7 +8,7 @@ import { router } from "./main";
 export function App() {
   useAuthBootstrap();
 
-  const authChecked = useUserStore((s) => s.authChecked);
+  const { authChecked } = useUserStore();
 
   if (!authChecked) {
     return (

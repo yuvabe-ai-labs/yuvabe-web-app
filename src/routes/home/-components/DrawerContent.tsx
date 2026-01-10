@@ -1,4 +1,4 @@
-import { clearTokens } from "@/lib/storage"; // Adjust path if needed
+import { clearTokens } from "@/lib/storage";
 import {
   Asset,
   ChatBot,
@@ -13,6 +13,7 @@ import {
 import { useUserStore } from "@/store/user.store";
 import { useNavigate } from "@tanstack/react-router";
 import { CookingPot, Footprints, Loader2, LogOut, User } from "lucide-react";
+import type { ReactNode } from "react";
 
 interface DrawerContentProps {
   onClose: () => void;
@@ -26,14 +27,13 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
 
   const handleNavigation = (path: string) => {
     onClose();
-    // navigate({ to: path }); // Uncomment when routes exist
+    // navigate({ to: path });
     console.log("Navigating to:", path);
   };
 
   const handleLogout = () => {
     setLogoutLoading(true);
 
-    // Simulate delay like Native
     setTimeout(() => {
       clearTokens();
       resetUser();
@@ -43,8 +43,9 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
     }, 1500);
   };
 
+  // Added h-full explicitly to ensure it fills the SheetContent
   return (
-    <div className="flex flex-col h-full bg-white relative">
+    <div className="flex flex-col h-full bg-white relative w-full">
       {/* 1. Profile Section */}
       <div
         className="flex items-center mb-2 p-5 cursor-pointer hover:bg-gray-50 transition-colors"
@@ -71,13 +72,14 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
         </div>
       </div>
 
-      {/* 2. Menu Items (Scrollable) */}
+      {/* 2. Menu Items */}
       <div className="flex-1 overflow-y-auto px-5 pb-5 no-scrollbar">
         <DrawerItem
           label="Assets"
           icon={<Asset className="text-[#444]" />}
           onClick={() => handleNavigation("/assets")}
         />
+        {/* ... keeping your existing items ... */}
         <DrawerItem
           label="Journaling"
           icon={<Journaling className="text-[#444]" />}
@@ -167,14 +169,14 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
   );
 }
 
-// Helper Component for List Items
+// Helper Component for List Items (Unchanged)
 function DrawerItem({
   label,
   icon,
   onClick,
 }: {
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   onClick: () => void;
 }) {
   return (

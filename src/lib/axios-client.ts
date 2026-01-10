@@ -31,42 +31,67 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // LOG 1: Check if an error was caught
+    console.group("Axios Interceptor Error Caught");
+    console.log("Error Status:", error.response?.status);
+    console.log("URL:", originalRequest.url);
+    console.log("Already Retried?", originalRequest._retry);
+
     // If token expired & we haven’t retried yet
     if (error.response?.status === 401 && !originalRequest._retry) {
+      console.log("Condition Met: 401 error and not retried yet.");
+
       originalRequest._retry = true;
 
       const refreshToken = getRefreshToken();
+      console.log(
+        "Checking Refresh Token in storage:",
+        refreshToken ? "Found" : "Missing"
+      );
+
       if (!refreshToken) {
+        console.warn("No refresh token found. Redirecting to login.");
         clearTokens();
-        // Ideally redirect to login here, but we handle that in the router
         window.location.href = "/login";
+        console.groupEnd(); // End the group
         return Promise.reject(error);
       }
 
       try {
+        console.log("Attempting to refresh token via API...");
         const res = await axios.post(`${API_BASE_URL}/auth/refresh`, {
           refresh_token: refreshToken,
         });
 
-        const newAccessToken = res.data.data.access_token;
-        const currentRefreshToken = getRefreshToken(); // reuse same refresh token if API doesn't rotate it
+        console.log("Refresh API Success:", res.data);
 
-        // Use the existing refresh token if the API doesn't return a new one, otherwise use new
+        const newAccessToken = res.data.data.access_token;
+        const currentRefreshToken = getRefreshToken();
+
+        // Use the existing refresh token if the API doesn't return a new one
         setTokens(
           newAccessToken,
           res.data.data.refresh_token || currentRefreshToken!
         );
+        console.log("New tokens saved to storage.");
 
         // Retry failed request with new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        console.log("Retrying original request with new access token...");
+        console.groupEnd(); // End the group
+
         return api(originalRequest);
       } catch (refreshError) {
-        console.error("Refresh token failed:", refreshError);
+        console.error("Refresh token API failed:", refreshError);
         clearTokens();
         window.location.href = "/login";
+        console.groupEnd(); // End the group
+        return Promise.reject(refreshError);
       }
     }
 
+    console.log("⏭Passing error through (not a 401 or already retried).");
+    console.groupEnd(); // End the group
     return Promise.reject(error);
   }
 );
