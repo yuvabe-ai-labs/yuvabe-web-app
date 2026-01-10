@@ -11,7 +11,7 @@ export function SplashScreen() {
       }}
     >
       <img
-        src="/public/logo/logo.png"
+        src="/logo/logo.png"
         alt="App Logo"
         style={{
           width: 120,

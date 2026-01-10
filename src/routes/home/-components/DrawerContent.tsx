@@ -27,7 +27,7 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
 
   const handleNavigation = (path: string) => {
     onClose();
-    // navigate({ to: path });
+    navigate({ to: path });
     console.log("Navigating to:", path);
   };
 

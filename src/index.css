@@ -8,25 +8,25 @@
 
 @font-face {
   font-family: "ClashDisplay";
-  src: url("/public/fonts/ClashDisplay-Regular.ttf") format("truetype");
+  src: url("/fonts/ClashDisplay-Regular.ttf") format("truetype");
   font-weight: 400;
 }
 
 @font-face {
   font-family: "ClashDisplay";
-  src: url("/public/fonts/ClashDisplay-Bold.ttf") format("truetype");
+  src: url("/fonts/ClashDisplay-Bold.ttf") format("truetype");
   font-weight: 700;
 }
 
 @font-face {
   font-family: "Gilroy";
-  src: url("/public/fonts/gilroy-regular.ttf") format("truetype");
+  src: url("/fonts/gilroy-regular.ttf") format("truetype");
   font-weight: 400;
 }
 
 @font-face {
   font-family: "Gilroy";
-  src: url("/public/fonts/gilroy-bold.ttf") format("truetype");
+  src: url("/fonts/gilroy-bold.ttf") format("truetype");
   font-weight: 700;
 }
 
