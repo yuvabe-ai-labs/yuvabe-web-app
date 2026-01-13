@@ -20,4 +20,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: true, // Allows network access
+    allowedHosts: [
+      "https://65863fcc9ee2.ngrok-free.app/", // 👈 Add the specific domain from your error
+      ".ngrok-free.app", // 👈 OR add this to allow ALL ngrok domains (Recommended)
+      "all", // 👈 OR use "all" to disable this check completely (Easiest for dev)
+    ],
+  },
 });

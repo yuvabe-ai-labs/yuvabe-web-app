@@ -7,6 +7,7 @@ import DrawerContent from "./DrawerContent";
 // Shadcn Sheet Imports
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useDailyQuote, useUserProfile } from "@/hooks/useHomeQueries";
+import { useRegisterDevice } from "@/hooks/useNotifications";
 
 export default function HomeScreen() {
   const { user, setUser } = useUserStore();
@@ -16,11 +17,22 @@ export default function HomeScreen() {
 
   const { data: profileData } = useUserProfile();
 
+  const { mutate: registerDevice } = useRegisterDevice();
+
   useEffect(() => {
     if (profileData?.data) {
       setUser(profileData.data);
     }
   }, [profileData, setUser]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      registerDevice();
+      console.log("Registering device for notifications");
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [registerDevice]);
 
   const TRANSITION_CLASSES = "duration-300 ease-in-out";
 
