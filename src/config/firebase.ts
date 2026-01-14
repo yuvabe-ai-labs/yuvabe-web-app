@@ -17,6 +17,20 @@ const app = initializeApp(firebaseConfig);
 // Initialize Messaging (Start as null)
 let messaging: Messaging | null = null;
 
+export const messagingPromise: Promise<Messaging | null> = isSupported()
+  .then((supported) => {
+    if (supported) {
+      console.log("✅ Firebase Messaging initialized");
+      return getMessaging(app);
+    }
+    console.warn("⚠️ Firebase Messaging not supported in this environment");
+    return null;
+  })
+  .catch((error) => {
+    console.error("❌ Failed to initialize messaging:", error);
+    return null;
+  });
+
 // We run this async function to check support SAFELY without crashing the app
 const initializeMessaging = async () => {
   try {
