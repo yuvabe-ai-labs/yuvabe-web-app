@@ -5,19 +5,18 @@ import { getToken } from "firebase/messaging";
 
 const getWebDeviceToken = async () => {
   try {
-    if (!messaging) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    if (!messaging) return null;
 
-      if (!messaging) {
-        console.warn("Messaging not ready or not supported. Skipping.");
-        return null;
-      }
+    // FIX: Allow "default" so we can ask the user
+    if (Notification.permission === "denied") {
+      console.warn("Notifications are blocked by the user.");
+      return null;
     }
 
-    console.log("Requesting notification permission...");
+    // 1. Explicitly ask for permission now
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
-      console.warn("Notification permission denied");
+      console.warn("User denied notification permission.");
       return null;
     }
 
@@ -25,12 +24,13 @@ const getWebDeviceToken = async () => {
       "/firebase-messaging-sw.js"
     );
 
+    await navigator.serviceWorker.ready;
+
     const token = await getToken(messaging, {
       vapidKey: ENV.VITE_FIREBASE_VAPID_KEY,
       serviceWorkerRegistration: swRegistration,
     });
 
-    console.log("Web device token:", token);
     return token || null;
   } catch (error) {
     console.error("Error fetching web token:", error);

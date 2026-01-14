@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useAuth";
-import { YBSymbol } from "@/lib/utils/custom-Icons";
+import { YBSymbol } from "@/lib/utils/custom-icons";
 import { signInSchema, type SignInSchemaType } from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";

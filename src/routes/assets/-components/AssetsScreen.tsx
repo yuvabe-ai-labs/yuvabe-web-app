@@ -7,7 +7,7 @@ import {
   LaptopStand,
   MonitoIcon,
   MouseIcon,
-} from "@/lib/utils/custom-Icons";
+} from "@/lib/utils/custom-icons";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { type JSX } from "react";
