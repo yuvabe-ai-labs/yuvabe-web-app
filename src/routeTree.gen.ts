@@ -10,14 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PendingLeavesIndexRouteImport } from './routes/pending-leaves/index'
 import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
+import { Route as LeaveHistoryIndexRouteImport } from './routes/leave-history/index'
 import { Route as AssetsIndexRouteImport } from './routes/assets/index'
+import { Route as MentorApprovalLeaveIdRouteImport } from './routes/mentor-approval/$leaveId'
+import { Route as LeaveDetailsLeaveIdRouteImport } from './routes/leave-details/$leaveId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PendingLeavesIndexRoute = PendingLeavesIndexRouteImport.update({
+  id: '/pending-leaves/',
+  path: '/pending-leaves/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PayslipIndexRoute = PayslipIndexRouteImport.update({
@@ -35,54 +44,107 @@ const LeaveRequestIndexRoute = LeaveRequestIndexRouteImport.update({
   path: '/leave-request/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeaveHistoryIndexRoute = LeaveHistoryIndexRouteImport.update({
+  id: '/leave-history/',
+  path: '/leave-history/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssetsIndexRoute = AssetsIndexRouteImport.update({
   id: '/assets/',
   path: '/assets/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentorApprovalLeaveIdRoute = MentorApprovalLeaveIdRouteImport.update({
+  id: '/mentor-approval/$leaveId',
+  path: '/mentor-approval/$leaveId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaveDetailsLeaveIdRoute = LeaveDetailsLeaveIdRouteImport.update({
+  id: '/leave-details/$leaveId',
+  path: '/leave-details/$leaveId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/leave-details/$leaveId': typeof LeaveDetailsLeaveIdRoute
+  '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/assets': typeof AssetsIndexRoute
+  '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/login': typeof LoginIndexRoute
   '/payslip': typeof PayslipIndexRoute
+  '/pending-leaves': typeof PendingLeavesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/leave-details/$leaveId': typeof LeaveDetailsLeaveIdRoute
+  '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/assets': typeof AssetsIndexRoute
+  '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/login': typeof LoginIndexRoute
   '/payslip': typeof PayslipIndexRoute
+  '/pending-leaves': typeof PendingLeavesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/leave-details/$leaveId': typeof LeaveDetailsLeaveIdRoute
+  '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/assets/': typeof AssetsIndexRoute
+  '/leave-history/': typeof LeaveHistoryIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
   '/login/': typeof LoginIndexRoute
   '/payslip/': typeof PayslipIndexRoute
+  '/pending-leaves/': typeof PendingLeavesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets' | '/leave-request' | '/login' | '/payslip'
+  fullPaths:
+    | '/'
+    | '/leave-details/$leaveId'
+    | '/mentor-approval/$leaveId'
+    | '/assets'
+    | '/leave-history'
+    | '/leave-request'
+    | '/login'
+    | '/payslip'
+    | '/pending-leaves'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets' | '/leave-request' | '/login' | '/payslip'
+  to:
+    | '/'
+    | '/leave-details/$leaveId'
+    | '/mentor-approval/$leaveId'
+    | '/assets'
+    | '/leave-history'
+    | '/leave-request'
+    | '/login'
+    | '/payslip'
+    | '/pending-leaves'
   id:
     | '__root__'
     | '/'
+    | '/leave-details/$leaveId'
+    | '/mentor-approval/$leaveId'
     | '/assets/'
+    | '/leave-history/'
     | '/leave-request/'
     | '/login/'
     | '/payslip/'
+    | '/pending-leaves/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LeaveDetailsLeaveIdRoute: typeof LeaveDetailsLeaveIdRoute
+  MentorApprovalLeaveIdRoute: typeof MentorApprovalLeaveIdRoute
   AssetsIndexRoute: typeof AssetsIndexRoute
+  LeaveHistoryIndexRoute: typeof LeaveHistoryIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   PayslipIndexRoute: typeof PayslipIndexRoute
+  PendingLeavesIndexRoute: typeof PendingLeavesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pending-leaves/': {
+      id: '/pending-leaves/'
+      path: '/pending-leaves'
+      fullPath: '/pending-leaves'
+      preLoaderRoute: typeof PendingLeavesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payslip/': {
@@ -115,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeaveRequestIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leave-history/': {
+      id: '/leave-history/'
+      path: '/leave-history'
+      fullPath: '/leave-history'
+      preLoaderRoute: typeof LeaveHistoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assets/': {
       id: '/assets/'
       path: '/assets'
@@ -122,15 +198,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentor-approval/$leaveId': {
+      id: '/mentor-approval/$leaveId'
+      path: '/mentor-approval/$leaveId'
+      fullPath: '/mentor-approval/$leaveId'
+      preLoaderRoute: typeof MentorApprovalLeaveIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leave-details/$leaveId': {
+      id: '/leave-details/$leaveId'
+      path: '/leave-details/$leaveId'
+      fullPath: '/leave-details/$leaveId'
+      preLoaderRoute: typeof LeaveDetailsLeaveIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LeaveDetailsLeaveIdRoute: LeaveDetailsLeaveIdRoute,
+  MentorApprovalLeaveIdRoute: MentorApprovalLeaveIdRoute,
   AssetsIndexRoute: AssetsIndexRoute,
+  LeaveHistoryIndexRoute: LeaveHistoryIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   PayslipIndexRoute: PayslipIndexRoute,
+  PendingLeavesIndexRoute: PendingLeavesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
