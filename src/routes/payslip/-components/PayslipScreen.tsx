@@ -105,7 +105,7 @@ export default function PayslipScreen() {
   const handleConnectGmail = async () => {
     if (!user?.id) return toast.error("User profile failed to load.");
     try {
-      const res = await getGmailUrl(user.id);
+      const res = await getGmailUrl({ userId: user.id, fromPath: "/payslip" });
       window.location.href = res.auth_url;
     } catch (e) {
       console.log(e);

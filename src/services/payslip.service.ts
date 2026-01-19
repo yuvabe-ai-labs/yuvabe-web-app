@@ -10,7 +10,10 @@ export const payslipService = {
    * Fetches the Google OAuth URL from the backend.
    * @param userId - The UUID of the current user
    */
-  getGmailConnectUrl: async (userId: string): Promise<GmailConnectResponse> => {
+  getGmailConnectUrl: async (
+    userId: string,
+    fromPath: string = "/payslip"
+  ): Promise<GmailConnectResponse> => {
     // We hardcode platform='web' here since this is the web app
     const res = await api.get<GmailConnectResponse>(
       "/payslips/gmail/connect-url",
@@ -18,6 +21,7 @@ export const payslipService = {
         params: {
           user_id: userId,
           platform: "web",
+          redirect_path: fromPath,
         },
       }
     );

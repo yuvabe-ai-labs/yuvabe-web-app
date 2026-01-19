@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PendingLeavesIndexRouteImport } from './routes/pending-leaves/index'
 import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
+import { Route as LunchPreferenceIndexRouteImport } from './routes/lunch-preference/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
 import { Route as LeaveHistoryIndexRouteImport } from './routes/leave-history/index'
@@ -32,6 +33,11 @@ const PendingLeavesIndexRoute = PendingLeavesIndexRouteImport.update({
 const PayslipIndexRoute = PayslipIndexRouteImport.update({
   id: '/payslip/',
   path: '/payslip/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LunchPreferenceIndexRoute = LunchPreferenceIndexRouteImport.update({
+  id: '/lunch-preference/',
+  path: '/lunch-preference/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/login': typeof LoginIndexRoute
+  '/lunch-preference': typeof LunchPreferenceIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/login': typeof LoginIndexRoute
+  '/lunch-preference': typeof LunchPreferenceIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/leave-history/': typeof LeaveHistoryIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/lunch-preference/': typeof LunchPreferenceIndexRoute
   '/payslip/': typeof PayslipIndexRoute
   '/pending-leaves/': typeof PendingLeavesIndexRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/leave-history'
     | '/leave-request'
     | '/login'
+    | '/lunch-preference'
     | '/payslip'
     | '/pending-leaves'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/leave-history'
     | '/leave-request'
     | '/login'
+    | '/lunch-preference'
     | '/payslip'
     | '/pending-leaves'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/leave-history/'
     | '/leave-request/'
     | '/login/'
+    | '/lunch-preference/'
     | '/payslip/'
     | '/pending-leaves/'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   LeaveHistoryIndexRoute: typeof LeaveHistoryIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  LunchPreferenceIndexRoute: typeof LunchPreferenceIndexRoute
   PayslipIndexRoute: typeof PayslipIndexRoute
   PendingLeavesIndexRoute: typeof PendingLeavesIndexRoute
 }
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/payslip'
       fullPath: '/payslip'
       preLoaderRoute: typeof PayslipIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lunch-preference/': {
+      id: '/lunch-preference/'
+      path: '/lunch-preference'
+      fullPath: '/lunch-preference'
+      preLoaderRoute: typeof LunchPreferenceIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login/': {
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeaveHistoryIndexRoute: LeaveHistoryIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  LunchPreferenceIndexRoute: LunchPreferenceIndexRoute,
   PayslipIndexRoute: PayslipIndexRoute,
   PendingLeavesIndexRoute: PendingLeavesIndexRoute,
 }

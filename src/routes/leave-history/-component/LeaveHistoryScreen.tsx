@@ -1,9 +1,10 @@
 import MobileLayout from "@/components/layout/MobileLayout";
+import { SplashScreen } from "@/components/layout/SplashScreen";
 import { useCancelLeave, useMyLeaveHistory } from "@/hooks/useLeaveHistory";
 import { formatDate } from "@/lib/utils";
 import type { LeaveHistoryDTO } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
+import { ChevronLeft, CloudOff } from "lucide-react";
 import { useState } from "react";
 
 export default function LeaveHistoryScreen() {
@@ -65,8 +66,7 @@ export default function LeaveHistoryScreen() {
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center mt-20">
-            <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-            <p className="text-gray-500 font-gilroy">Loading history...</p>
+            <SplashScreen />
           </div>
         ) : !leaves || leaves.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20">
