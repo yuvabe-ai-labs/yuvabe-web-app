@@ -11,6 +11,8 @@ export type User = {
   mentor_name?: string;
   dob?: string | null;
   profile_picture?: string | null;
+
+  lead_label?: string; 
+  lead_name?: string;
+  nickname?: string; 
 };
-
-
