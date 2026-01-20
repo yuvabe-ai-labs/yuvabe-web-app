@@ -30,6 +30,7 @@ export const useLogin = () => {
       try {
         const userData = await userService.fetchUser();
         setUser(userData.user);
+        console.log("Date", userData.user.dob);
 
         if (!data.user.is_verified) {
           toast.warning("Please verify your email");

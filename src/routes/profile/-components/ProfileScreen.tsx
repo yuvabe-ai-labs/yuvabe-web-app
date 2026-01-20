@@ -2,23 +2,23 @@ import MobileLayout from "@/components/layout/MobileLayout";
 import { SplashScreen } from "@/components/layout/SplashScreen";
 import { useUserProfile } from "@/hooks/useHomeQueries";
 import { useLogout } from "@/hooks/useLogout";
+import { MentorIcon, TeamIcon } from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
 import { useNavigate } from "@tanstack/react-router";
 import {
   ChevronLeft,
   ChevronRight,
+  Loader2,
   LogOut,
   Pencil,
-  UserCheck,
-  User as UserIcon, // Icon for Mentor/Lead
-  Users, // Icon for Team
+  User as UserIcon,
 } from "lucide-react";
 import { useEffect } from "react";
 
 export default function ProfileScreen() {
   const navigate = useNavigate();
-  const { user, setUser } = useUserStore();
-  const { mutate: logout } = useLogout(); // Assuming you have this hook
+  const { user, setUser, isLogoutLoading } = useUserStore();
+  const { mutate: logout } = useLogout();
 
   // 1. Fetch Data (Ensures data exists even if user refreshes page)
   const { data: profileData, isLoading } = useUserProfile();
@@ -30,8 +30,6 @@ export default function ProfileScreen() {
     }
   }, [profileData, setUser]);
 
-  // 3. Derived Values (Fallback to Store if API loading)
-  // We use the store 'user' as the primary source of truth for UI
   const name = user?.name || "User";
   const email = user?.email || "example@yuvabe.com";
   const nickname = user?.nickname;
@@ -57,7 +55,7 @@ export default function ProfileScreen() {
       {/* 🔵 GRADIENT HEADER */}
       {/* Replaces <Svg> gradient */}
       <div
-        className="relative h-[160px] w-full shrink-0 px-5 pb-6"
+        className="relative h-40 w-full shrink-0 px-5 pb-6"
         style={{
           background: "linear-gradient(180deg, #592AC7 0%, #CCB6FF 100%)",
         }}
@@ -72,8 +70,8 @@ export default function ProfileScreen() {
       </div>
 
       <div className="flex-1 pb-10">
-        <div className="mx-5 -mt-[50px] bg-white rounded-2xl p-5 border border-[#592AC7] shadow-sm flex items-center relative z-20">
-          <div className="w-[65px] h-[65px] rounded-full bg-[#e6e6e6] flex items-center justify-center mr-5 overflow-hidden border border-gray-100 shrink-0">
+        <div className="mx-5 -mt-12.5 bg-white rounded-2xl p-5 border border-[#592AC7] shadow-sm flex items-center relative z-20">
+          <div className="w-16.25 h-16.25 rounded-full bg-[#e6e6e6] flex items-center justify-center mr-5 overflow-hidden border border-gray-100 shrink-0">
             {profileSrc ? (
               <img
                 src={profileSrc}
@@ -106,8 +104,8 @@ export default function ProfileScreen() {
 
             {/* Team */}
             <div className="flex items-center mt-2.5">
-              <Users size={16} className="text-black mr-2 shrink-0" />
-              <span className="text-[14px] font-medium text-[#555] font-gilroy w-[70px]">
+              <TeamIcon className="text-black mr-2 shrink-0" />
+              <span className="text-[14px] font-medium text-[#555] font-gilroy w-17.5">
                 Team:
               </span>
               <span className="text-[14px] font-semibold text-black font-gilroy truncate flex-1">
@@ -117,8 +115,8 @@ export default function ProfileScreen() {
 
             {/* Mentor / Lead */}
             <div className="flex items-center mt-1.5">
-              <UserCheck size={16} className="text-black mr-2 shrink-0" />
-              <span className="text-[14px] font-medium text-[#555] font-gilroy w-[70px]">
+              <MentorIcon className="text-black mr-2 shrink-0" />
+              <span className="text-[14px] font-medium text-[#555] font-gilroy w-17.5">
                 {leadLabel}:
               </span>
               <span className="text-[14px] font-semibold text-black font-gilroy truncate flex-1">
@@ -131,8 +129,8 @@ export default function ProfileScreen() {
         {/* ⚙️ SECTIONS (Edit Profile) */}
         <div className="mx-5 mt-5 bg-white rounded-xl border border-[#592AC7] overflow-hidden">
           <button
-            onClick={() => navigate({ to: "/" })}
-            className="w-full flex items-center px-5 py-[22px] border-b border-[#EEE] active:bg-gray-50 transition-colors"
+            onClick={() => navigate({ to: "/profile/edit-profile" })}
+            className="w-full flex items-center px-5 py-5.5 border-b border-[#EEE] active:bg-gray-50 transition-colors"
           >
             <Pencil size={20} className="text-black mr-3" strokeWidth={2} />
             <span className="flex-1 text-left text-[17px] font-bold text-[#1A1A1A] font-gilroy">
@@ -143,10 +141,10 @@ export default function ProfileScreen() {
         </div>
 
         {/* 🔴 LOGOUT BUTTON */}
-        <div className="px-5 mt-10">
+        <div className="px-5 mt-90">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center py-[15px] bg-[#FF383C] rounded-xl active:bg-red-600 transition-colors shadow-sm"
+            className="w-full flex items-center justify-center py-3.75 bg-[#FF383C] rounded-xl active:bg-red-600 transition-colors shadow-sm"
           >
             {/* Flip icon horizontally to match RN design */}
             <LogOut
@@ -159,6 +157,16 @@ export default function ProfileScreen() {
             </span>
           </button>
         </div>
+        {isLogoutLoading && (
+          <div className="absolute inset-0 bg-black/35 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center w-37.5">
+              <Loader2 className="animate-spin text-primary mb-3" size={32} />
+              <span className="text-text-primary text-[16px]">
+                Logging out...
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </MobileLayout>
   );

@@ -19,6 +19,7 @@ import { Route as LegalIndexRouteImport } from './routes/legal/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
 import { Route as LeaveHistoryIndexRouteImport } from './routes/leave-history/index'
 import { Route as AssetsIndexRouteImport } from './routes/assets/index'
+import { Route as ProfileEditProfileRouteImport } from './routes/profile/edit-profile'
 import { Route as MentorApprovalLeaveIdRouteImport } from './routes/mentor-approval/$leaveId'
 import { Route as LegalTermsRouteImport } from './routes/legal/terms'
 import { Route as LegalPrivacyRouteImport } from './routes/legal/privacy'
@@ -74,6 +75,11 @@ const AssetsIndexRoute = AssetsIndexRouteImport.update({
   path: '/assets/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileEditProfileRoute = ProfileEditProfileRouteImport.update({
+  id: '/profile/edit-profile',
+  path: '/profile/edit-profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MentorApprovalLeaveIdRoute = MentorApprovalLeaveIdRouteImport.update({
   id: '/mentor-approval/$leaveId',
   path: '/mentor-approval/$leaveId',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
+  '/profile/edit-profile': typeof ProfileEditProfileRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
+  '/profile/edit-profile': typeof ProfileEditProfileRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
+  '/profile/edit-profile': typeof ProfileEditProfileRoute
   '/assets/': typeof AssetsIndexRoute
   '/leave-history/': typeof LeaveHistoryIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/mentor-approval/$leaveId'
+    | '/profile/edit-profile'
     | '/assets'
     | '/leave-history'
     | '/leave-request'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/mentor-approval/$leaveId'
+    | '/profile/edit-profile'
     | '/assets'
     | '/leave-history'
     | '/leave-request'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/mentor-approval/$leaveId'
+    | '/profile/edit-profile'
     | '/assets/'
     | '/leave-history/'
     | '/leave-request/'
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   LegalPrivacyRoute: typeof LegalPrivacyRoute
   LegalTermsRoute: typeof LegalTermsRoute
   MentorApprovalLeaveIdRoute: typeof MentorApprovalLeaveIdRoute
+  ProfileEditProfileRoute: typeof ProfileEditProfileRoute
   AssetsIndexRoute: typeof AssetsIndexRoute
   LeaveHistoryIndexRoute: typeof LeaveHistoryIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/edit-profile': {
+      id: '/profile/edit-profile'
+      path: '/profile/edit-profile'
+      fullPath: '/profile/edit-profile'
+      preLoaderRoute: typeof ProfileEditProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mentor-approval/$leaveId': {
       id: '/mentor-approval/$leaveId'
       path: '/mentor-approval/$leaveId'
@@ -321,6 +341,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalPrivacyRoute: LegalPrivacyRoute,
   LegalTermsRoute: LegalTermsRoute,
   MentorApprovalLeaveIdRoute: MentorApprovalLeaveIdRoute,
+  ProfileEditProfileRoute: ProfileEditProfileRoute,
   AssetsIndexRoute: AssetsIndexRoute,
   LeaveHistoryIndexRoute: LeaveHistoryIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
