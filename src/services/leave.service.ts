@@ -31,7 +31,7 @@ export const leaveService = {
 
   submitMentorDecision: async (
     leaveId: string,
-    payload: MentorDecisionPayload
+    payload: MentorDecisionPayload,
   ) => {
     const res = await api.post(`/profile/${leaveId}/mentor-decision`, payload);
     return res.data;
@@ -47,10 +47,18 @@ export const leaveService = {
     return res.data.data;
   },
 
+  fetchTeamLeaveHistory: async (): Promise<LeaveDetailsDTO[]> => {
+    const response = await api.get("/profile/mentor/team-leaves");
+    return response.data.data;
+  },
+
+  getLeaveDetails: async (leaveId: string): Promise<LeaveDetailsDTO> => {
+    const response = await api.get(`/profile/leave/${leaveId}`);
+    return response.data.data;
+  },
+
   cancelLeave: async (leaveId: string) => {
     const res = await api.post(`/profile/leave/${leaveId}/cancel`);
     return res.data;
   },
-
-  
 };

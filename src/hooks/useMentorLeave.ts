@@ -18,7 +18,7 @@ export const usePendingLeaves = () => {
       // Sort by updated_at descending (newest first)
       return data.sort(
         (a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
       );
     },
   });
@@ -61,5 +61,20 @@ export const useMentorDecision = () => {
     onError: (error: unknown) => {
       toast.error(getErrorMessage(error));
     },
+  });
+};
+
+export const useTeamLeaveHistory = () => {
+  return useQuery({
+    queryKey: ["team-leave-history"],
+    queryFn: leaveService.fetchTeamLeaveHistory,
+  });
+};
+
+export const useTeamLeaveDetails = (leaveId: string) => {
+  return useQuery({
+    queryKey: ["leave-details", leaveId],
+    queryFn: () => leaveService.getLeaveDetails(leaveId),
+    enabled: !!leaveId,
   });
 };
