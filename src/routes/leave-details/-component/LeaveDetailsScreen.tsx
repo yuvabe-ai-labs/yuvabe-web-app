@@ -1,28 +1,17 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useLeaveDetails } from "@/hooks/useMentorLeave";
-import { formatDate } from "@/lib/utils";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { formatDate, getStatusTextColor } from "@/lib/utils";
+import { useParams, useRouter } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
 export default function LeaveDetailsScreen() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // Get the ID from the URL params
   const { leaveId } = useParams({ from: "/leave-details/$leaveId" });
 
   const { data: leave, isLoading } = useLeaveDetails(leaveId);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return "text-green-600";
-      case "Rejected":
-        return "text-red-600";
-      case "Cancelled":
-        return "text-[#E53935]";
-      default:
-        return "text-orange-500";
-    }
-  };
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -43,7 +32,7 @@ export default function LeaveDetailsScreen() {
             Leave not found
           </p>
           <button
-            onClick={() => navigate({ to: "/leave-history" })}
+            onClick={() => router.history.back()}
             className="mt-4 text-blue-600 font-semibold font-gilroy hover:underline"
           >
             Go Back
@@ -58,7 +47,7 @@ export default function LeaveDetailsScreen() {
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0 border-b border-gray-100">
         <button
-          onClick={() => navigate({ to: "/leave-history" })}
+          onClick={() => router.history.back()}
           className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
         >
           <ChevronLeft size={28} className="text-black" />
@@ -120,8 +109,8 @@ export default function LeaveDetailsScreen() {
               Status
             </h3>
             <p
-              className={`text-[18px] mt-1 font-bold font-gilroy ${getStatusColor(
-                leave.status
+              className={`text-[18px] mt-1 font-bold font-gilroy ${getStatusTextColor(
+                leave.status,
               )}`}
             >
               {leave.status}

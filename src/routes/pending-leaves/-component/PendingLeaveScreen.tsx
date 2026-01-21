@@ -1,38 +1,16 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { usePendingLeaves } from "@/hooks/useMentorLeave";
+import {
+  formatDate,
+  formatLeaveType,
+  getLeaveTypeBadgeColor,
+} from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
 
 export default function PendingLeavesScreen() {
   const navigate = useNavigate();
   const { data: leaves, isLoading } = usePendingLeaves();
-
-  // Helper Functions
-  const formatLeaveType = (leaveType: string): string => {
-    if (!leaveType) return "";
-    const type = leaveType.trim().toLowerCase();
-    if (type === "sick") return "Sick Leave";
-    if (type === "casual") return "Casual Leave";
-    return leaveType;
-  };
-
-  const badgeColor = (leaveType: string): string => {
-    if (!leaveType) return "#6C757D";
-    const type = leaveType.trim().toLowerCase();
-    if (type === "sick") return "#C89C00"; // yellow
-    if (type === "casual") return "#005DBD"; // blue
-    return "#6C757D";
-  };
-
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
 
   return (
     <MobileLayout className="bg-white flex flex-col h-full">
@@ -57,11 +35,17 @@ export default function PendingLeavesScreen() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center mt-20">
             <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-            <p className="text-gray-500 font-gilroy">Loading pending leaves...</p>
+            <p className="text-gray-500 font-gilroy">
+              Loading pending leaves...
+            </p>
           </div>
         ) : !leaves || leaves.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20">
-            <CloudOff size={60} className="text-gray-400 mb-2" strokeWidth={2} />
+            <CloudOff
+              size={60}
+              className="text-gray-400 mb-2"
+              strokeWidth={2}
+            />
             <p className="text-[16px] text-gray-500 font-gilroy">
               No pending requests
             </p>
@@ -87,11 +71,13 @@ export default function PendingLeavesScreen() {
 
                   {/* LEAVE TYPE BADGE */}
                   <div
-                    style={{ backgroundColor: badgeColor(item.leave_type) }}
+                    style={{
+                      backgroundColor: getLeaveTypeBadgeColor(item.leave_type),
+                    }}
                     className="px-3 py-1 rounded-[20px]"
                   >
                     <span className="text-white text-[12px] font-semibold font-gilroy capitalize">
-                      {formatLeaveType(item.leave_type)}
+                      {formatLeaveType(item.leave_type)} {/* ✅ Uses Utils */}
                     </span>
                   </div>
                 </div>
@@ -99,7 +85,8 @@ export default function PendingLeavesScreen() {
                 {/* DATE RANGE */}
                 <div className="mt-3">
                   <p className="text-[14px] text-[#333] font-gilroy">
-                    {formatDate(item.from_date)} ➜ {formatDate(item.to_date)}
+                    {formatDate(item.from_date)} ➜ {formatDate(item.to_date)}{" "}
+                    {/* ✅ Uses Utils */}
                   </p>
                 </div>
 
@@ -113,7 +100,8 @@ export default function PendingLeavesScreen() {
                 {/* REQUEST SENT DATE */}
                 <div className="mt-1.5">
                   <p className="text-[12px] text-gray-500 font-gilroy">
-                    Request sent: {formatDate(item.requested_at?.slice(0, 10))}
+                    Request sent: {formatDate(item.requested_at?.slice(0, 10))}{" "}
+                    
                   </p>
                 </div>
               </div>

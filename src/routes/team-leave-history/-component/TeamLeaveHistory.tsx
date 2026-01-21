@@ -1,26 +1,12 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useTeamLeaveHistory } from "@/hooks/useMentorLeave";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getLeaveStatusBadgeStyles } from "@/lib/utils"; 
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
 export default function TeamLeaveHistoryScreen() {
   const navigate = useNavigate();
   const { data: leaves, isLoading } = useTeamLeaveHistory();
-
-  const getStatusStyles = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return { bg: "#17A42A", color: "#FFFFFF" };
-      case "Cancelled":
-        return { bg: "#1C0E96", color: "#FFFFFF" };
-      case "Rejected":
-        return { bg: "#FF383C", color: "#FFFFFF" };
-      case "Pending":
-      default:
-        return { bg: "#F9A91E", color: "#FFFFFF" };
-    }
-  };
 
   return (
     <MobileLayout className="bg-white flex flex-col h-full">
@@ -50,7 +36,7 @@ export default function TeamLeaveHistoryScreen() {
         ) : (
           <div className="space-y-4.5">
             {leaves?.map((item) => {
-              const statusStyle = getStatusStyles(item.status);
+              const statusStyle = getLeaveStatusBadgeStyles(item.status); // ✅ Uses Utils
 
               return (
                 <div
@@ -86,7 +72,8 @@ export default function TeamLeaveHistoryScreen() {
                   </p>
 
                   <p className="mt-2.5 text-[15px] text-black font-gilroy">
-                    {formatDate(item.from_date)} → {formatDate(item.to_date)}
+                    {formatDate(item.from_date)} → {formatDate(item.to_date)}{" "}
+                    {/* ✅ Uses Utils */}
                   </p>
 
                   <p className="mt-1.5 text-[15px] text-black font-gilroy">
@@ -97,7 +84,8 @@ export default function TeamLeaveHistoryScreen() {
                     Updated on:{" "}
                     {formatDate(
                       item.updated_at ? item.updated_at.slice(0, 10) : "",
-                    )}
+                    )}{" "}
+                    
                   </p>
                 </div>
               );

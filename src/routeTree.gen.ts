@@ -14,6 +14,7 @@ import { Route as TeamLeaveHistoryIndexRouteImport } from './routes/team-leave-h
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as PendingLeavesIndexRouteImport } from './routes/pending-leaves/index'
 import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
+import { Route as NotificationsIndexRouteImport } from './routes/notifications/index'
 import { Route as LunchPreferenceIndexRouteImport } from './routes/lunch-preference/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as LegalIndexRouteImport } from './routes/legal/index'
@@ -50,6 +51,11 @@ const PendingLeavesIndexRoute = PendingLeavesIndexRouteImport.update({
 const PayslipIndexRoute = PayslipIndexRouteImport.update({
   id: '/payslip/',
   path: '/payslip/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsIndexRoute = NotificationsIndexRouteImport.update({
+  id: '/notifications/',
+  path: '/notifications/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LunchPreferenceIndexRoute = LunchPreferenceIndexRouteImport.update({
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/legal': typeof LegalIndexRoute
   '/login': typeof LoginIndexRoute
   '/lunch-preference': typeof LunchPreferenceIndexRoute
+  '/notifications': typeof NotificationsIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
   '/profile': typeof ProfileIndexRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/legal': typeof LegalIndexRoute
   '/login': typeof LoginIndexRoute
   '/lunch-preference': typeof LunchPreferenceIndexRoute
+  '/notifications': typeof NotificationsIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
   '/profile': typeof ProfileIndexRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/legal/': typeof LegalIndexRoute
   '/login/': typeof LoginIndexRoute
   '/lunch-preference/': typeof LunchPreferenceIndexRoute
+  '/notifications/': typeof NotificationsIndexRoute
   '/payslip/': typeof PayslipIndexRoute
   '/pending-leaves/': typeof PendingLeavesIndexRoute
   '/profile/': typeof ProfileIndexRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/lunch-preference'
+    | '/notifications'
     | '/payslip'
     | '/pending-leaves'
     | '/profile'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/lunch-preference'
+    | '/notifications'
     | '/payslip'
     | '/pending-leaves'
     | '/profile'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/legal/'
     | '/login/'
     | '/lunch-preference/'
+    | '/notifications/'
     | '/payslip/'
     | '/pending-leaves/'
     | '/profile/'
@@ -245,6 +257,7 @@ export interface RootRouteChildren {
   LegalIndexRoute: typeof LegalIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   LunchPreferenceIndexRoute: typeof LunchPreferenceIndexRoute
+  NotificationsIndexRoute: typeof NotificationsIndexRoute
   PayslipIndexRoute: typeof PayslipIndexRoute
   PendingLeavesIndexRoute: typeof PendingLeavesIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/payslip'
       fullPath: '/payslip'
       preLoaderRoute: typeof PayslipIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications/': {
+      id: '/notifications/'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lunch-preference/': {
@@ -389,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalIndexRoute: LegalIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   LunchPreferenceIndexRoute: LunchPreferenceIndexRoute,
+  NotificationsIndexRoute: NotificationsIndexRoute,
   PayslipIndexRoute: PayslipIndexRoute,
   PendingLeavesIndexRoute: PendingLeavesIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,

@@ -1,31 +1,13 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useLeaveDetails } from "@/hooks/useMentorLeave";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getStatusTextColor } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
-export default function MentorApprovalScreen() {
+export default function TeamLeaveDetailScreen() {
   const navigate = useNavigate();
-
-  // Get ID from URL
   const { leaveId } = useParams({ from: "/team-leave-history/$leaveId" });
-
-  // Fetch Data
   const { data: leave, isLoading } = useLeaveDetails(leaveId);
-
-  // Helper for Status Color
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return "text-[#166534]"; // Green
-      case "Rejected":
-        return "text-[#DC2626]"; // Red
-      case "Cancelled":
-        return "text-[#E53935]"; // Dark Red
-      default:
-        return "text-[#EA580C]"; // Orange
-    }
-  };
 
   if (isLoading) {
     return (
@@ -105,7 +87,7 @@ export default function MentorApprovalScreen() {
               From → To
             </h3>
             <p className="text-[18px] mt-1 text-black font-gilroy font-normal">
-              {formatDate(leave.from_date)} ➜ {formatDate(leave.to_date)}
+              {formatDate(leave.from_date)} ➜ {formatDate(leave.to_date)}{" "}
             </p>
           </div>
 
@@ -125,7 +107,7 @@ export default function MentorApprovalScreen() {
               Status
             </h3>
             <p
-              className={`text-[18px] mt-1 font-gilroy font-bold ${getStatusColor(leave.status)}`}
+              className={`text-[18px] mt-1 font-gilroy font-bold ${getStatusTextColor(leave.status)}`} // ✅ Uses Utils
             >
               {leave.status}
             </p>
@@ -137,7 +119,7 @@ export default function MentorApprovalScreen() {
               Updated At
             </h3>
             <p className="text-[14px] mt-1 text-black font-gilroy font-normal">
-              {formatDate(leave.updated_at?.slice(0, 10))}
+              {formatDate(leave.updated_at?.slice(0, 10))} {/* ✅ Uses Utils */}
             </p>
           </div>
 

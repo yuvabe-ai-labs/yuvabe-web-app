@@ -4,6 +4,7 @@ import {
   useMentorDecision,
   useUserLeaveBalance,
 } from "@/hooks/useMentorLeave";
+import { formatDate } from "@/lib/utils"; 
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -11,26 +12,20 @@ import { toast } from "sonner";
 
 export default function MentorApprovalScreen() {
   const navigate = useNavigate();
-  // Get ID from URL params
   const { leaveId } = useParams({ from: "/mentor-approval/$leaveId" });
 
   const [rejectComment, setRejectComment] = useState("");
 
-  // 1. Fetch Leave Details
   const { data: leave, isLoading: loadingDetails } = useLeaveDetails(leaveId);
-
-  // 2. Fetch User Balance (only runs when leave data is available)
   const { data: balance, isLoading: loadingBalance } = useUserLeaveBalance(
-    leave?.user_id
+    leave?.user_id,
   );
-
-  // 3. Mutation for Actions
   const { mutate: submitDecision, isPending } = useMentorDecision();
 
   const handleApprove = () => {
     submitDecision(
       { leaveId, payload: { status: "Approved" } },
-      { onSuccess: () => navigate({ to: "/pending-leaves" }) } // Go back
+      { onSuccess: () => navigate({ to: "/pending-leaves" }) },
     );
   };
 
@@ -41,17 +36,8 @@ export default function MentorApprovalScreen() {
     }
     submitDecision(
       { leaveId, payload: { status: "Rejected", comment: rejectComment } },
-      { onSuccess: () => navigate({ to: "/pending-leaves" }) }
+      { onSuccess: () => navigate({ to: "/pending-leaves" }) },
     );
-  };
-
-  const toReadableDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
   };
 
   if (loadingDetails || !leave) {
@@ -146,9 +132,9 @@ export default function MentorApprovalScreen() {
               Leave Date
             </h3>
             <p className="text-[17px] text-black font-gilroy">
-              {toReadableDate(leave.from_date)}{" "}
+              {formatDate(leave.from_date)} 
               <span className="text-gray-400 mx-1">→</span>{" "}
-              {toReadableDate(leave.to_date)}
+              {formatDate(leave.to_date)} 
             </p>
           </div>
 
