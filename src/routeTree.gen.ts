@@ -14,7 +14,6 @@ import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
 import { Route as AssetsIndexRouteImport } from './routes/assets/index'
-import { Route as AbiIndexRouteImport } from './routes/abi/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,15 +40,9 @@ const AssetsIndexRoute = AssetsIndexRouteImport.update({
   path: '/assets/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AbiIndexRoute = AbiIndexRouteImport.update({
-  id: '/abi/',
-  path: '/abi/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/abi': typeof AbiIndexRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/login': typeof LoginIndexRoute
@@ -57,7 +50,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/abi': typeof AbiIndexRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/login': typeof LoginIndexRoute
@@ -66,7 +58,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/abi/': typeof AbiIndexRoute
   '/assets/': typeof AssetsIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
   '/login/': typeof LoginIndexRoute
@@ -74,13 +65,12 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/abi' | '/assets' | '/leave-request' | '/login' | '/payslip'
+  fullPaths: '/' | '/assets' | '/leave-request' | '/login' | '/payslip'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/abi' | '/assets' | '/leave-request' | '/login' | '/payslip'
+  to: '/' | '/assets' | '/leave-request' | '/login' | '/payslip'
   id:
     | '__root__'
     | '/'
-    | '/abi/'
     | '/assets/'
     | '/leave-request/'
     | '/login/'
@@ -89,7 +79,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AbiIndexRoute: typeof AbiIndexRoute
   AssetsIndexRoute: typeof AssetsIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
@@ -133,19 +122,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssetsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/abi/': {
-      id: '/abi/'
-      path: '/abi'
-      fullPath: '/abi'
-      preLoaderRoute: typeof AbiIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AbiIndexRoute: AbiIndexRoute,
   AssetsIndexRoute: AssetsIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
   LoginIndexRoute: LoginIndexRoute,

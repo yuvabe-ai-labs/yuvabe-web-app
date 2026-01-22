@@ -9,7 +9,7 @@ import {
   RequestLeave,
   TeamLeaveHistoryIcon,
   WaterTracker,
-} from "@/lib/utils/custom-Icons";
+} from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
 import { useNavigate } from "@tanstack/react-router";
 import { CookingPot, Footprints, Loader2, LogOut, User } from "lucide-react";
