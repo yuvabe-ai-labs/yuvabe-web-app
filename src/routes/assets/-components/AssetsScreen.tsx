@@ -1,6 +1,6 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useAssets } from "@/hooks/useAssets";
-import { getAssetIcon } from "@/lib/utils/assets-icons";
+import { getAssetIcon } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
