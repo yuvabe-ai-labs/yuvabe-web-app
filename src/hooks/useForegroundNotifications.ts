@@ -13,7 +13,6 @@ export const useForegroundNotifications = () => {
       unsubscribe = onMessage(messaging, (payload) => {
         console.log(" [Foreground] Message RECEIVED!", payload);
 
-        
         const title = payload.notification?.title || payload.data?.title;
         const body = payload.notification?.body || payload.data?.body;
 
@@ -30,7 +29,7 @@ export const useForegroundNotifications = () => {
         } else {
           console.warn(
             "⚠️ Received message but could not find title/body",
-            payload
+            payload,
           );
         }
       });
