@@ -1,20 +1,22 @@
-import { Button } from "@/components/ui/button";
+// src/App.tsx
+import { useAuthBootstrap } from "@/hooks/useAuthBootstrap";
+import { useUserStore } from "@/store/user.store";
+import { RouterProvider } from "@tanstack/react-router";
+import { SplashScreen } from "./components/layout/SplashScreen";
+import { router } from "./main";
 
-export default function App() {
-  return (
-    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-bold">Shadcn Test</h1>
+export function App() {
+  useAuthBootstrap();
 
-      {/* Standard Shadcn Button */}
-      <Button>Default Button</Button>
+  const { authChecked } = useUserStore();
 
-      {/* Variant: Destructive (Red) */}
-      <Button className="text-yellow-200" variant="destructive">
-        Delete Account
-      </Button>
+  if (!authChecked) {
+    return (
+      <div>
+        <SplashScreen />
+      </div>
+    );
+  }
 
-      {/* Variant: Outline */}
-      <Button variant="outline">Click me</Button>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
