@@ -1,5 +1,8 @@
 import { leaveService } from "@/services/leave.service";
-import type { MentorDecisionPayload } from "@/types/leave.types";
+import {
+  MentorDecisionStatus,
+  type MentorDecisionPayload,
+} from "@/types/leave.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -18,7 +21,7 @@ export const usePendingLeaves = () => {
       // Sort by updated_at descending (newest first)
       return data.sort(
         (a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
       );
     },
   });
@@ -54,7 +57,9 @@ export const useMentorDecision = () => {
     }) => leaveService.submitMentorDecision(leaveId, payload),
     onSuccess: (_, variables) => {
       const action =
-        variables.payload.status === "Approved" ? "approved" : "rejected";
+        variables.payload.status === MentorDecisionStatus.APPROVED
+          ? "approved"
+          : "rejected";
       toast.success(`Leave request ${action}`);
       queryClient.invalidateQueries({ queryKey: ["pending-leaves"] });
     },
