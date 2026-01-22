@@ -1,5 +1,6 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useLeaveBalance, useRequestLeave } from "@/hooks/useLeave";
+import { LeaveType } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronDown, ChevronLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +19,7 @@ export default function LeaveRequestScreen() {
 
   // Dates (Formatted as YYYY-MM-DD for HTML inputs)
   const [fromDate, setFromDate] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
   const [toDate, setToDate] = useState(new Date().toISOString().split("T")[0]);
 
@@ -44,7 +45,8 @@ export default function LeaveRequestScreen() {
 
     submitLeave(
       {
-        leave_type: leaveType === "Sick Leave" ? "Sick" : "Casual",
+        leave_type:
+          leaveType === "Sick Leave" ? LeaveType.SICK : LeaveType.CASUAL,
         from_date: fromDate,
         to_date: toDate,
         days,
@@ -57,7 +59,7 @@ export default function LeaveRequestScreen() {
           setLeaveType("");
           navigate({ to: "/" }); // Go back home
         },
-      }
+      },
     );
   };
 
