@@ -93,7 +93,9 @@ export default function LoginScreen() {
           />
 
           {error instanceof Error && (
-            <p className="text-error text-sm text-center">{error.message}</p>
+            <p className="text-error text-sm text-center text-red-500">
+              {error.message}
+            </p>
           )}
 
           <Button
