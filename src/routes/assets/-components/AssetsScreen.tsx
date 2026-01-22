@@ -1,25 +1,8 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useAssets } from "@/hooks/useAssets";
-import {
-  HeadphoneIcon,
-  KeyboardIcon,
-  Laptop,
-  LaptopStand,
-  MonitoIcon,
-  MouseIcon,
-} from "@/lib/utils/custom-Icons";
+import { getAssetIcon } from "@/lib/utils/assets-icons";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
-import { type JSX } from "react";
-
-const ASSET_COMPONENTS: Record<string, JSX.Element> = {
-  laptop: <Laptop className="text-[#333]" />,
-  mouse: <MouseIcon className="text-[#333]" />,
-  keyboard: <KeyboardIcon className="text-[#333]" />,
-  monitor: <MonitoIcon className="text-[#333]" />,
-  headphone: <HeadphoneIcon className="text-[#333]" />,
-  laptopstand: <LaptopStand className="text-[#333]" />,
-};
 
 export default function AssetsScreen() {
   const navigate = useNavigate();
@@ -73,9 +56,7 @@ export default function AssetsScreen() {
           <div className="space-y-4.5">
             {assets.map((item) => {
               // Get Icon or Default
-              const iconComponent = ASSET_COMPONENTS[
-                item.type.toLowerCase().replace(/\s/g, "")
-              ] || <Laptop className="text-[#333]" />;
+              const iconComponent = getAssetIcon(item.type);
 
               return (
                 <div

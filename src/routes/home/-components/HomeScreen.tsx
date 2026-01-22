@@ -1,5 +1,5 @@
 import MobileLayout from "@/components/layout/MobileLayout";
-import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/custom-Icons";
+import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
 import { useEffect, useState } from "react";
 import DrawerContent from "./DrawerContent";
