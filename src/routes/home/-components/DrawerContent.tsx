@@ -120,7 +120,7 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
             <DrawerItem
               label="Request Leave"
               icon={<RequestLeave className="text-[#444]" />}
-              onClick={() => handleNavigation("/request-leave")}
+              onClick={() => handleNavigation("/leave-request")}
             />
             <DrawerItem
               label="Leave History"
