@@ -5,6 +5,5 @@ export const useAssets = () => {
   return useQuery({
     queryKey: ["assets"],
     queryFn: assetService.fetchAssets,
-    retry: 1,
   });
 };

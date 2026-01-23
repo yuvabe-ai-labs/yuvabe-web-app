@@ -7,6 +7,7 @@ import {
   MouseIcon,
 } from "@/lib/utils/custom-icons";
 import { clsx, type ClassValue } from "clsx";
+import type { ComponentType } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -17,26 +18,23 @@ type AssetIconProps = {
   className?: string;
 };
 
-export function getAssetIcon(
-  type: string,
-  props: AssetIconProps = { className: "text-[#333]" },
-) {
+export function getAssetIcon(type: string): ComponentType<AssetIconProps> {
   const key = type.toLowerCase().replace(/\s/g, "");
 
   switch (key) {
     case "laptop":
-      return <Laptop {...props} />;
+      return Laptop;
     case "mouse":
-      return <MouseIcon {...props} />;
+      return MouseIcon;
     case "keyboard":
-      return <KeyboardIcon {...props} />;
+      return KeyboardIcon;
     case "monitor":
-      return <MonitoIcon {...props} />;
+      return MonitoIcon;
     case "headphone":
-      return <HeadphoneIcon {...props} />;
+      return HeadphoneIcon;
     case "laptopstand":
-      return <LaptopStand {...props} />;
+      return LaptopStand;
     default:
-      return <Laptop {...props} />;
+      return Laptop;
   }
 }

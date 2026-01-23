@@ -56,7 +56,7 @@ export default function AssetsScreen() {
           <div className="space-y-4.5">
             {assets.map((item) => {
               // Get Icon or Default
-              const iconComponent = getAssetIcon(item.type);
+              const IconComponent = getAssetIcon(item.type);
 
               return (
                 <div
@@ -65,8 +65,8 @@ export default function AssetsScreen() {
                   style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }} // Custom IOS-like shadow
                 >
                   {/* Icon Wrapper */}
-                  <div className="w-12.5 h-12.5 p-2 ml-3 flex justify-center items-center mr-4.5">
-                    <div>{iconComponent}</div>
+                  <div className="w-12.5 h-12.5 p-0 ml-3 flex justify-center items-center mr-4.5">
+                    <IconComponent className="w-30 h-30 " />
                   </div>
 
                   {/* Text Details */}
