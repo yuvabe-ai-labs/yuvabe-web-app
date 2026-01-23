@@ -5,15 +5,15 @@ importScripts(
   "https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-compat.js",
 );
 
-const params = new URLSearchParams(self.location.search);
+importScripts("swEnv.js");
 
 const firebaseConfig = {
-  apiKey: params.get("apiKey"),
-  authDomain: params.get("authDomain"),
-  projectId: params.get("projectId"),
-  storageBucket: params.get("storageBucket"),
-  messagingSenderId: params.get("messagingSenderId"),
-  appId: params.get("appId"),
+  apiKey: swEnv.apiKey,
+  authDomain: swEnv.authDomain,
+  projectId: swEnv.projectId,
+  storageBucket: swEnv.storageBucket,
+  messagingSenderId: swEnv.messagingSenderId,
+  appId: swEnv.appId,
 };
 
 firebase.initializeApp(firebaseConfig);
