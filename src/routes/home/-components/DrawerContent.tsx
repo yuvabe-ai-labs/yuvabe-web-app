@@ -1,19 +1,16 @@
-import { clearTokens } from "@/lib/storage";
+import { useLogout } from "@/hooks/useLogout";
 import {
   Asset,
-  ChatBot,
-  Journaling,
   LeaveHistory,
   PaySlip,
   PendingIcon,
   RequestLeave,
   TeamLeaveHistoryIcon,
-  WaterTracker,
 } from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
 import { UserRole } from "@/types/user.types";
 import { useNavigate } from "@tanstack/react-router";
-import { CookingPot, Footprints, Loader2, LogOut, User } from "lucide-react";
+import { CookingPot, Loader2, LogOut, User } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface DrawerContentProps {
@@ -26,6 +23,8 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
   const role = user?.role;
   const isMentor = role === UserRole.MENTOR || role === UserRole.SUB_MENTOR;
 
+   const { mutate: logout } = useLogout();
+
   const handleNavigation = (path: string) => {
     onClose();
     navigate({ to: path });
@@ -33,15 +32,8 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
   };
 
   const handleLogout = () => {
-    setLogoutLoading(true);
-
-    setTimeout(() => {
-      clearTokens();
-      resetUser();
-      setLogoutLoading(false);
-      onClose();
-      navigate({ to: "/login" });
-    }, 1500);
+    console.log("logout clicked");
+    logout();
   };
 
   // Added h-full explicitly to ensure it fills the SheetContent
@@ -81,21 +73,21 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
           onClick={() => handleNavigation("/assets")}
         />
         {/* ... keeping your existing items ... */}
-        <DrawerItem
+        {/* <DrawerItem
           label="Journaling"
           icon={<Journaling className="text-[#444]" />}
           onClick={() => handleNavigation("/journaling")}
-        />
+        /> */}
         <DrawerItem
           label="Lunch Preference"
           icon={<CookingPot size={20} className="text-[#444]" />}
           onClick={() => handleNavigation("/lunch-preference")}
         />
-        <DrawerItem
+        {/* <DrawerItem
           label="Water Track"
           icon={<WaterTracker className="text-[#444]" />}
           onClick={() => handleNavigation("/water-track")}
-        />
+        /> */}
         <DrawerItem
           label="Payslip"
           icon={<PaySlip className="text-[#444]" />}
@@ -130,7 +122,7 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
           </>
         )}
 
-        <DrawerItem
+        {/* <DrawerItem
           label="Chatbot"
           icon={<ChatBot className="text-[#444]" />}
           onClick={() => handleNavigation("/chat")}
@@ -139,7 +131,7 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
           label="Steps count"
           icon={<Footprints size={20} className="text-[#444]" />}
           onClick={() => handleNavigation("/steps")}
-        />
+        /> */}
       </div>
 
       {/* 3. Logout Footer */}
