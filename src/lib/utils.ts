@@ -6,7 +6,7 @@ import {
   MonitoIcon,
   MouseIcon,
 } from "@/lib/utils/custom-icons";
-import  { LeaveType } from "@/types/leave.types";
+import { LeaveType } from "@/types/leave.types";
 import { clsx, type ClassValue } from "clsx";
 import type { ComponentType } from "react";
 import { twMerge } from "tailwind-merge";
@@ -17,6 +17,11 @@ export function cn(...inputs: ClassValue[]) {
 
 type AssetIconProps = {
   className?: string;
+};
+
+export const LEAVE_LABEL_MAP: Record<LeaveType, string> = {
+  [LeaveType.SICK]: "Sick Leave",
+  [LeaveType.CASUAL]: "Casual Leave",
 };
 
 export function getAssetIcon(type: string): ComponentType<AssetIconProps> {
@@ -39,8 +44,3 @@ export function getAssetIcon(type: string): ComponentType<AssetIconProps> {
       return Laptop;
   }
 }
-
-export const LEAVE_LABEL_MAP: Record<LeaveType, string> = {
-  [LeaveType.SICK]: "Sick Leave",
-  [LeaveType.CASUAL]: "Casual Leave",
-};
