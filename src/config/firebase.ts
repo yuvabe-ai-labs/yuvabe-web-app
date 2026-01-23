@@ -37,22 +37,24 @@ export const registerFirebaseServiceWorker = async () => {
     return null;
   }
 
-  // 1. Create the query parameters using your existing ENV variables
-  const params = new URLSearchParams({
-    apiKey: ENV.VITE_FIREBASE_API_KEY,
-    projectId: ENV.VITE_FIREBASE_PROJECT_ID,
-    messagingSenderId: ENV.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: ENV.VITE_FIREBASE_APP_ID,
-    authDomain: ENV.VITE_FIREBASE_AUTH_DOMAIN,
-    storageBucket: ENV.VITE_FIREBASE_STORAGE_BUCKET,
-  }).toString();
+  // // 1. Create the query parameters using your existing ENV variables
+  // const params = new URLSearchParams({
+  //   apiKey: ENV.VITE_FIREBASE_API_KEY,
+  //   projectId: ENV.VITE_FIREBASE_PROJECT_ID,
+  //   messagingSenderId: ENV.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  //   appId: ENV.VITE_FIREBASE_APP_ID,
+  //   authDomain: ENV.VITE_FIREBASE_AUTH_DOMAIN,
+  //   storageBucket: ENV.VITE_FIREBASE_STORAGE_BUCKET,
+  // }).toString();
 
-  // 2. Append params to the SW file path
-  const swUrl = `/firebase-messaging-sw.js?${params}`;
+  // // 2. Append params to the SW file path
+  // const swUrl = `/firebase-messaging-sw.js?${params}`;
 
   try {
     // 3. Register the SW with the custom URL
-    const registration = await navigator.serviceWorker.register(swUrl);
+    const registration = await navigator.serviceWorker.register(
+      "/firebase-messaging-sw.js",
+    );
     console.log("Service Worker registered with params");
     return registration;
   } catch (error) {
