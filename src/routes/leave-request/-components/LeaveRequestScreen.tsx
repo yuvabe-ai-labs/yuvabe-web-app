@@ -1,4 +1,22 @@
 import MobileLayout from "@/components/layout/MobileLayout";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useLeaveBalance, useRequestLeave } from "@/hooks/useLeave";
 import { LEAVE_LABEL_MAP } from "@/lib/utils";
 import type { LeaveRequestFormValues } from "@/schemas/leave.schema";
@@ -6,37 +24,30 @@ import { leaveRequestSchema } from "@/schemas/leave.schema";
 import { LeaveType } from "@/types/leave.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronDown, ChevronLeft, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 export default function LeaveRequestScreen() {
   const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState(false);
 
   // Queries & Mutations
   const { data: balance, isLoading: balanceLoading } = useLeaveBalance();
   const { mutate: submitLeave, isPending: submitLoading } = useRequestLeave();
 
   // React Hook Form Setup
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isValid },
-  } = useForm<LeaveRequestFormValues>({
+  const form = useForm<LeaveRequestFormValues>({
     resolver: zodResolver(leaveRequestSchema),
-    mode: "onChange", // Validates as you type
+    mode: "onChange",
     defaultValues: {
+      leave_type: undefined,
       from_date: new Date().toISOString().split("T")[0],
       to_date: new Date().toISOString().split("T")[0],
       reason: "",
     },
   });
 
-  const selectedLeaveType = watch("leave_type");
-  const fromDateValue = watch("from_date");
+  // Watch values for logic/min-date calculation
+  const fromDateValue = form.watch("from_date");
 
   const onSubmit = (data: LeaveRequestFormValues) => {
     // Calculate days
@@ -109,141 +120,139 @@ export default function LeaveRequestScreen() {
         </div>
 
         {/* FORM START */}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* LEAVE TYPE DROPDOWN */}
-          <div className="mb-5 relative">
-            <label className="block text-[15px] font-semibold text-black mb-2 font-gilroy">
-              Leave Type
-            </label>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            {/* LEAVE TYPE DROPDOWN */}
+            <FormField
+              control={form.control}
+              name="leave_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[15px] font-semibold text-black font-gilroy">
+                    Leave Type
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full h-auto py-3.5 px-3 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy focus:ring-offset-0 focus:ring-0 focus:border-black bg-white">
+                        <SelectValue placeholder="Select leave type" />
+                      </SelectTrigger>
+                    </FormControl>
 
-            <button
-              type="button"
-              onClick={() => setShowDropdown(!showDropdown)}
-              className={`w-full border rounded-xl py-3.5 px-3 bg-white flex justify-between items-center text-left transition-colors
-                ${errors.leave_type ? "border-red-500" : "border-[#E5E5E5]"}
+                    {/* FIX APPLIED HERE: Added bg-white and z-50 */}
+                    <SelectContent className="bg-white z-50 shadow-lg border border-[#E5E5E5]">
+                      <SelectItem
+                        value={LeaveType.SICK}
+                        className="font-gilroy py-3 focus:bg-gray-50"
+                      >
+                        {LEAVE_LABEL_MAP[LeaveType.SICK]}
+                      </SelectItem>
+                      <SelectItem
+                        value={LeaveType.CASUAL}
+                        className="font-gilroy py-3 focus:bg-gray-50"
+                      >
+                        {LEAVE_LABEL_MAP[LeaveType.CASUAL]}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="font-gilroy pl-1" />
+                </FormItem>
+              )}
+            />
+
+            {/* DATES ROW */}
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <FormField
+                  control={form.control}
+                  name="from_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[15px] font-semibold text-black font-gilroy">
+                        From
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          className="w-full h-auto py-3.5 px-3 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black focus-visible:ring-0 focus-visible:border-black block bg-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="font-gilroy pl-1" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex-1">
+                <FormField
+                  control={form.control}
+                  name="to_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[15px] font-semibold text-black font-gilroy">
+                        To
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          min={fromDateValue}
+                          className="w-full h-auto py-3.5 px-3 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black focus-visible:ring-0 focus-visible:border-black block bg-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="font-gilroy pl-1" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* REASON INPUT */}
+            <FormField
+              control={form.control}
+              name="reason"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[15px] font-semibold text-black font-gilroy">
+                    Reason
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Enter your reason..."
+                      className="w-full min-h-32 p-4 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black resize-none focus-visible:ring-0 focus-visible:border-black placeholder:text-[#A0A0A0] bg-white"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="font-gilroy pl-1" />
+                </FormItem>
+              )}
+            />
+
+            {/* SUBMIT BUTTON */}
+            <Button
+              type="submit"
+              disabled={submitLoading || !form.formState.isValid}
+              className={`
+                w-full py-6 mt-4 rounded-xl text-[16px] font-semibold font-gilroy transition-all
+                ${
+                  !form.formState.isValid || submitLoading
+                    ? "bg-[#BDA0FF] hover:bg-[#BDA0FF] cursor-not-allowed text-white/80"
+                    : "bg-[#592AC7] hover:bg-[#592AC7]/90 text-white"
+                }
               `}
             >
-              <span
-                className={`text-[15px] font-gilroy ${
-                  selectedLeaveType ? "text-black" : "text-[#A0A0A0]"
-                }`}
-              >
-                {selectedLeaveType
-                  ? LEAVE_LABEL_MAP[selectedLeaveType]
-                  : "Select leave type"}
-              </span>
-              <ChevronDown size={20} className="text-gray-400" />
-            </button>
-
-            {errors.leave_type && (
-              <span className="text-red-500 text-xs mt-1 font-gilroy pl-1">
-                {errors.leave_type.message}
-              </span>
-            )}
-
-            {/* Dropdown Menu */}
-            {showDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E5E5E5] rounded-xl shadow-lg z-20 overflow-hidden">
-                {[LeaveType.SICK, LeaveType.CASUAL].map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    className="w-full text-left px-4 py-3 hover:bg-gray-50 text-[15px] font-gilroy text-black border-b border-gray-50 last:border-none"
-                    onClick={() => {
-                      setValue("leave_type", type, { shouldValidate: true });
-                      setShowDropdown(false);
-                    }}
-                  >
-                    {LEAVE_LABEL_MAP[type]}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* DATES ROW */}
-          <div className="flex gap-4 mb-5">
-            <div className="flex-1">
-              <label className="block text-[15px] font-semibold text-black mb-2 font-gilroy">
-                From
-              </label>
-              <input
-                type="date"
-                min={new Date().toISOString().split("T")[0]}
-                className={`w-full border rounded-xl py-3.5 px-3 bg-white text-[15px] font-gilroy text-black outline-none focus:border-primary
-                  ${errors.from_date ? "border-red-500" : "border-[#E5E5E5]"}
-                `}
-                {...register("from_date")}
-              />
-              {errors.from_date && (
-                <span className="text-red-500 text-xs mt-1 font-gilroy pl-1">
-                  {errors.from_date.message}
-                </span>
+              {submitLoading ? (
+                <Loader2 className="animate-spin mr-2" />
+              ) : (
+                "Submit Leave Request"
               )}
-            </div>
-
-            <div className="flex-1">
-              <label className="block text-[15px] font-semibold text-black mb-2 font-gilroy">
-                To
-              </label>
-              <input
-                type="date"
-                // Ensure min date is at least the selected from_date
-                min={fromDateValue}
-                className={`w-full border rounded-xl py-3.5 px-3 bg-white text-[15px] font-gilroy text-black outline-none focus:border-primary
-                  ${errors.to_date ? "border-red-500" : "border-[#E5E5E5]"}
-                `}
-                {...register("to_date")}
-              />
-              {errors.to_date && (
-                <span className="text-red-500 text-xs mt-1 font-gilroy pl-1">
-                  {errors.to_date.message}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* REASON INPUT */}
-          <div className="mb-10">
-            <label className="block text-[15px] font-semibold text-black mb-2 font-gilroy">
-              Reason
-            </label>
-            <textarea
-              placeholder="Enter your reason..."
-              className={`w-full border rounded-xl p-4 bg-white text-[15px] font-gilroy text-black min-h-30 outline-none focus:border-primary resize-none placeholder:text-[#A0A0A0]
-                ${errors.reason ? "border-red-500" : "border-[#E5E5E5]"}
-              `}
-              {...register("reason")}
-            />
-            {errors.reason && (
-              <span className="text-red-500 text-xs mt-1 font-gilroy pl-1">
-                {errors.reason.message}
-              </span>
-            )}
-          </div>
-
-          {/* SUBMIT BUTTON */}
-          <button
-            type="submit"
-            disabled={submitLoading || !isValid}
-            className={`
-              w-full py-4 rounded-xl flex items-center justify-center transition-all
-              ${
-                !isValid || submitLoading
-                  ? "bg-[#BDA0FF] cursor-not-allowed"
-                  : "bg-[#592AC7] hover:opacity-90"
-              }
-            `}
-          >
-            {submitLoading ? (
-              <Loader2 className="animate-spin text-white" />
-            ) : (
-              <span className="text-white text-[16px] font-semibold font-gilroy">
-                Submit Leave Request
-              </span>
-            )}
-          </button>
-        </form>
+            </Button>
+          </form>
+        </Form>
       </div>
     </MobileLayout>
   );
