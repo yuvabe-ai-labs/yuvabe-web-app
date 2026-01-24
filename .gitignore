@@ -25,3 +25,4 @@ dist-ssr
 .env
 .tanstack/
 firebase-messaging-sw.js
+swEnv.js
