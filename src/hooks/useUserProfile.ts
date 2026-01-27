@@ -28,7 +28,6 @@ export const useUserProfilePayslip = () => {
     },
 
     enabled: !user?.id,
-    retry: 1,
   });
 
   useEffect(() => {
