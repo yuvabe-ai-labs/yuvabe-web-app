@@ -7,3 +7,5 @@ export interface LunchOptOutResponse {
   message: string;
   status: string;
 }
+
+export type ModeType = "tomorrow" | "range" | null;

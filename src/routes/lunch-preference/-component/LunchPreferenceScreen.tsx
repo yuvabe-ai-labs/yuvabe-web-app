@@ -1,145 +1,43 @@
 import MobileLayout from "@/components/layout/MobileLayout";
-import { useLunchOptOut } from "@/hooks/useLunch";
-import { useGmailConnect } from "@/hooks/usePayslip";
-import { useUserStore } from "@/store/user.store";
-import { useNavigate } from "@tanstack/react-router";
-import { AxiosError } from "axios";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { ChevronLeft, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-
-type ModeType = "tomorrow" | "range" | null;
+import { useLunchPreferenceLogic } from "./useLunchPreferenceLogic";
 
 export default function LunchPreferenceScreen() {
-  const navigate = useNavigate();
-  const { user } = useUserStore();
-
-  // State
-  const [selectedMode, setSelectedMode] = useState<ModeType>(null);
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showGmailModal, setShowGmailModal] = useState(false);
-  const [pendingSubmit, setPendingSubmit] = useState(false);
-
-  // Hooks
-  const { mutateAsync: sendLunchRequest, isPending: submitting } =
-    useLunchOptOut();
-  const { mutateAsync: getGmailUrl, isPending: connectingGmail } =
-    useGmailConnect();
-
-  useEffect(() => {
-    const checkCallback = async () => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.has("success") && pendingSubmit) {
-        // Clean URL
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-
-        // Retry submission automatically
-        // eslint-disable-next-line react-hooks/immutability
-        await handleSubmit();
-        setPendingSubmit(false);
-        setShowGmailModal(false);
-      } else if (params.has("error")) {
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-        toast.error("Gmail connection failed");
-        setPendingSubmit(false);
-      }
-    };
-
-    setTimeout(checkCallback, 100);
-  }, []);
-
-  const isRangeValid =
-    selectedMode &&
-    startDate &&
-    endDate &&
-    new Date(endDate) >= new Date(startDate);
-
-  const getConfirmText = () => {
-    if (!startDate || !endDate) return "";
-    const startStr = new Date(startDate).toDateString();
-    const endStr = new Date(endDate).toDateString();
-
-    return startDate === endDate
-      ? `You want to opt out of lunch on ${startStr}.`
-      : `You want to opt out of lunch from ${startStr} to ${endStr}.`;
-  };
-
-  // ---------------------------------------------------------
-  // 3. ACTIONS
-  // ---------------------------------------------------------
-  const handleConnectGmail = async () => {
-    if (!user?.id) {
-      toast.error("User ID missing. Please refresh.");
-      return;
-    }
-
-    try {
-      const res = await getGmailUrl({
-        userId: user.id,
-        fromPath: "/lunch-preference",
-      });
-      window.location.href = res.auth_url;
-    } catch (error) {
-      console.log(error);
-      toast.error("Connection Failed", {
-        description: "Could not get authorization URL.",
-      });
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!startDate || !endDate) return;
-
-    try {
-      await sendLunchRequest({
-        start_date: startDate,
-        end_date: endDate,
-      });
-      toast.success("Success", { description: "Lunch opt-out request sent!" });
-      navigate({ to: "/" });
-    } catch (err) {
-      const error = err as AxiosError;
-
-      // Check for 428 Precondition Required (Standard for "Needs Gmail")
-      if (error.response?.status === 428) {
-        setPendingSubmit(true); // Mark that we are waiting for Gmail
-        setShowGmailModal(true);
-      } else {
-        toast.error("Request Failed", { description: "Something went wrong" });
-      }
-    }
-  };
-
-  const handleTomorrowSelect = () => {
-    const t = new Date();
-    t.setDate(t.getDate() + 1);
-    const dateStr = t.toISOString().split("T")[0];
-
-    setStartDate(dateStr);
-    setEndDate(dateStr);
-    setSelectedMode("tomorrow");
-  };
+  const { state, actions } = useLunchPreferenceLogic();
 
   return (
     <MobileLayout className="bg-white flex flex-col h-full relative">
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
-        <button
-          onClick={() => navigate({ to: "/" })}
-          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => actions.navigate({ to: "/" })}
+          className="-ml-2 hover:bg-gray-100 rounded-full"
         >
           <ChevronLeft size={28} className="text-black" />
-        </button>
+        </Button>
         <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-bold text-[#374151] font-gilroy">
             Lunch Preference
@@ -149,152 +47,162 @@ export default function LunchPreferenceScreen() {
 
       {/* CONTENT */}
       <div className="flex-1 overflow-y-auto px-4 pb-24">
-        <p className="text-[16px] text-[#374151] mb-6 leading-6 font-gilroy">
+        <p className="text-[16px] text-[#374151] mb-6 leading-6 font-gilroy mt-2">
           Planning a leave or working remotely?
           <br />
           Make sure to opt out of lunch — let’s reduce food waste 🌱
         </p>
 
-        {/* Tomorrow Option */}
-        <button
-          onClick={handleTomorrowSelect}
-          className={`w-full p-4 rounded-xl border mb-6 text-left transition-all ${
-            selectedMode === "tomorrow"
-              ? "bg-[#F3E8FF] border-[#5B21B6] opacity-100"
-              : "bg-white border-[#E5E7EB] opacity-60 hover:opacity-100"
+        {/* Tomorrow Option Card */}
+        <Card
+          onClick={actions.handleTomorrowSelect}
+          className={`cursor-pointer transition-all border shadow-sm mb-6 ${
+            state.selectedMode === "tomorrow"
+              ? "bg-[#F3E8FF] border-[#5B21B6]"
+              : "bg-white border-[#E5E7EB] hover:border-gray-300"
           }`}
         >
-          <span className="text-[#5B21B6] font-semibold text-[16px] font-gilroy">
-            I don’t want lunch tomorrow
-          </span>
-        </button>
+          <CardContent className="p-4 flex items-center">
+            <span
+              className={`font-semibold text-[16px] font-gilroy ${
+                state.selectedMode === "tomorrow"
+                  ? "text-[#5B21B6]"
+                  : "text-[#374151]"
+              }`}
+            >
+              I don’t want lunch tomorrow
+            </span>
+          </CardContent>
+        </Card>
 
         {/* Range Options */}
-        <p className="text-[14px] text-[#6B7280] mb-2 font-gilroy">
+        <Label className="text-[14px] text-[#6B7280] mb-2 font-gilroy block">
           I don’t want lunch from
-        </p>
+        </Label>
 
         <div className="flex gap-3">
           <div className="flex-1">
-            <div className="border border-[#E5E7EB] rounded-lg p-1 relative h-13 flex items-center">
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => {
-                  setSelectedMode("range");
-                  setStartDate(e.target.value);
-                }}
-                className="w-full h-full px-3 outline-none text-[15px] bg-transparent font-gilroy text-[#111827] uppercase"
-                placeholder="Start Date"
-              />
-            </div>
+            <Input
+              type="date"
+              placeholder="Start Date"
+              value={state.startDate}
+              onChange={(e) => {
+                actions.setSelectedMode("range");
+                actions.setStartDate(e.target.value);
+              }}
+              className="h-12 px-3 text-[15px] font-gilroy text-[#111827] uppercase focus-visible:ring-[#5B21B6]"
+            />
           </div>
 
           <div className="flex-1">
-            <div className="border border-[#E5E7EB] rounded-lg p-1 relative h-13 flex items-center">
-              <input
-                type="date"
-                value={endDate}
-                min={startDate}
-                onChange={(e) => {
-                  setSelectedMode("range");
-                  setEndDate(e.target.value);
-                }}
-                className="w-full h-full px-3 outline-none text-[15px] bg-transparent font-gilroy text-[#111827] uppercase"
-              />
-            </div>
+            <Input
+              type="date"
+              placeholder="End Date"
+              value={state.endDate}
+              min={state.startDate}
+              onChange={(e) => {
+                actions.setSelectedMode("range");
+                actions.setEndDate(e.target.value);
+              }}
+              className="h-12 px-3 text-[15px] font-gilroy text-[#111827] uppercase focus-visible:ring-[#5B21B6]"
+            />
           </div>
         </div>
-
-        {/* Submit Button */}
-        <button
-          disabled={!isRangeValid || submitting}
-          onClick={() => setShowConfirm(true)}
-          className={`w-full mt-8 py-4 rounded-xl flex items-center justify-center transition-colors ${
-            !isRangeValid || submitting
-              ? "bg-[#D1D5DB] cursor-not-allowed"
-              : "bg-[#592AC7] hover:bg-[#4c249f]"
-          }`}
-        >
-          {submitting ? (
-            <Loader2 className="animate-spin text-white" />
-          ) : (
-            <span className="text-[16px] font-semibold text-white font-gilroy">
-              Send
-            </span>
-          )}
-        </button>
       </div>
 
-      {/* CONFIRMATION MODAL */}
-      {showConfirm && (
-        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/50 animate-in fade-in duration-200 px-4">
-          <div className="bg-white w-full max-w-85 rounded-xl p-6 shadow-xl animate-in zoom-in-95 duration-200">
-            <h3 className="text-[18px] font-bold text-[#1F2937] text-center mb-4 font-gilroy">
+      {/* FOOTER BUTTON */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-[#E5E7EB]">
+        <Button
+          onClick={() => actions.setShowConfirmDialog(true)}
+          disabled={!state.isRangeValid || state.submitting}
+          className={`w-full py-6 rounded-xl text-[16px] font-semibold font-gilroy transition-all ${
+            !state.isRangeValid || state.submitting
+              ? "bg-[#D1D5DB] hover:bg-[#D1D5DB] cursor-not-allowed"
+              : "bg-[#592AC7] hover:bg-[#592AC7]/90 text-white"
+          }`}
+        >
+          {state.submitting ? (
+            <Loader2 className="animate-spin mr-2" />
+          ) : (
+            "Send"
+          )}
+        </Button>
+      </div>
+
+      {/* CONFIRMATION DIALOG */}
+      <AlertDialog
+        open={state.showConfirmDialog}
+        onOpenChange={actions.setShowConfirmDialog}
+      >
+        <AlertDialogContent className="w-[90%] rounded-xl font-gilroy">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-center">
               Confirm Lunch Opt-Out
-            </h3>
-            <p className="text-[15px] text-[#374151] text-center mb-6 font-gilroy leading-relaxed">
-              {getConfirmText()}
-            </p>
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-[15px] text-[#374151]">
+              {actions.getConfirmText()}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-row gap-3 sm:gap-3">
+            <AlertDialogCancel className="flex-1 mt-0">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                actions.setShowConfirmDialog(false);
+                actions.handleSubmit();
+              }}
+              disabled={state.submitting}
+              className="flex-1 bg-[#592AC7] hover:bg-[#592AC7]/90 text-white"
+            >
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowConfirm(false)}
-                className="flex-1 py-3 rounded-lg bg-[#F3F4F6] text-[#4B5563] font-semibold font-gilroy hover:bg-gray-200 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={async () => {
-                  setShowConfirm(false);
-                  await handleSubmit();
-                }}
-                disabled={submitting}
-                className="flex-1 py-3 rounded-lg bg-[#592AC7] text-white font-semibold font-gilroy hover:bg-[#4c1b99] transition-colors"
-              >
-                {submitting ? "Sending..." : "Confirm"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* GMAIL CONNECT MODAL */}
-      {showGmailModal && (
-        <div className="fixed inset-0 z-999 flex items-end justify-center bg-black/50 animate-in fade-in duration-200">
-          <div className="bg-white w-full rounded-t-[20px] p-6 pb-8 animate-in slide-in-from-bottom duration-300">
-            <h3 className="text-[18px] font-bold text-[#1F2937] mb-2 font-gilroy">
+      {/* GMAIL SHEET */}
+      <Sheet
+        open={state.showGmailSheet}
+        onOpenChange={actions.setShowGmailSheet}
+      >
+        <SheetContent side="bottom" className="rounded-t-[20px] pb-8">
+          <SheetHeader className="text-left mb-6">
+            <SheetTitle className="text-[18px] font-bold text-[#1F2937] font-gilroy">
               Connect Gmail Account
-            </h3>
-            <p className="text-[14px] text-[#6B7280] leading-5 mb-6 font-gilroy">
+            </SheetTitle>
+            <SheetDescription className="text-[14px] text-[#6B7280] font-gilroy">
               To notify the lunch manager, we need to connect your Gmail
               account.
-            </p>
+            </SheetDescription>
+          </SheetHeader>
 
-            <button
-              onClick={handleConnectGmail}
-              disabled={connectingGmail}
-              className="w-full py-3.5 rounded-[10px] bg-[#5B21B6] mb-2.5 flex items-center justify-center font-gilroy font-semibold text-white text-[15px] hover:bg-[#4c1b99] transition-colors"
+          <div className="space-y-3">
+            <Button
+              onClick={actions.handleConnectGmail}
+              disabled={state.connectingGmail}
+              className="w-full py-6 rounded-[10px] bg-[#5B21B6] hover:bg-[#5B21B6]/90 text-[15px] font-gilroy"
             >
-              {connectingGmail ? (
-                <Loader2 className="animate-spin" size={20} />
+              {state.connectingGmail ? (
+                <Loader2 className="animate-spin mr-2" />
               ) : (
                 "Connect Gmail"
               )}
-            </button>
+            </Button>
 
-            <button
+            <Button
+              variant="secondary"
               onClick={() => {
-                setShowGmailModal(false);
-                setPendingSubmit(false);
+                actions.setShowGmailSheet(false);
               }}
-              className="w-full py-3.5 rounded-[10px] bg-[#F3F4F6] text-[#4B5563] font-gilroy font-semibold text-[15px] hover:bg-gray-200 transition-colors"
+              className="w-full py-6 rounded-[10px] bg-[#F3F4F6] text-[#4B5563] hover:bg-gray-200 text-[15px] font-gilroy"
             >
               Cancel
-            </button>
+            </Button>
           </div>
-        </div>
-      )}
+        </SheetContent>
+      </Sheet>
     </MobileLayout>
   );
 }
