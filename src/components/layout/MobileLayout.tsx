@@ -13,7 +13,7 @@ export default function MobileLayout({
     // 1. OUTER CONTAINER
     // bg-gray-100: Background for desktop
     // flex items-center justify-center: Centers the phone
-    <div className="fixed inset-0 w-full h-full bg-white sm:bg-gray-100 flex items-center justify-center overflow-hidden">
+    <div className=" fixed w-full h-full bg-white sm:bg-gray-100 flex items-center justify-center overflow-hidden">
       {/* 2. THE PHONE FRAME
           - Mobile (<640px): w-full h-full (Full screen, no borders)
           - Desktop (sm): 

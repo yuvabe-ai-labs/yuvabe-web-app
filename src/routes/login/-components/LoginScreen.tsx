@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useAuth";
-import { YBSymbol } from "@/lib/utils/custom-Icons";
+import { YBSymbol } from "@/lib/utils/custom-icons";
 import { signInSchema, type SignInSchemaType } from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -30,7 +30,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <MobileLayout className="flex flex-col justify-center p-8">
+    <MobileLayout className="flex h-full flex-col justify-center p-8">
       <div className="w-25 h-25 mx-auto mb-6 flex items-center justify-center">
         <YBSymbol className="w-full h-full" />
       </div>
@@ -93,7 +93,9 @@ export default function LoginScreen() {
           />
 
           {error instanceof Error && (
-            <p className="text-error text-sm text-center">{error.message}</p>
+            <p className="text-error text-sm text-center text-red-500">
+              {error.message}
+            </p>
           )}
 
           <Button

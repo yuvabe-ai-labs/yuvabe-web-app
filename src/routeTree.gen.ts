@@ -9,23 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestRouteImport } from './routes/test'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
-import { Route as AssetsAssetsRouteImport } from './routes/assets/assets'
+import { Route as AssetsIndexRouteImport } from './routes/assets/index'
 
-const TestRoute = TestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -36,94 +25,68 @@ const PayslipIndexRoute = PayslipIndexRouteImport.update({
   path: '/payslip/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LeaveRequestIndexRoute = LeaveRequestIndexRouteImport.update({
   id: '/leave-request/',
   path: '/leave-request/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AssetsAssetsRoute = AssetsAssetsRouteImport.update({
-  id: '/assets/assets',
-  path: '/assets/assets',
+const AssetsIndexRoute = AssetsIndexRouteImport.update({
+  id: '/assets/',
+  path: '/assets/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/test': typeof TestRoute
-  '/assets/assets': typeof AssetsAssetsRoute
+  '/assets': typeof AssetsIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
+  '/login': typeof LoginIndexRoute
   '/payslip': typeof PayslipIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/test': typeof TestRoute
-  '/assets/assets': typeof AssetsAssetsRoute
+  '/assets': typeof AssetsIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
+  '/login': typeof LoginIndexRoute
   '/payslip': typeof PayslipIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/test': typeof TestRoute
-  '/assets/assets': typeof AssetsAssetsRoute
+  '/assets/': typeof AssetsIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/payslip/': typeof PayslipIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/login'
-    | '/test'
-    | '/assets/assets'
-    | '/leave-request'
-    | '/payslip'
+  fullPaths: '/' | '/assets' | '/leave-request' | '/login' | '/payslip'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/login'
-    | '/test'
-    | '/assets/assets'
-    | '/leave-request'
-    | '/payslip'
+  to: '/' | '/assets' | '/leave-request' | '/login' | '/payslip'
   id:
     | '__root__'
     | '/'
-    | '/login'
-    | '/test'
-    | '/assets/assets'
+    | '/assets/'
     | '/leave-request/'
+    | '/login/'
     | '/payslip/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginRoute: typeof LoginRoute
-  TestRoute: typeof TestRoute
-  AssetsAssetsRoute: typeof AssetsAssetsRoute
+  AssetsIndexRoute: typeof AssetsIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
+  LoginIndexRoute: typeof LoginIndexRoute
   PayslipIndexRoute: typeof PayslipIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test': {
-      id: '/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -138,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PayslipIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/leave-request/': {
       id: '/leave-request/'
       path: '/leave-request'
@@ -145,11 +115,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeaveRequestIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/assets/assets': {
-      id: '/assets/assets'
-      path: '/assets/assets'
-      fullPath: '/assets/assets'
-      preLoaderRoute: typeof AssetsAssetsRouteImport
+    '/assets/': {
+      id: '/assets/'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AssetsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -157,10 +127,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginRoute: LoginRoute,
-  TestRoute: TestRoute,
-  AssetsAssetsRoute: AssetsAssetsRoute,
+  AssetsIndexRoute: AssetsIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
+  LoginIndexRoute: LoginIndexRoute,
   PayslipIndexRoute: PayslipIndexRoute,
 }
 export const routeTree = rootRouteImport
