@@ -1,25 +1,8 @@
 import MobileLayout from "@/components/layout/MobileLayout";
 import { useAssets } from "@/hooks/useAssets";
-import {
-  HeadphoneIcon,
-  KeyboardIcon,
-  Laptop,
-  LaptopStand,
-  MonitoIcon,
-  MouseIcon,
-} from "@/lib/utils/custom-icons";
+import { getAssetIcon } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
-import { type JSX } from "react";
-
-const ASSET_COMPONENTS: Record<string, JSX.Element> = {
-  laptop: <Laptop className="text-[#333]" />,
-  mouse: <MouseIcon className="text-[#333]" />,
-  keyboard: <KeyboardIcon className="text-[#333]" />,
-  monitor: <MonitoIcon className="text-[#333]" />,
-  headphone: <HeadphoneIcon className="text-[#333]" />,
-  laptopstand: <LaptopStand className="text-[#333]" />,
-};
 
 export default function AssetsScreen() {
   const navigate = useNavigate();
@@ -73,9 +56,7 @@ export default function AssetsScreen() {
           <div className="space-y-4.5">
             {assets.map((item) => {
               // Get Icon or Default
-              const iconComponent = ASSET_COMPONENTS[
-                item.type.toLowerCase().replace(/\s/g, "")
-              ] || <Laptop className="text-[#333]" />;
+              const IconComponent = getAssetIcon(item.type);
 
               return (
                 <div
@@ -84,8 +65,8 @@ export default function AssetsScreen() {
                   style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }} // Custom IOS-like shadow
                 >
                   {/* Icon Wrapper */}
-                  <div className="w-12.5 h-12.5 p-2 ml-3 flex justify-center items-center mr-4.5">
-                    <div>{iconComponent}</div>
+                  <div className="w-12.5 h-12.5 p-0 ml-3 flex justify-center items-center mr-4.5">
+                    <IconComponent className="w-30 h-30 " />
                   </div>
 
                   {/* Text Details */}

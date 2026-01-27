@@ -359,9 +359,7 @@ export const TeamLeaveHistoryIcon = (props: SVGProps<SVGSVGElement>) => (
 
 export const MouseIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width={85}
-    height={50}
-    viewBox="0 0 85 50"
+    viewBox="23 0 39.2606 50"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
@@ -408,23 +406,12 @@ export const MouseIcon = (props: React.SVGProps<SVGSVGElement>) => (
         fill="#848484"
       />
     </g>
-    <defs>
-      <clipPath id="clip0_36_584">
-        <rect
-          width={39.2606}
-          height={50.0003}
-          fill="white"
-          transform="translate(23)"
-        />
-      </clipPath>
-    </defs>
+    <defs></defs>
   </svg>
 );
 
 export const KeyboardIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width={85}
-    height={50}
     viewBox="0 0 85 50"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -1361,14 +1348,6 @@ export const KeyboardIcon = (props: React.SVGProps<SVGSVGElement>) => (
         <stop offset={0.54} stopColor="#3C3A3C" />
         <stop offset={1} stopColor="#231F20" />
       </linearGradient>
-      <clipPath id="clip0_36_517">
-        <rect
-          width={83.8412}
-          height={50}
-          fill="white"
-          transform="translate(1)"
-        />
-      </clipPath>
     </defs>
   </svg>
 );
