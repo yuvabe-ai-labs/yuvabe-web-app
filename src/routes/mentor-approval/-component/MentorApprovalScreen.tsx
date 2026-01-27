@@ -1,4 +1,7 @@
 import MobileLayout from "@/components/layout/MobileLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import {
   useLeaveDetails,
   useMentorDecision,
@@ -21,7 +24,7 @@ export default function MentorApprovalScreen() {
 
   // 2. Fetch User Balance (only runs when leave data is available)
   const { data: balance, isLoading: loadingBalance } = useUserLeaveBalance(
-    leave?.user_id
+    leave?.user_id,
   );
 
   // 3. Mutation for Actions
@@ -30,7 +33,7 @@ export default function MentorApprovalScreen() {
   const handleApprove = () => {
     submitDecision(
       { leaveId, payload: { status: "Approved" } },
-      { onSuccess: () => navigate({ to: "/pending-leaves" }) } // Go back
+      { onSuccess: () => navigate({ to: "/pending-leaves" }) },
     );
   };
 
@@ -41,7 +44,7 @@ export default function MentorApprovalScreen() {
     }
     submitDecision(
       { leaveId, payload: { status: "Rejected", comment: rejectComment } },
-      { onSuccess: () => navigate({ to: "/pending-leaves" }) }
+      { onSuccess: () => navigate({ to: "/pending-leaves" }) },
     );
   };
 
@@ -69,12 +72,14 @@ export default function MentorApprovalScreen() {
     <MobileLayout className="bg-white flex flex-col h-full">
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => navigate({ to: "/pending-leaves" })}
-          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          className="-ml-2 hover:bg-gray-100 rounded-full"
         >
           <ChevronLeft size={28} className="text-black" />
-        </button>
+        </Button>
 
         <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-semibold text-black font-gilroy">
@@ -87,87 +92,95 @@ export default function MentorApprovalScreen() {
       <div className="flex-1 overflow-y-auto px-6 pb-4">
         {/* LEAVE BALANCE CARDS */}
         <div className="flex gap-4 mb-8 pt-5">
-          {/* Sick Leave */}
-          <div className="flex-1 bg-[#FFF9E8] border border-[#F3D395] p-5 rounded-xl flex flex-col items-center">
-            <span className="text-[16px] font-semibold text-center mb-1 font-gilroy">
-              Sick Leave
-            </span>
-            <span className="text-[26px] font-extrabold text-center mb-1 font-gilroy">
-              {loadingBalance ? "--" : balance?.sick_remaining}
-            </span>
-            <span className="text-[14px] text-[#777] text-center font-gilroy">
-              Remaining
-            </span>
-          </div>
+          {/* Sick Leave Card */}
+          <Card className="flex-1 bg-[#FFF9E8] border-[#F3D395] shadow-none rounded-xl">
+            <CardContent className="p-5 flex flex-col items-center">
+              <span className="text-[16px] font-semibold text-center mb-1 font-gilroy text-black">
+                Sick Leave
+              </span>
+              <span className="text-[26px] font-extrabold text-center mb-1 font-gilroy text-black">
+                {loadingBalance ? "--" : balance?.sick_remaining}
+              </span>
+              <span className="text-[14px] text-[#777] text-center font-gilroy">
+                Remaining
+              </span>
+            </CardContent>
+          </Card>
 
-          {/* Casual Leave */}
-          <div className="flex-1 bg-[#F6F1FF] border border-[#C6B7F2] p-5 rounded-xl flex flex-col items-center">
-            <span className="text-[16px] font-semibold text-center mb-1 font-gilroy">
-              Casual Leave
-            </span>
-            <span className="text-[26px] font-extrabold text-center mb-1 font-gilroy">
-              {loadingBalance ? "--" : balance?.casual_remaining}
-            </span>
-            <span className="text-[14px] text-[#777] text-center font-gilroy">
-              Remaining
-            </span>
-          </div>
+          {/* Casual Leave Card */}
+          <Card className="flex-1 bg-[#F6F1FF] border-[#C6B7F2] shadow-none rounded-xl">
+            <CardContent className="p-5 flex flex-col items-center">
+              <span className="text-[16px] font-semibold text-center mb-1 font-gilroy text-black">
+                Casual Leave
+              </span>
+              <span className="text-[26px] font-extrabold text-center mb-1 font-gilroy text-black">
+                {loadingBalance ? "--" : balance?.casual_remaining}
+              </span>
+              <span className="text-[14px] text-[#777] text-center font-gilroy">
+                Remaining
+              </span>
+            </CardContent>
+          </Card>
         </div>
 
         {/* DETAILS LIST */}
-        <div className="space-y-5 mb-10">
-          <div>
-            <h3 className="text-[16px] font-semibold text-black mb-1 font-gilroy">
+        <div className="space-y-6 mb-10">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-[16px] font-semibold text-black font-gilroy">
               Employee Name
             </h3>
-            <p className="text-[17px] text-black font-gilroy">
+            <p className="text-[17px] text-black/80 font-gilroy">
               {leave.user_name}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-[16px] font-semibold text-black mb-1 font-gilroy">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-[16px] font-semibold text-black font-gilroy">
               Leave Type
             </h3>
-            <p className="text-[17px] text-black font-gilroy">
+            <p className="text-[17px] text-black/80 font-gilroy">
               {leave.leave_type}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-[16px] font-semibold text-black mb-1 font-gilroy">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-[16px] font-semibold text-black font-gilroy">
               Reason for Leave
             </h3>
-            <p className="text-[17px] text-black font-gilroy">{leave.reason}</p>
+            <p className="text-[17px] text-black/80 font-gilroy">
+              {leave.reason}
+            </p>
           </div>
 
-          <div>
-            <h3 className="text-[16px] font-semibold text-black mb-1 font-gilroy">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-[16px] font-semibold text-black font-gilroy">
               Leave Date
             </h3>
-            <p className="text-[17px] text-black font-gilroy">
+            <p className="text-[17px] text-black/80 font-gilroy">
               {toReadableDate(leave.from_date)}{" "}
               <span className="text-gray-400 mx-1">→</span>{" "}
               {toReadableDate(leave.to_date)}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-[16px] font-semibold text-black mb-1 font-gilroy">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-[16px] font-semibold text-black font-gilroy">
               Total Days
             </h3>
-            <p className="text-[17px] text-black font-gilroy">{leave.days}</p>
+            <p className="text-[17px] text-black/80 font-gilroy">
+              {leave.days}
+            </p>
           </div>
 
-          <div>
-            <h3 className="text-[16px] font-semibold text-black mb-2 font-gilroy">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-[16px] font-semibold text-black font-gilroy">
               Reject Comment
             </h3>
-            <textarea
+            <Textarea
               placeholder="Enter reason if rejecting..."
               value={rejectComment}
               onChange={(e) => setRejectComment(e.target.value)}
-              className="w-full border border-[#CFCFCF] rounded-xl p-3.5 text-[16px] font-gilroy outline-none focus:border-primary resize-none min-h-[100px]"
+              className="w-full border-[#CFCFCF] bg-white rounded-xl p-3.5 text-[16px] font-gilroy focus-visible:ring-1 focus-visible:ring-primary min-h-25 resize-none"
             />
           </div>
         </div>
@@ -176,21 +189,22 @@ export default function MentorApprovalScreen() {
       {/* FIXED FOOTER ACTIONS */}
       <div className="bg-white p-4 border-t border-gray-100 shrink-0">
         <div className="flex gap-3">
-          <button
+          <Button
             onClick={handleApprove}
             disabled={isPending}
-            className="flex-1 bg-[#2E8B57] text-white py-3.5 rounded-xl text-[18px] font-semibold font-gilroy hover:opacity-90 disabled:opacity-70 transition-opacity"
+            className="flex-1 bg-[#2E8B57] hover:bg-[#2E8B57]/90 text-white h-auto py-3.5 rounded-xl text-[18px] font-semibold font-gilroy transition-all"
           >
-            {isPending ? "Processing..." : "Approve"}
-          </button>
+            {isPending ? <Loader2 className="animate-spin mr-2" /> : "Approve"}
+          </Button>
 
-          <button
+          <Button
             onClick={handleReject}
             disabled={isPending}
-            className="flex-1 bg-[#D94343] text-white py-3.5 rounded-xl text-[18px] font-semibold font-gilroy hover:opacity-90 disabled:opacity-70 transition-opacity"
+            variant="destructive"
+            className="flex-1 bg-[#D94343] hover:bg-[#D94343]/90 text-white h-auto py-3.5 rounded-xl text-[18px] font-semibold font-gilroy transition-all"
           >
-            {isPending ? "Processing..." : "Reject"}
-          </button>
+            {isPending ? <Loader2 className="animate-spin mr-2" /> : "Reject"}
+          </Button>
         </div>
       </div>
     </MobileLayout>

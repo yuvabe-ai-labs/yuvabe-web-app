@@ -13,3 +13,18 @@ export const formatDate = (dateString: string) => {
   const year = date.getFullYear();
   return `${day} ${month} ${year}`;
 };
+
+export const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Approved":
+        return "#4CAF50"; // Green
+      case "Pending":
+        return "#FFA000"; // Amber
+      case "Cancelled":
+        return "#3F1ABF"; // Purple
+      case "Rejected":
+        return "#FF3B30"; // Red
+      default:
+        return "#999999";
+    }
+  };
