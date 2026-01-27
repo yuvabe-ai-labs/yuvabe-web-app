@@ -4,10 +4,18 @@ import { Bell } from "lucide-react";
 import { toast } from "sonner";
 
 const NotificationIndicator = () => {
-  const { permission, checkPermission } = useNotificationStore();
+  const { permission, checkPermission, promptAttempted } =
+    useNotificationStore();
   const { mutate: registerDevice } = useRegisterDevice();
 
+  console.log("Permission", permission);
+
+  // 1. If Granted: Always Hide
   if (permission === "granted") return null;
+
+  // 2. If Default: Only show IF we have already tried to ask (promptAttempted is true)
+  //    This prevents it from showing behind the native browser prompt on load.
+  if (permission === "default" && !promptAttempted) return null;
 
   const handlePress = async () => {
     if (permission === "default") {
