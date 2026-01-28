@@ -30,7 +30,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <MobileLayout className="flex flex-col justify-center p-8">
+    <MobileLayout className="flex h-full flex-col justify-center p-8">
       <div className="w-25 h-25 mx-auto mb-6 flex items-center justify-center">
         <YBSymbol className="w-full h-full" />
       </div>

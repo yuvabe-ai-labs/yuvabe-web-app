@@ -1,3 +1,4 @@
+
 import {
   notificationFetchService,
   notificationService,
@@ -6,11 +7,15 @@ import { useUserStore } from "@/store/user.store";
 import type { NotificationItem } from "@/types/notification.types";
 import { UserRole } from "@/types/user.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNotificationStore } from "@/store/notification.store";
+
 
 export const useRegisterDevice = () => {
+  const { markPromptAttempted, checkPermission } = useNotificationStore();
   return useMutation({
     mutationFn: notificationService.registerDevice,
     onSuccess: (data) => {
+      checkPermission();
       // Only log success if the backend actually returned data
       if (data) {
         console.log("Device successfully registered with backend");
@@ -20,6 +25,10 @@ export const useRegisterDevice = () => {
     },
     onError: (error) => {
       console.error("Device registration failed:", error);
+      checkPermission();
+    },
+    onSettled: () => {
+      markPromptAttempted();
     },
   });
 };
