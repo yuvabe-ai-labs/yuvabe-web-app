@@ -37,7 +37,7 @@ export const useForegroundNotifications = () => {
         } else {
           console.warn(
             "⚠️ Received message but could not find title/body",
-            payload
+            payload,
           );
         }
       });
