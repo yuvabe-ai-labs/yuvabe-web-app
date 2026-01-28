@@ -29,7 +29,7 @@ export default function HomeScreen() {
     const timer = setTimeout(() => {
       registerDevice();
       console.log("Registering device for notifications");
-    }, 1000);
+    });
 
     return () => clearTimeout(timer);
   }, [registerDevice]);

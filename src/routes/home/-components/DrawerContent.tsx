@@ -8,6 +8,7 @@ import {
   TeamLeaveHistoryIcon,
 } from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
+import { UserRole } from "@/types/user.types";
 import { useNavigate } from "@tanstack/react-router";
 import { CookingPot, Loader2, LogOut, User } from "lucide-react";
 import type { ReactNode } from "react";
@@ -19,10 +20,10 @@ interface DrawerContentProps {
 export default function DrawerContent({ onClose }: DrawerContentProps) {
   const navigate = useNavigate();
   const { user, isLogoutLoading } = useUserStore();
-  const role = user?.role || "user";
-  const isMentor = role === "mentor" || role === "sub mentor";
+  const role = user?.role;
+  const isMentor = role === UserRole.MENTOR || role === UserRole.SUB_MENTOR;
 
-  const { mutate: logout } = useLogout();
+   const { mutate: logout } = useLogout();
 
   const handleNavigation = (path: string) => {
     onClose();
