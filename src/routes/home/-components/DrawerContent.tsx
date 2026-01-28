@@ -23,7 +23,7 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
   const role = user?.role;
   const isMentor = role === UserRole.MENTOR || role === UserRole.SUB_MENTOR;
 
-  const { mutate: logout } = useLogout();
+   const { mutate: logout } = useLogout();
 
   const handleNavigation = (path: string) => {
     onClose();
