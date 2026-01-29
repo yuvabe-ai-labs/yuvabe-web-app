@@ -8,10 +8,13 @@ import DrawerContent from "./DrawerContent";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useDailyQuote, useUserProfile } from "@/hooks/useHomeQueries";
 import { useRegisterDevice } from "@/hooks/useNotifications";
+import NotificationScreen from "@/routes/notifications/-component/NotificationScreen";
 
 export default function HomeScreen() {
   const { user, setUser } = useUserStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const { data: quoteData } = useDailyQuote();
 
@@ -51,6 +54,17 @@ export default function HomeScreen() {
         </SheetContent>
       </Sheet>
 
+      <Sheet open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
+        <SheetContent
+          side="right"
+          className="w-[75%] sm:w-100 bg-white p-0 border-l shadow-xl"
+        >
+          <div className="flex flex-col gap-4 h-full">
+            <NotificationScreen onClose={() => setIsNotificationOpen(false)} />
+          </div>
+        </SheetContent>
+      </Sheet>
+
       <div
         className={`
           flex flex-col h-full bg-white 
@@ -68,7 +82,7 @@ export default function HomeScreen() {
             <YBLogo className="h-full w-auto" />
           </div>
 
-          <button className="p-1">
+          <button className="p-1" onClick={() => setIsNotificationOpen(true)}>
             <Alert className="text-text-primary" />
           </button>
         </div>
