@@ -1,3 +1,4 @@
+
 import {
   HeadphoneIcon,
   KeyboardIcon,
@@ -13,6 +14,7 @@ import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+
 }
 
 type AssetIconProps = {
@@ -43,4 +45,14 @@ export function getAssetIcon(type: string): ComponentType<AssetIconProps> {
     default:
       return Laptop;
   }
+
 }
+
+export const formatDate = (dateString: string) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+};
