@@ -1,8 +1,8 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePendingLeaves } from "@/hooks/useMentorLeave";
+import { cn, formatDate } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
 
@@ -19,26 +19,22 @@ export default function PendingLeavesScreen() {
     return leaveType;
   };
 
-  const badgeColor = (leaveType: string): string => {
-    if (!leaveType) return "#6C757D";
+  // UPDATED: Returns Tailwind classes instead of Hex codes
+  const getBadgeClasses = (leaveType: string): string => {
+    if (!leaveType) return "bg-gray-500"; 
     const type = leaveType.trim().toLowerCase();
-    if (type === "sick") return "#C89C00"; // yellow
-    if (type === "casual") return "#005DBD"; // blue
-    return "#6C757D";
+    
+   
+    if (type === "sick") return "bg-[#C89C00]"; 
+    if (type === "casual") return "bg-[#005DBD]"; 
+    
+    return "bg-gray-500";
   };
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  };
+ 
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
         <Button
@@ -91,7 +87,7 @@ export default function PendingLeavesScreen() {
                 // Applied your specific border color and width here
                 className="border-[1.6px] border-[#C9A0FF] cursor-pointer active:scale-[0.98] transition-transform shadow-sm overflow-hidden"
               >
-                <CardContent className="p-[18px]">
+                <CardContent className="p-4.5">
                   {/* TOP ROW */}
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-bold text-[17px] text-[#2C3E50] font-gilroy">
@@ -100,8 +96,10 @@ export default function PendingLeavesScreen() {
 
                     {/* LEAVE TYPE BADGE */}
                     <Badge
-                      className="px-3 py-1 rounded-[20px] text-[12px] font-semibold font-gilroy capitalize text-white hover:opacity-90 transition-opacity border-none shadow-none"
-                      style={{ backgroundColor: badgeColor(item.leave_type) }}
+                     className={cn(
+                        "px-3 py-1 rounded-[20px] text-[12px] font-semibold font-gilroy capitalize text-white hover:opacity-90 transition-opacity border-none shadow-none",
+                        getBadgeClasses(item.leave_type) 
+                      )}
                     >
                       {formatLeaveType(item.leave_type)}
                     </Badge>
@@ -134,6 +132,6 @@ export default function PendingLeavesScreen() {
           </div>
         )}
       </div>
-    </MobileLayout>
+    </>
   );
 }

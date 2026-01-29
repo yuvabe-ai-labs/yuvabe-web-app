@@ -16,30 +16,21 @@ function getErrorMessage(error: unknown): string {
 export const usePendingLeaves = () => {
   return useQuery({
     queryKey: ["pending-leaves"],
-    queryFn: async () => {
-      const data = await leaveService.fetchPendingLeaves();
-      // Sort by updated_at descending (newest first)
-      return data.sort(
-        (a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
-      );
-    },
+    queryFn: () => leaveService.fetchPendingLeaves(),
   });
 };
 
 export const useLeaveDetails = (leaveId: string) => {
-  const isValidId = !!leaveId && leaveId !== "undefined" && leaveId !== "null";
   return useQuery({
     queryKey: ["leave-details", leaveId],
     queryFn: () => leaveService.fetchLeaveDetails(leaveId),
-    enabled: isValidId,
   });
 };
 
-export const useUserLeaveBalance = (userId: string | undefined) => {
+export const useUserLeaveBalance = (userId: string) => {
   return useQuery({
     queryKey: ["user-leave-balance", userId],
-    queryFn: () => leaveService.fetchUserBalance(userId!),
+    queryFn: () => leaveService.fetchUserBalance(userId),
     enabled: !!userId,
   });
 };

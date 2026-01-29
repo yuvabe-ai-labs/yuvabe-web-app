@@ -1,4 +1,4 @@
-import MobileLayout from "@/components/layout/MobileLayout";
+import { cn } from "@/lib/utils";
 import { Alert, HamburgerMenu, YBLogo } from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
 import { useEffect, useState } from "react";
@@ -37,26 +37,26 @@ export default function HomeScreen() {
   const TRANSITION_CLASSES = "duration-300 ease-in-out";
 
   return (
-    <MobileLayout className="overflow-hidden bg-white">
+    <div className="overflow-hidden ">
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen} modal={true}>
         <SheetContent
           side="left"
-          className={`
-            w-[75%] p-0 border-none shadow-none [&>button]:hidden bg-transparent
-            data-[state=open]:duration-300 data-[state=closed]:duration-300
-            ${TRANSITION_CLASSES}
-          `}
+          className={cn(
+            "w-[75%] p-0 border-none shadow-none [&>button]:hidden bg-transparent",
+            "data-[state=open]:duration-300 data-[state=closed]:duration-300",
+            TRANSITION_CLASSES,
+          )}
         >
           <DrawerContent onClose={() => setIsDrawerOpen(false)} />
         </SheetContent>
       </Sheet>
 
       <div
-        className={`
-          flex flex-col h-full bg-white 
-          transition-transform ${TRANSITION_CLASSES} will-change-transform
-          ${isDrawerOpen ? "translate-x-[75%]" : "translate-x-0"}
-        `}
+        className={cn(
+          "flex flex-col h-full bg-white transition-transform will-change-transform",
+          TRANSITION_CLASSES,
+          isDrawerOpen ? "translate-x-[75%]" : "translate-x-0",
+        )}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 mt-6 mb-4">
@@ -95,10 +95,11 @@ export default function HomeScreen() {
         </div>
 
         <div
-          className={`
-            absolute inset-0 bg-black/10 z-50 pointer-events-none transition-opacity ${TRANSITION_CLASSES}
-            ${isDrawerOpen ? "opacity-100" : "opacity-0"}
-          `}
+          className={cn(
+            "absolute inset-0 bg-black/10 z-50 pointer-events-none transition-opacity",
+            TRANSITION_CLASSES,
+            isDrawerOpen ? "opacity-100" : "opacity-0",
+          )}
         />
 
         {/* Click listener to close drawer if tapping the pushed content */}
@@ -109,6 +110,6 @@ export default function HomeScreen() {
           />
         )}
       </div>
-    </MobileLayout>
+    </div>
   );
 }

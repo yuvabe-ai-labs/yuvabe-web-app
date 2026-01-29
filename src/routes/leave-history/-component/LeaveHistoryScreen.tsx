@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCancelLeave, useMyLeaveHistory } from "@/hooks/useLeaveHistory";
-import { formatDate, getStatusColor } from "@/lib/utils";
+import { cn, formatDate, getStatusBadgeClasses } from "@/lib/utils";
 import type { LeaveHistoryDTO } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
@@ -37,7 +36,7 @@ export default function LeaveHistoryScreen() {
   };
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
         <Button
@@ -104,8 +103,10 @@ export default function LeaveHistoryScreen() {
                       </h3>
                       {/* Using Badge with dynamic color injection */}
                       <Badge
-                        className="px-3.5 py-1 rounded-[20px] text-[13px] font-semibold font-gilroy text-white hover:opacity-90 border-none shadow-none"
-                        style={{ backgroundColor: getStatusColor(item.status) }}
+                        className={cn(
+                          "px-3.5 py-1 rounded-[20px] text-[13px] font-semibold font-gilroy text-white hover:opacity-90 border-none shadow-none",
+                          getStatusBadgeClasses(item.status),
+                        )}
                       >
                         {item.status}
                       </Badge>
@@ -192,6 +193,6 @@ export default function LeaveHistoryScreen() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </MobileLayout>
+    </>
   );
 }

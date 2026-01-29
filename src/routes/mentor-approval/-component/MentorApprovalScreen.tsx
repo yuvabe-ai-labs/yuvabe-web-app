@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +7,7 @@ import {
   useUserLeaveBalance,
 } from "@/hooks/useMentorLeave";
 import { useNavigate, useParams } from "@tanstack/react-router";
+import { format, isValid, parseISO } from "date-fns";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,11 +20,15 @@ export default function MentorApprovalScreen() {
   const [rejectComment, setRejectComment] = useState("");
 
   // 1. Fetch Leave Details
-  const { data: leave, isLoading: loadingDetails } = useLeaveDetails(leaveId);
+  const {
+    data: leave,
+    isLoading: loadingDetails,
+    isError: isLeaveError,
+  } = useLeaveDetails(leaveId);
 
   // 2. Fetch User Balance (only runs when leave data is available)
   const { data: balance, isLoading: loadingBalance } = useUserLeaveBalance(
-    leave?.user_id,
+    leave?.user_id || "",
   );
 
   // 3. Mutation for Actions
@@ -48,28 +52,40 @@ export default function MentorApprovalScreen() {
     );
   };
 
-  const toReadableDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
+  const toReadableDate = (dateString?: string) => {
+    if (!dateString) return "--";
+
+    const date = parseISO(dateString);
+    if (!isValid(date)) return "--";
+
+    return format(date, "d MMM yyyy");
   };
 
-  if (loadingDetails || !leave) {
+  if (isLeaveError) {
     return (
-      <MobileLayout>
-        <div className="flex flex-col items-center justify-center h-full">
-          <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-          <p className="text-gray-500 font-gilroy">Loading details...</p>
-        </div>
-      </MobileLayout>
+      <div className="flex flex-col items-center justify-center h-full">
+        <p className="text-gray-500 font-gilroy">Invalid leave request</p>
+        <button
+          onClick={() => navigate({ to: "/pending-leaves" })}
+          className="mt-4 text-blue-600 font-semibold"
+        >
+          Go back
+        </button>
+      </div>
+    );
+  }
+
+  if (loadingDetails) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
+        <p className="text-gray-500 font-gilroy">Loading details...</p>
+      </div>
     );
   }
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
         <Button
@@ -130,7 +146,7 @@ export default function MentorApprovalScreen() {
               Employee Name
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {leave.user_name}
+              {leave?.user_name}
             </p>
           </div>
 
@@ -139,7 +155,7 @@ export default function MentorApprovalScreen() {
               Leave Type
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {leave.leave_type}
+              {leave?.leave_type}
             </p>
           </div>
 
@@ -148,7 +164,7 @@ export default function MentorApprovalScreen() {
               Reason for Leave
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {leave.reason}
+              {leave?.reason}
             </p>
           </div>
 
@@ -157,9 +173,9 @@ export default function MentorApprovalScreen() {
               Leave Date
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {toReadableDate(leave.from_date)}{" "}
+              {toReadableDate(leave?.from_date)}{" "}
               <span className="text-gray-400 mx-1">→</span>{" "}
-              {toReadableDate(leave.to_date)}
+              {toReadableDate(leave?.to_date)}
             </p>
           </div>
 
@@ -168,7 +184,7 @@ export default function MentorApprovalScreen() {
               Total Days
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {leave.days}
+              {leave?.days}
             </p>
           </div>
 
@@ -207,6 +223,6 @@ export default function MentorApprovalScreen() {
           </Button>
         </div>
       </div>
-    </MobileLayout>
+    </>
   );
 }
