@@ -34,8 +34,6 @@ export default function HomeScreen() {
     return () => clearTimeout(timer);
   }, [registerDevice]);
 
-  const TRANSITION_CLASSES = "duration-300 ease-in-out";
-
   return (
     <div className="overflow-hidden ">
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen} modal={true}>
@@ -43,8 +41,7 @@ export default function HomeScreen() {
           side="left"
           className={cn(
             "w-[75%] p-0 border-none shadow-none [&>button]:hidden bg-transparent",
-            "data-[state=open]:duration-300 data-[state=closed]:duration-300",
-            TRANSITION_CLASSES,
+            "data-[state=open]:duration-300 data-[state=closed]:duration-300 ease-in-out",
           )}
         >
           <DrawerContent onClose={() => setIsDrawerOpen(false)} />
@@ -53,8 +50,7 @@ export default function HomeScreen() {
 
       <div
         className={cn(
-          "flex flex-col h-full bg-white transition-transform will-change-transform",
-          TRANSITION_CLASSES,
+          "flex flex-col h-full bg-white transition-transform will-change-transform duration-300 ease-in-out",
           isDrawerOpen ? "translate-x-[75%]" : "translate-x-0",
         )}
       >
@@ -96,8 +92,7 @@ export default function HomeScreen() {
 
         <div
           className={cn(
-            "absolute inset-0 bg-black/10 z-50 pointer-events-none transition-opacity",
-            TRANSITION_CLASSES,
+            "absolute inset-0 bg-black/10 z-50 pointer-events-none transition-opacity duration-300 ease-in-out",
             isDrawerOpen ? "opacity-100" : "opacity-0",
           )}
         />

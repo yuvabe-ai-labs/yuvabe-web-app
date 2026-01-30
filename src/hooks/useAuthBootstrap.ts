@@ -11,12 +11,8 @@ export const useAuthBootstrap = () => {
       try {
         const data = await userService.fetchUser();
 
-        if (data && data.user) {
-          console.log("User value", data.user);
-          setUser(data.user);
-        } else {
-          setUser(data);
-        }
+        setUser(data.user);
+        console.log("Auth Bootstrap", data);
       } catch (error) {
         console.error("Auth Bootstrap", error);
         resetUser();
