@@ -72,22 +72,13 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
           icon={<Asset className="text-[#444]" />}
           onClick={() => handleNavigation("/assets")}
         />
-        {/* ... keeping your existing items ... */}
-        {/* <DrawerItem
-          label="Journaling"
-          icon={<Journaling className="text-[#444]" />}
-          onClick={() => handleNavigation("/journaling")}
-        /> */}
+
         <DrawerItem
           label="Lunch Preference"
           icon={<CookingPot size={20} className="text-[#444]" />}
           onClick={() => handleNavigation("/lunch-preference")}
         />
-        {/* <DrawerItem
-          label="Water Track"
-          icon={<WaterTracker className="text-[#444]" />}
-          onClick={() => handleNavigation("/water-track")}
-        /> */}
+
         <DrawerItem
           label="Payslip"
           icon={<PaySlip className="text-[#444]" />}
@@ -121,17 +112,6 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
             />
           </>
         )}
-
-        {/* <DrawerItem
-          label="Chatbot"
-          icon={<ChatBot className="text-[#444]" />}
-          onClick={() => handleNavigation("/chat")}
-        />
-        <DrawerItem
-          label="Steps count"
-          icon={<Footprints size={20} className="text-[#444]" />}
-          onClick={() => handleNavigation("/steps")}
-        /> */}
       </div>
 
       {/* 3. Logout Footer */}
