@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -73,7 +72,7 @@ export default function LeaveRequestScreen() {
   };
 
   return (
-    <MobileLayout>
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-6 bg-white sticky top-0 z-10">
         <button
@@ -254,6 +253,6 @@ export default function LeaveRequestScreen() {
           </form>
         </Form>
       </div>
-    </MobileLayout>
+    </>
   );
 }
