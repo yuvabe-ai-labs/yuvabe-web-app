@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { SplashScreen } from "@/components/layout/SplashScreen";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import type { PresetType } from "@/types/payslip.types";
 import { ChevronLeft, Loader2, RefreshCw } from "lucide-react";
 import { usePayslipLogic } from "./usePaslipLogic";
@@ -20,15 +20,15 @@ export default function PayslipScreen() {
 
   if (state.isLoading) {
     return (
-      <MobileLayout className="bg-white flex items-center justify-center h-full">
+      <div className="items-center justify-center">
         <SplashScreen />
-      </MobileLayout>
+      </div>
     );
   }
 
-  if (state.isError || !state.user?.id) {
+  if (state.isError) {
     return (
-      <MobileLayout className="bg-white flex flex-col items-center justify-center h-full p-6">
+      <div className="items-center justify-center  p-6">
         <SplashScreen />
         <Button
           onClick={() => {
@@ -39,12 +39,12 @@ export default function PayslipScreen() {
         >
           <RefreshCw className="mr-2 h-4 w-4" /> Retry
         </Button>
-      </MobileLayout>
+      </div>
     );
   }
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full relative">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
         <Button
@@ -82,17 +82,19 @@ export default function PayslipScreen() {
                   actions.setFromMonth("");
                   actions.setToMonth("");
                 }}
-                className={`cursor-pointer transition-all border-[1.5px] shadow-sm ${
+                className={cn(
+                  "cursor-pointer transition-all border-[1.5px] shadow-sm",
                   isActive
                     ? "bg-[#F3E8FF] border-[#5B21B6]"
-                    : "bg-white border-[#E5E7EB] hover:border-gray-300"
-                }`}
+                    : "bg-white border-[#E5E7EB] hover:border-gray-300",
+                )}
               >
                 <CardContent className="p-4">
                   <p
-                    className={`text-[15px] font-bold font-gilroy ${
-                      isActive ? "text-[#5B21B6]" : "text-[#1F2937]"
-                    }`}
+                    className={cn(
+                      "text-[15px] font-bold font-gilroy",
+                      isActive ? "text-[#5B21B6]" : "text-[#1F2937]",
+                    )}
                   >
                     {opt === "3_months" ? "Last 3 Months" : "Last 6 Months"}
                   </p>
@@ -130,11 +132,12 @@ export default function PayslipScreen() {
                 actions.setMode("manual");
                 actions.setFromMonth(e.target.value);
               }}
-              className={`h-11 px-3 rounded-xl text-[15px] font-gilroy transition-colors ${
+              className={cn(
+                "h-11 px-3 rounded-xl text-[15px] font-gilroy transition-colors",
                 state.mode === "manual" && state.fromMonth
                   ? "border-[#5B21B6] ring-1 ring-[#5B21B6]"
-                  : "border-[#E5E7EB]"
-              }`}
+                  : "border-[#E5E7EB]",
+              )}
             />
           </div>
           <div className="flex-1">
@@ -148,11 +151,12 @@ export default function PayslipScreen() {
                 actions.setMode("manual");
                 actions.setToMonth(e.target.value);
               }}
-              className={`h-11 px-3 rounded-xl text-[15px] font-gilroy transition-colors ${
-                state.mode === "manual" && state.toMonth
+              className={cn(
+                "h-11 px-3 rounded-xl text-[15px] font-gilroy transition-colors",
+                state.mode === "manual" && state.fromMonth
                   ? "border-[#5B21B6] ring-1 ring-[#5B21B6]"
-                  : "border-[#E5E7EB]"
-              }`}
+                  : "border-[#E5E7EB]",
+              )}
             />
           </div>
         </div>
@@ -163,11 +167,12 @@ export default function PayslipScreen() {
         <Button
           onClick={actions.handleRequest}
           disabled={state.isButtonDisabled}
-          className={`w-full py-6 rounded-xl text-[16px] font-semibold font-gilroy ${
+          className={cn(
+            "w-full py-6 rounded-xl text-[16px] font-semibold font-gilroy",
             state.isButtonDisabled
               ? "bg-[#BDA0FF] hover:bg-[#BDA0FF]"
-              : "bg-[#592AC7] hover:bg-[#592AC7]/90"
-          }`}
+              : "bg-[#592AC7] hover:bg-[#592AC7]/90",
+          )}
         >
           {state.requesting ? (
             <Loader2 className="animate-spin mr-2" />
@@ -216,6 +221,6 @@ export default function PayslipScreen() {
           </div>
         </SheetContent>
       </Sheet>
-    </MobileLayout>
+    </>
   );
 }
