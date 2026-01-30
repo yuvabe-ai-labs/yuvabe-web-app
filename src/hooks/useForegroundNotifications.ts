@@ -12,8 +12,6 @@ export const useForegroundNotifications = () => {
       if (!messaging) return;
 
       unsubscribe = onMessage(messaging, (payload) => {
-        console.log(" [Foreground] Message RECEIVED!", payload);
-
         const title = payload.notification?.title || payload.data?.title;
         const body = payload.notification?.body || payload.data?.body;
 
@@ -27,7 +25,6 @@ export const useForegroundNotifications = () => {
             action: {
               label: "View",
               onClick: () => {
-                console.log("Navigate to:", payload.data?.screen);
                 if (targetUrl) {
                   router.navigate({ to: targetUrl });
                 }
