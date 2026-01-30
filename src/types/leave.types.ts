@@ -3,6 +3,22 @@ export type LeaveBalanceDTO = {
   casual_remaining: number;
 };
 
+export const LeaveStatus = {
+  APPROVED: "Approved",
+  PENDING: "Pending",
+  CANCELLED: "Cancelled",
+  REJECTED: "Rejected",
+} as const;
+
+export type LeaveStatus = (typeof LeaveStatus)[keyof typeof LeaveStatus];
+
+export const MentorDecisionStatus = {
+  APPROVED: LeaveStatus.APPROVED,
+  REJECTED: LeaveStatus.REJECTED,
+} as const;
+
+export type MentorDecisionStatus =
+  (typeof MentorDecisionStatus)[keyof typeof MentorDecisionStatus];
 export const LeaveType = {
   SICK: "Sick",
   CASUAL: "Casual",
@@ -38,9 +54,9 @@ export type LeaveDetailsDTO = {
   from_date: string;
   to_date: string;
   days: number;
-  status: "Approved" | "Pending" | "Cancelled" | "Rejected";
+  status: LeaveStatus;
   updated_at: string;
-  reject_reason?: string; 
+  reject_reason?: string;
 };
 
 export type LeaveHistoryDTO = {
@@ -49,12 +65,12 @@ export type LeaveHistoryDTO = {
   from_date: string;
   to_date: string;
   days: number;
-  status: "Approved" | "Pending" | "Cancelled" | "Rejected";
+  status: LeaveStatus;
   mentor_name?: string;
   updated_at: string;
 };
 
 export type MentorDecisionPayload = {
-  status: "Approved" | "Rejected";
+  status: MentorDecisionStatus;
   comment?: string;
 };
