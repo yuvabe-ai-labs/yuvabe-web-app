@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +19,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useLunchPreferenceLogic } from "./useLunchPreferenceLogic";
 
@@ -27,7 +27,7 @@ export default function LunchPreferenceScreen() {
   const { state, actions } = useLunchPreferenceLogic();
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full relative">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
         <Button
@@ -56,19 +56,21 @@ export default function LunchPreferenceScreen() {
         {/* Tomorrow Option Card */}
         <Card
           onClick={actions.handleTomorrowSelect}
-          className={`cursor-pointer transition-all border shadow-sm mb-6 ${
+          className={cn(
+            "cursor-pointer transition-all border shadow-sm mb-6 ",
             state.selectedMode === "tomorrow"
               ? "bg-[#F3E8FF] border-[#5B21B6]"
-              : "bg-white border-[#E5E7EB] hover:border-gray-300"
-          }`}
+              : "bg-white border-[#E5E7EB] hover:border-gray-300",
+          )}
         >
           <CardContent className="p-4 flex items-center">
             <span
-              className={`font-semibold text-[16px] font-gilroy ${
+              className={cn(
+                "font-semibold text-[16px] font-gilroy",
                 state.selectedMode === "tomorrow"
                   ? "text-[#5B21B6]"
-                  : "text-[#374151]"
-              }`}
+                  : "text-[#374151]",
+              )}
             >
               I don’t want lunch tomorrow
             </span>
@@ -115,11 +117,12 @@ export default function LunchPreferenceScreen() {
         <Button
           onClick={() => actions.setShowConfirmDialog(true)}
           disabled={!state.isRangeValid || state.submitting}
-          className={`w-full py-6 rounded-xl text-[16px] font-semibold font-gilroy transition-all ${
+          className={cn(
+            "w-full py-6 rounded-xl text-[16px] font-semibold font-gilroy transition-all",
             !state.isRangeValid || state.submitting
               ? "bg-[#D1D5DB] hover:bg-[#D1D5DB] cursor-not-allowed"
-              : "bg-[#592AC7] hover:bg-[#592AC7]/90 text-white"
-          }`}
+              : "bg-[#592AC7] hover:bg-[#592AC7]/90 text-white",
+          )}
         >
           {state.submitting ? (
             <Loader2 className="animate-spin mr-2" />
@@ -203,6 +206,6 @@ export default function LunchPreferenceScreen() {
           </div>
         </SheetContent>
       </Sheet>
-    </MobileLayout>
+    </>
   );
 }
