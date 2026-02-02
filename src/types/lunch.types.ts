@@ -1,6 +1,6 @@
 export interface LunchOptOutPayload {
-  start_date: string;
-  end_date: string;
+  start_date: Date | null | string;
+  end_date: Date | null | string;
 }
 
 export interface LunchOptOutResponse {
@@ -9,3 +9,9 @@ export interface LunchOptOutResponse {
 }
 
 export type ModeType = "tomorrow" | "range" | null;
+
+export type LunchFormValues = {
+  startDate: Date | null;
+  endDate: Date | null;
+  selectedMode: "tomorrow" | "range" | null;
+};

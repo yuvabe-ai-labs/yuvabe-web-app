@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 
@@ -6,7 +5,7 @@ export default function PrivacyPolicyScreen() {
   const navigate = useNavigate();
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* Header */}
       <div className="flex items-center px-4 py-4 sticky top-0 bg-white z-10 border-b border-gray-100">
         <button onClick={() => navigate({ to: ".." })} className="p-1 -ml-1">
@@ -43,6 +42,6 @@ export default function PrivacyPolicyScreen() {
         <h2 className="font-bold text-lg mb-2">4. Contact Us</h2>
         <p>If you have questions, please contact us at support@yuvabe.com.</p>
       </div>
-    </MobileLayout>
+    </>
   );
 }

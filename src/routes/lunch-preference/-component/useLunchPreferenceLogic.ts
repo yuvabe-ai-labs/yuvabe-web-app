@@ -1,122 +1,139 @@
 import { useLunchOptOut } from "@/hooks/useLunch";
 import { useGmailConnect } from "@/hooks/usePayslip";
+import { formatDate } from "@/lib/utils";
+import { lunchSchema } from "@/schemas/lunch.schemas";
 import { useUserStore } from "@/store/user.store";
-import type { ModeType } from "@/types/lunch.types";
-import { useNavigate } from "@tanstack/react-router";
+import type { LunchFormValues } from "@/types/lunch.types";
+import type { PayslipSearch } from "@/types/payslip.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { AxiosError } from "axios";
+import { addDays, format, isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export const useLunchPreferenceLogic = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
 
-  // State
-  const [selectedMode, setSelectedMode] = useState<ModeType>(null);
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showGmailSheet, setShowGmailSheet] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
+  const searchParams = useSearch({ from: "/lunch-preference/" });
 
-  // Hooks
+  const form = useForm<LunchFormValues>({
+    resolver: zodResolver(lunchSchema),
+    mode: "onChange",
+    defaultValues: {
+      startDate: undefined,
+      endDate: undefined,
+      selectedMode: null,
+    },
+  });
+
   const { mutateAsync: sendLunchRequest, isPending: submitting } =
     useLunchOptOut();
   const { mutateAsync: getGmailUrl, isPending: connectingGmail } =
     useGmailConnect();
 
+  // Watch values for the UI
+  const { startDate, endDate, selectedMode } = form.watch();
+  const isRangeValid = form.formState.isValid;
+
   // Handle URL Callbacks (Gmail Success/Error)
   useEffect(() => {
-    const checkCallback = async () => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.has("success") && pendingSubmit) {
-        // Clean URL
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
-        );
+    const { success, error } = searchParams;
+    const isSuccess = success === true || success === "true";
 
-        // Retry submission automatically
-        await handleSubmit();
-        setPendingSubmit(false);
+    if (isSuccess || error) {
+      if (isSuccess) {
+        console.log("Successfully connected gmail");
+
+        // Use a static ID to prevent the toast from being dismissed
+        // during the navigation re-render
+        toast.success("Gmail connected successfully!", {
+          id: "gmail-success",
+          duration: 4000,
+        });
+
         setShowGmailSheet(false);
-      } else if (params.has("error")) {
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
+      } else if (error) {
+        toast.error(
+          error === "email_mismatch"
+            ? "Email mismatch"
+            : "Gmail connection failed",
+          { id: "gmail-error" },
         );
-        toast.error("Gmail connection failed");
-        setPendingSubmit(false);
       }
-    };
 
-    setTimeout(checkCallback, 100);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run once on mount
+      // Increase delay slightly to 300ms to let the toast "settle"
+      // before the URL state is wiped
+      const timer = setTimeout(() => {
+        navigate({
+          to: "/lunch-preference",
+          search: (prev: PayslipSearch) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { success: _, error: __, ...rest } = prev;
+            return rest;
+          },
+          replace: true,
+        });
+      }, 300);
 
-  // Helper: Validate Date Range
-  const isRangeValid =
-    selectedMode &&
-    startDate &&
-    endDate &&
-    new Date(endDate) >= new Date(startDate);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, navigate, pendingSubmit]);
 
-  // Helper: Generate Confirm Text
-  const getConfirmText = () => {
-    if (!startDate || !endDate) return "";
-    const startStr = new Date(startDate).toDateString();
-    const endStr = new Date(endDate).toDateString();
-
-    return startDate === endDate
-      ? `You want to opt out of lunch on ${startStr}.`
-      : `You want to opt out of lunch from ${startStr} to ${endStr}.`;
-  };
-
-  // Actions
   const handleTomorrowSelect = () => {
-    const t = new Date();
-    t.setDate(t.getDate() + 1);
-    const dateStr = t.toISOString().split("T")[0];
-
-    setStartDate(dateStr);
-    setEndDate(dateStr);
-    setSelectedMode("tomorrow");
+    const tomorrow = addDays(new Date(), 1);
+    // Set as Date objects
+    form.setValue("startDate", tomorrow, { shouldValidate: true });
+    form.setValue("endDate", tomorrow, { shouldValidate: true });
+    form.setValue("selectedMode", "tomorrow");
   };
 
-  const handleSubmit = async () => {
-    if (!startDate || !endDate) return;
-
+  const onSubmit = async (values: LunchFormValues) => {
+    if (!values.startDate || !values.endDate) {
+      toast.error("Please select both start and end dates.");
+      return;
+    }
     try {
       await sendLunchRequest({
-        start_date: startDate,
-        end_date: endDate,
+        start_date: format(values.startDate, "yyyy-MM-dd"),
+        end_date: format(values.endDate, "yyyy-MM-dd"),
       });
       toast.success("Success", { description: "Lunch opt-out request sent!" });
       navigate({ to: "/" });
     } catch (err) {
       const error = err as AxiosError;
-
-      // Check for 428 Precondition Required (Standard for "Needs Gmail")
       if (error.response?.status === 428) {
-        setPendingSubmit(true); // Mark that we are waiting for Gmail
-        setShowGmailSheet(true);
+        setPendingSubmit(true);
+        setShowGmailSheet(true); // This opens the sheet
         toast.info("Authorization Required", {
           description: "Please connect Gmail to proceed.",
         });
       } else {
-        toast.error("Request Failed", { description: "Something went wrong" });
+        toast.error("Request Failed");
       }
     }
   };
 
-  const handleConnectGmail = async () => {
-    if (!user?.id) {
-      toast.error("User ID missing. Please refresh.");
-      return;
-    }
+  const getConfirmText = () => {
+    const { startDate, endDate } = form.getValues();
+    if (!startDate || !endDate) return "";
 
+    // formatDate handles Date objects too!
+    const startStr = formatDate(startDate.toISOString());
+    const endStr = formatDate(endDate.toISOString());
+
+    return isSameDay(startDate, endDate)
+      ? `You want to opt out of lunch on ${startStr}.`
+      : `You want to opt out of lunch from ${startStr} to ${endStr}.`;
+  };
+
+  const handleConnectGmail = async () => {
+    if (!user?.id) return;
     try {
       const res = await getGmailUrl({
         userId: user.id,
@@ -124,16 +141,15 @@ export const useLunchPreferenceLogic = () => {
       });
       window.location.href = res.auth_url;
     } catch (error) {
-      console.log(error);
       toast.error("Connection Failed", {
-        description: "Could not get authorization URL.",
+        description: (error as Error)?.message,
       });
     }
   };
 
   return {
+    form,
     state: {
-      user,
       selectedMode,
       startDate,
       endDate,
@@ -144,16 +160,13 @@ export const useLunchPreferenceLogic = () => {
       isRangeValid,
     },
     actions: {
-      navigate,
-      setSelectedMode,
-      setStartDate,
-      setEndDate,
+      handleTomorrowSelect,
+      handleSubmit: form.handleSubmit(onSubmit), // This is the RHF trigger
       setShowConfirmDialog,
       setShowGmailSheet,
-      handleTomorrowSelect,
-      handleSubmit,
       handleConnectGmail,
       getConfirmText,
+      navigate,
     },
   };
 };

@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 
@@ -6,7 +5,7 @@ export default function TermsScreen() {
   const navigate = useNavigate();
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* Header */}
       <div className="flex items-center px-4 py-4 sticky top-0 bg-white z-10 border-b border-gray-100">
         <button onClick={() => navigate({ to: ".." })} className="p-1 -ml-1">
@@ -39,6 +38,6 @@ export default function TermsScreen() {
           user who violates these terms.
         </p>
       </div>
-    </MobileLayout>
+    </>
   );
 }
