@@ -46,7 +46,7 @@ export function getAssetIcon(type: string): ComponentType<AssetIconProps> {
   }
 }
 
-export const formatDate = (dateString: string) => {
+export const formatDate = (dateString?: string) => {
   if (!dateString) return "";
 
   const date = parseISO(dateString);

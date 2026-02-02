@@ -11,32 +11,19 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import type { PresetType } from "@/types/payslip.types";
 import { ChevronLeft, Loader2, RefreshCw } from "lucide-react";
 import { usePayslipLogic } from "./usePaslipLogic";
 
 export default function PayslipScreen() {
-  const { state, actions } = usePayslipLogic();
+  const { state, actions, form } = usePayslipLogic();
 
-  if (state.isLoading) {
-    return (
-      <div className="items-center justify-center">
-        <SplashScreen />
-      </div>
-    );
-  }
+  if (state.isLoading) return <SplashScreen />;
 
   if (state.isError) {
     return (
-      <div className="items-center justify-center  p-6">
+      <div className="flex flex-col items-center p-6">
         <SplashScreen />
-        <Button
-          onClick={() => {
-            actions.refetch();
-            window.location.reload();
-          }}
-          className="mt-4 bg-[#592AC7] hover:bg-[#592AC7]/90"
-        >
+        <Button onClick={() => actions.refetch()} className="mt-4 bg-[#592AC7]">
           <RefreshCw className="mr-2 h-4 w-4" /> Retry
         </Button>
       </div>
@@ -44,61 +31,53 @@ export default function PayslipScreen() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen bg-white">
       {/* HEADER */}
-      <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
+      <div className="flex items-center px-4 py-4 sticky top-0 z-10 bg-white">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => actions.navigate({ to: "/" })}
-          className="-ml-2 hover:bg-gray-100 rounded-full"
         >
-          <ChevronLeft size={28} className="text-black" />
+          <ChevronLeft size={28} />
         </Button>
-        <div className="flex-1 text-center pr-7">
-          <h1 className="text-[18px] font-bold text-[#475569] font-gilroy">
-            Request Payslip
-          </h1>
-        </div>
+        <h1 className="flex-1 text-center pr-7 text-[18px] font-bold text-[#475569]">
+          Request Payslip
+        </h1>
       </div>
 
-      {/* BODY */}
-      <div className="flex-1 overflow-y-auto px-4 pb-24">
-        {/* PRESET SECTION */}
-        <h2 className="text-[18px] font-bold text-[#1F2937] mt-2 mb-3 font-gilroy">
+      <div className="flex-1  px-4 pb-32">
+        <h2 className="text-[18px] font-bold text-[#1F2937] mt-2 mb-3">
           Choose Duration
         </h2>
-        <div className="space-y-3">
-          {(["3_months", "6_months"] as PresetType[]).map((opt) => {
-            const isActive =
-              state.presetMode === opt && state.mode === "preset";
 
+        {/* PRESET CARDS */}
+        <div className="space-y-3">
+          {(["3_months", "6_months"] as const).map((opt) => {
+            const isActive = state.currentMode === opt;
             return (
               <Card
                 key={opt}
-                onClick={() => {
-                  actions.setMode("preset");
-                  actions.setPresetMode(opt);
-                  actions.setFromMonth("");
-                  actions.setToMonth("");
-                }}
+                onClick={() =>
+                  form.setValue("mode", opt, { shouldValidate: true })
+                }
                 className={cn(
-                  "cursor-pointer transition-all border-[1.5px] shadow-sm",
+                  "cursor-pointer border-[1.5px] transition-all",
                   isActive
                     ? "bg-[#F3E8FF] border-[#5B21B6]"
-                    : "bg-white border-[#E5E7EB] hover:border-gray-300",
+                    : "bg-white border-[#E5E7EB]",
                 )}
               >
                 <CardContent className="p-4">
                   <p
                     className={cn(
-                      "text-[15px] font-bold font-gilroy",
+                      "text-[15px] font-bold",
                       isActive ? "text-[#5B21B6]" : "text-[#1F2937]",
                     )}
                   >
                     {opt === "3_months" ? "Last 3 Months" : "Last 6 Months"}
                   </p>
-                  <p className="text-[12px] text-[#6B7280] mt-1 font-gilroy font-medium">
+                  <p className="text-[12px] text-[#6B7280]">
                     {actions.getPresetDateRange(opt)}
                   </p>
                 </CardContent>
@@ -107,120 +86,96 @@ export default function PayslipScreen() {
           })}
         </div>
 
-        {/* SEPARATOR */}
-        <div className="flex items-center my-8">
-          <div className="flex-1 h-px bg-[#E5E7EB]"></div>
-          <span className="mx-3 text-[14px] text-[#6B7280] font-medium font-gilroy">
-            or
-          </span>
-          <div className="flex-1 h-px bg-[#E5E7EB]"></div>
+        <div className="flex items-center my-8 text-[#6B7280]">
+          <div className="flex-1 h-px bg-[#E5E7EB]" />
+          <span className="mx-3 text-sm">or</span>
+          <div className="flex-1 h-px bg-[#E5E7EB]" />
         </div>
 
         {/* CUSTOM DATE SECTION */}
-        <h2 className="text-[16px] font-bold text-[#1F2937] mb-3 font-gilroy">
+        <h2 className="text-[16px] font-bold text-[#1F2937] mb-3">
           Choose custom date
         </h2>
         <div className="flex gap-3.5">
           <div className="flex-1">
-            <Label className="block text-[13px] font-semibold text-[#6B7280] mb-1.5 font-gilroy">
-              From
-            </Label>
+            <Label className="text-[13px] text-[#6B7280]">From</Label>
             <Input
               type="month"
-              value={state.fromMonth}
-              onChange={(e) => {
-                actions.setMode("manual");
-                actions.setFromMonth(e.target.value);
-              }}
+              {...form.register("start_month", {
+                onChange: () => form.setValue("mode", "manual"),
+              })}
               className={cn(
-                "h-11 px-3 rounded-xl text-[15px] font-gilroy transition-colors",
-                state.mode === "manual" && state.fromMonth
-                  ? "border-[#5B21B6] ring-1 ring-[#5B21B6]"
-                  : "border-[#E5E7EB]",
+                state.currentMode === "manual" &&
+                  "border-[#5B21B6] ring-1 ring-[#5B21B6]",
               )}
             />
           </div>
           <div className="flex-1">
-            <Label className="block text-[13px] font-semibold text-[#6B7280] mb-1.5 font-gilroy">
-              To
-            </Label>
+            <Label className="text-[13px] text-[#6B7280]">To</Label>
             <Input
               type="month"
-              value={state.toMonth}
-              onChange={(e) => {
-                actions.setMode("manual");
-                actions.setToMonth(e.target.value);
-              }}
+              {...form.register("end_month", {
+                onChange: () => form.setValue("mode", "manual"),
+              })}
               className={cn(
-                "h-11 px-3 rounded-xl text-[15px] font-gilroy transition-colors",
-                state.mode === "manual" && state.fromMonth
-                  ? "border-[#5B21B6] ring-1 ring-[#5B21B6]"
-                  : "border-[#E5E7EB]",
+                state.currentMode === "manual" &&
+                  "border-[#5B21B6] ring-1 ring-[#5B21B6]",
               )}
             />
           </div>
         </div>
       </div>
 
-      {/* FOOTER BUTTON */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-[#E5E7EB]">
+      {/* FOOTER */}
+      <div className=" bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           onClick={actions.handleRequest}
-          disabled={state.isButtonDisabled}
-          className={cn(
-            "w-full py-6 rounded-xl text-[16px] font-semibold font-gilroy",
-            state.isButtonDisabled
-              ? "bg-[#BDA0FF] hover:bg-[#BDA0FF]"
-              : "bg-[#592AC7] hover:bg-[#592AC7]/90",
-          )}
+          disabled={state.requesting}
+          className="w-full py-6 bg-[#592AC7] hover:bg-[#592AC7]/90 rounded-xl"
         >
           {state.requesting ? (
-            <Loader2 className="animate-spin mr-2" />
+            <Loader2 className="animate-spin" />
           ) : (
             "Request Payslip"
           )}
         </Button>
       </div>
 
-      {/* GMAIL SHEET (Replaces Custom Modal) */}
+      {/* GMAIL SHEET */}
       <Sheet
         open={state.showGmailSheet}
         onOpenChange={actions.setShowGmailSheet}
       >
-        <SheetContent side="bottom" className="rounded-t-[20px] pb-8">
+        <SheetContent side="bottom" className="rounded-t-[20px]">
           <SheetHeader className="text-left mb-6">
-            <SheetTitle className="text-[18px] font-bold text-[#1F2937] font-gilroy">
-              Connect Gmail Account
-            </SheetTitle>
-            <SheetDescription className="text-[14px] text-[#6B7280] font-gilroy">
+            <SheetTitle>Connect Gmail Account</SheetTitle>
+            <SheetDescription>
               To request payslips, we need to connect your Gmail account
               securely.
             </SheetDescription>
           </SheetHeader>
-
           <div className="space-y-3">
             <Button
               onClick={actions.handleConnectGmail}
               disabled={state.connectingGmail}
-              className="w-full py-6 rounded-[10px] bg-[#5B21B6] hover:bg-[#5B21B6]/90 text-[15px] font-gilroy"
+              className="w-full py-6 bg-[#5B21B6]"
             >
               {state.connectingGmail ? (
-                <Loader2 className="animate-spin mr-2" />
+                <Loader2 className="animate-spin" />
               ) : (
                 "Connect Gmail"
               )}
             </Button>
-
             <Button
               variant="secondary"
               onClick={() => actions.setShowGmailSheet(false)}
-              className="w-full py-6 rounded-[10px] bg-[#F3F4F6] text-[#4B5563] hover:bg-gray-200 text-[15px] font-gilroy"
+              className="w-full py-6"
             >
               Cancel
             </Button>
           </div>
         </SheetContent>
       </Sheet>
-    </>
+    </div>
   );
 }

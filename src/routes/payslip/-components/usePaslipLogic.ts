@@ -1,90 +1,89 @@
 import { useGmailConnect, useRequestPayslip } from "@/hooks/usePayslip";
 import { useUserProfilePayslip } from "@/hooks/useUserProfile";
-import { payslipRequestSchema } from "@/schemas/payslip.schema";
-import type {
-  ModeType,
-  PayslipRequestPayload,
-  PresetType,
-} from "@/types/payslip.types";
-import { useNavigate } from "@tanstack/react-router";
+import {
+  payslipRequestSchema,
+  type PayslipRequestSchemaType,
+} from "@/schemas/payslip.schema";
+import type { PayslipSearch } from "@/types/payslip.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export const usePayslipLogic = () => {
   const navigate = useNavigate();
   const { user, isLoading, isError, refetch } = useUserProfilePayslip();
-
-  // Local State
-  const [mode, setMode] = useState<ModeType>("preset");
-  const [presetMode, setPresetMode] = useState<PresetType>("3_months");
-  const [fromMonth, setFromMonth] = useState("");
-  const [toMonth, setToMonth] = useState("");
   const [showGmailSheet, setShowGmailSheet] = useState(false);
+  const searchParams = useSearch({ from: "/payslip/" });
 
-  // Mutations
+  // 1. Initialize RHF
+  const form = useForm<PayslipRequestSchemaType>({
+    resolver: zodResolver(payslipRequestSchema),
+    defaultValues: {
+      mode: "3_months", // Matches the first union case
+    },
+  });
+
   const { mutateAsync: getGmailUrl, isPending: connectingGmail } =
     useGmailConnect();
   const { mutateAsync: submitRequest, isPending: requesting } =
     useRequestPayslip();
 
-  // Handle URL Params for Gmail OAuth
+  // Watch values for UI state
+  const currentMode = form.watch("mode");
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.has("success") || params.has("error")) {
-        const isSuccess = params.get("success") === "true";
-        const errorType = params.get("error");
+    const { success, error } = searchParams;
+    const isSuccess = success === true || success === "true";
 
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname,
+    if (isSuccess || error) {
+      if (isSuccess) {
+        console.log("Successfully connected gmail");
+
+        // Use a static ID to prevent the toast from being dismissed
+        // during the navigation re-render
+        toast.success("Gmail connected successfully!", {
+          id: "gmail-success",
+          duration: 4000,
+        });
+
+        setShowGmailSheet(false);
+      } else if (error) {
+        toast.error(
+          error === "email_mismatch"
+            ? "Email mismatch"
+            : "Gmail connection failed",
+          { id: "gmail-error" },
         );
-
-        if (isSuccess) {
-          toast.success("Gmail connected successfully!");
-          setShowGmailSheet(false);
-        } else {
-          if (errorType === "email_mismatch") {
-            toast.error("Email mismatch", {
-              description: "Google email not linked to account.",
-            });
-          } else {
-            toast.error("Gmail connection failed");
-          }
-        }
       }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
-  // Handlers
-  const handleRequest = async () => {
-    const rawPayload =
-      mode === "preset"
-        ? { mode: presetMode }
-        : { mode: "manual", start_month: fromMonth, end_month: toMonth };
+      // Increase delay slightly to 300ms to let the toast "settle"
+      // before the URL state is wiped
+      const timer = setTimeout(() => {
+        navigate({
+          to: "/payslip",
+          search: (prev: PayslipSearch) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { success: _, error: __, ...rest } = prev;
+            return rest;
+          },
+          replace: true,
+        });
+      }, 300);
 
-    const validation = payslipRequestSchema.safeParse(rawPayload);
-
-    if (!validation.success) {
-      const errorMessage = validation.error.issues[0].message;
-      toast.error("Validation Error", { description: errorMessage });
-      return;
+      return () => clearTimeout(timer);
     }
+  }, [searchParams, navigate]);
 
+  const handleRequest = async (data: PayslipRequestSchemaType) => {
     try {
-      const payload = validation.data as PayslipRequestPayload;
-      await submitRequest(payload);
+      // Data is already validated by Zod via RHF
+      await submitRequest(data);
       toast.success("Request Sent", { description: "Check your email." });
       navigate({ to: "/" });
-
-      // Reset
-      setFromMonth("");
-      setToMonth("");
-      setMode("preset");
-      setPresetMode("3_months");
+      form.reset();
     } catch (err) {
       const error = err as AxiosError<{ detail: string }>;
       const detail = error.response?.data?.detail || "";
@@ -106,14 +105,11 @@ export const usePayslipLogic = () => {
       const res = await getGmailUrl(user.id);
       window.location.href = res.auth_url;
     } catch (e) {
-      console.error(e);
-      toast.error("Connection Failed", {
-        description: "Could not get authorization URL.",
-      });
+      toast.error("Connection Failed", { description: (e as Error)?.message });
     }
   };
 
-  const getPresetDateRange = (type: PresetType) => {
+  const getPresetDateRange = (type: "3_months" | "6_months") => {
     const today = new Date();
     const end = new Date(today.getFullYear(), today.getMonth() - 1, 1);
     const start = new Date(
@@ -126,32 +122,23 @@ export const usePayslipLogic = () => {
     return `${fmt(start)} - ${fmt(end)}`;
   };
 
-  const isButtonDisabled =
-    requesting || (mode === "manual" && (!fromMonth || !toMonth));
-
   return {
+    form,
     state: {
       user,
       isLoading,
       isError,
-      mode,
-      presetMode,
-      fromMonth,
-      toMonth,
       showGmailSheet,
       requesting,
       connectingGmail,
-      isButtonDisabled,
+      currentMode,
+      isValid: form.formState.isValid,
     },
     actions: {
       refetch,
       navigate,
-      setMode,
-      setPresetMode,
-      setFromMonth,
-      setToMonth,
       setShowGmailSheet,
-      handleRequest,
+      handleRequest: form.handleSubmit(handleRequest),
       handleConnectGmail,
       getPresetDateRange,
     },

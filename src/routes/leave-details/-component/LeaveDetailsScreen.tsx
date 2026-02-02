@@ -1,4 +1,4 @@
-import { useLeaveDetails } from "@/hooks/useMentorLeave";
+import { useLeaveDetails } from "@/hooks/useLeave";
 import { cn, formatDate, getFontColor } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
