@@ -1,6 +1,5 @@
-import MobileLayout from "@/components/layout/MobileLayout";
-import { useLeaveDetails } from "@/hooks/useMentorLeave";
-import { formatDate } from "@/lib/utils";
+import { useLeaveDetails } from "@/hooks/useLeave";
+import { cn, formatDate, getFontColor } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
@@ -11,33 +10,20 @@ export default function LeaveDetailsScreen() {
 
   const { data: leave, isLoading } = useLeaveDetails(leaveId);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return "text-green-600";
-      case "Rejected":
-        return "text-red-600";
-      case "Cancelled":
-        return "text-[#E53935]";
-      default:
-        return "text-orange-500";
-    }
-  };
-
   if (isLoading) {
     return (
-      <MobileLayout>
+      <>
         <div className="flex flex-col items-center justify-center h-full">
           <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
           <p className="text-gray-500 font-gilroy">Loading leave details...</p>
         </div>
-      </MobileLayout>
+      </>
     );
   }
 
   if (!leave) {
     return (
-      <MobileLayout>
+      <>
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-[16px] text-gray-500 font-gilroy">
             Leave not found
@@ -49,12 +35,12 @@ export default function LeaveDetailsScreen() {
             Go Back
           </button>
         </div>
-      </MobileLayout>
+      </>
     );
   }
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0 border-b border-gray-100">
         <button
@@ -120,9 +106,10 @@ export default function LeaveDetailsScreen() {
               Status
             </h3>
             <p
-              className={`text-[18px] mt-1 font-bold font-gilroy ${getStatusColor(
-                leave.status
-              )}`}
+              className={cn(
+                "text-[18px] mt-1 font-bold font-gilroy",
+                getFontColor(leave.status),
+              )}
             >
               {leave.status}
             </p>
@@ -151,6 +138,6 @@ export default function LeaveDetailsScreen() {
           )}
         </div>
       </div>
-    </MobileLayout>
+    </>
   );
 }
