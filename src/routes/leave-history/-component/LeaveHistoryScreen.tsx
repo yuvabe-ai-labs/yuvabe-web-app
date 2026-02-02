@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCancelLeave, useMyLeaveHistory } from "@/hooks/useLeaveHistory";
+import { useCancelLeave, useMyLeaveHistory } from "@/hooks/useLeave";
 import { cn, formatDate, getStatusBadgeClasses } from "@/lib/utils";
 import type { LeaveHistoryDTO } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";

@@ -1,37 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { usePendingLeaves } from "@/hooks/useMentorLeave";
+import { usePendingLeaves } from "@/hooks/useLeave";
 import { cn, formatDate } from "@/lib/utils";
+import { LeaveType } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
 
 export default function PendingLeavesScreen() {
   const navigate = useNavigate();
   const { data: leaves, isLoading } = usePendingLeaves();
-
-  // Helper Functions
-  const formatLeaveType = (leaveType: string): string => {
-    if (!leaveType) return "";
-    const type = leaveType.trim().toLowerCase();
-    if (type === "sick") return "Sick Leave";
-    if (type === "casual") return "Casual Leave";
-    return leaveType;
-  };
-
-  // UPDATED: Returns Tailwind classes instead of Hex codes
-  const getBadgeClasses = (leaveType: string): string => {
-    if (!leaveType) return "bg-gray-500"; 
-    const type = leaveType.trim().toLowerCase();
-    
-   
-    if (type === "sick") return "bg-[#C89C00]"; 
-    if (type === "casual") return "bg-[#005DBD]"; 
-    
-    return "bg-gray-500";
-  };
-
- 
 
   return (
     <>
@@ -96,12 +74,18 @@ export default function PendingLeavesScreen() {
 
                     {/* LEAVE TYPE BADGE */}
                     <Badge
-                     className={cn(
-                        "px-3 py-1 rounded-[20px] text-[12px] font-semibold font-gilroy capitalize text-white hover:opacity-90 transition-opacity border-none shadow-none",
-                        getBadgeClasses(item.leave_type) 
+                      className={cn(
+                        "px-3 py-1 rounded-[20px] text-[12px] font-semibold font-gilroy text-white border-none shadow-none",
+                        
+                        item.leave_type === LeaveType.SICK && "bg-[#C89C00]",
+                        item.leave_type === LeaveType.CASUAL && "bg-[#005DBD]",
+                       
+                        !Object.values(LeaveType).includes(
+                          item.leave_type as LeaveType,
+                        ) && "bg-gray-500",
                       )}
                     >
-                      {formatLeaveType(item.leave_type)}
+                      {item.leave_type} Leave
                     </Badge>
                   </div>
 

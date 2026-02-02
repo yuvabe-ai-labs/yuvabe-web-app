@@ -1,9 +1,17 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { requireAuth } from "@/hooks/useRouteGuards";
+import { createFileRoute } from "@tanstack/react-router";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { z } from "zod";
+import PayslipScreen from "./-components/PayslipScreen";
 
-export const Route = createFileRoute('/payslip/')({
-  component: RouteComponent,
-})
+const searchSchema = z.object({
+  success: z.union([z.string(), z.boolean()]).optional().catch(undefined),
+  error: z.string().optional().catch(undefined),
+});
 
-function RouteComponent() {
-  return <div>Hello "/payslip/"!</div>
-}
+// REMOVE the trailing slash here to match the error suggestion
+export const Route = createFileRoute("/payslip/")({
+  validateSearch: zodValidator(searchSchema),
+  component: PayslipScreen,
+  beforeLoad: requireAuth,
+});
