@@ -5,9 +5,9 @@ import {
   useLeaveDetails,
   useMentorDecision,
   useUserLeaveBalance,
-} from "@/hooks/useMentorLeave";
+} from "@/hooks/useLeave";
+import { formatDate } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { format, isValid, parseISO } from "date-fns";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -50,15 +50,6 @@ export default function MentorApprovalScreen() {
       { leaveId, payload: { status: "Rejected", comment: rejectComment } },
       { onSuccess: () => navigate({ to: "/pending-leaves" }) },
     );
-  };
-
-  const toReadableDate = (dateString?: string) => {
-    if (!dateString) return "--";
-
-    const date = parseISO(dateString);
-    if (!isValid(date)) return "--";
-
-    return format(date, "d MMM yyyy");
   };
 
   if (isLeaveError) {
@@ -173,9 +164,9 @@ export default function MentorApprovalScreen() {
               Leave Date
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {toReadableDate(leave?.from_date)}{" "}
+              {formatDate(leave?.from_date)}{" "}
               <span className="text-gray-400 mx-1">→</span>{" "}
-              {toReadableDate(leave?.to_date)}
+              {formatDate(leave?.to_date)}
             </p>
           </div>
 
