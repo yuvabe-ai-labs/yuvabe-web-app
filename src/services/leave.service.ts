@@ -6,45 +6,89 @@ import type {
   MentorDecisionPayload,
   PendingLeaveDTO,
 } from "@/types/leave.types";
+import { AxiosError } from "axios";
 import api from "../lib/axios-client";
+
+const handleApiError = (error: unknown) => {
+  if (error instanceof AxiosError && error.response) {
+    const backendMessage =
+      error.response.data.detail ||
+      error.response.data.message ||
+      "Request failed";
+    throw new Error(backendMessage);
+  }
+  throw error;
+};
 
 export const leaveService = {
   fetchBalance: async (): Promise<LeaveBalanceDTO> => {
-    const res = await api.get("/profile/balance");
-    return res.data.data;
+    try {
+      const res = await api.get("/profile/balance");
+      return res.data.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 
   // Submit Leave Request
   requestLeave: async (payload: LeaveRequestPayload) => {
-    const res = await api.post("/profile/request", payload);
-    return res.data;
+    try {
+      const res = await api.post("/profile/request", payload);
+      return res.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 
   fetchPendingLeaves: async (): Promise<PendingLeaveDTO[]> => {
-    const res = await api.get("/profile/mentor/pending");
-    return res.data.data;
+    try {
+      const res = await api.get("/profile/mentor/pending");
+      return res.data.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
+
   fetchLeaveDetails: async (leaveId: string): Promise<LeaveDetailsDTO> => {
-    const res = await api.get(`/profile/leave/${leaveId}`);
-    return res.data.data;
+    try {
+      const res = await api.get(`/profile/leave/${leaveId}`);
+      return res.data.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 
   submitMentorDecision: async (
     leaveId: string,
     payload: MentorDecisionPayload,
   ) => {
-    const res = await api.post(`/profile/${leaveId}/mentor-decision`, payload);
-    return res.data;
+    try {
+      const res = await api.post(
+        `/profile/${leaveId}/mentor-decision`,
+        payload,
+      );
+      return res.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 
   fetchUserBalance: async (userId: string): Promise<LeaveBalanceDTO> => {
-    const res = await api.get(`/profile/balance/${userId}`);
-    return res.data.data;
+    try {
+      const res = await api.get(`/profile/balance/${userId}`);
+      return res.data.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 
   fetchMyLeaveHistory: async (): Promise<LeaveHistoryDTO[]> => {
-    const res = await api.get("/profile/my-leaves");
-    return res.data.data;
+    try {
+      const res = await api.get("/profile/my-leaves");
+      return res.data.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 
   fetchTeamLeaveHistory: async (): Promise<LeaveDetailsDTO[]> => {
@@ -58,7 +102,11 @@ export const leaveService = {
   },
 
   cancelLeave: async (leaveId: string) => {
-    const res = await api.post(`/profile/leave/${leaveId}/cancel`);
-    return res.data;
+    try {
+      const res = await api.post(`/profile/leave/${leaveId}/cancel`);
+      return res.data;
+    } catch (error) {
+      return handleApiError(error);
+    }
   },
 };

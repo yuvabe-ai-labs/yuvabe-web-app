@@ -20,7 +20,6 @@ let messaging: Messaging | null = null;
 export const messagingPromise: Promise<Messaging | null> = isSupported()
   .then((supported) => {
     if (supported) {
-      console.log("✅ Firebase Messaging initialized");
       return getMessaging(app);
     }
     console.warn("⚠️ Firebase Messaging not supported in this environment");
@@ -69,7 +68,6 @@ const initializeMessaging = async () => {
     const supported = await isSupported();
     if (supported) {
       messaging = getMessaging(app);
-      console.log("✅ Firebase Messaging initialized");
     } else {
       console.warn("⚠️ Firebase Messaging not supported in this environment");
     }

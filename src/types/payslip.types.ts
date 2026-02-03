@@ -17,3 +17,8 @@ export interface PayslipRequestResponse {
 
 export type ModeType = "preset" | "manual";
 export type PresetType = "3_months" | "6_months";
+
+export type PayslipSearch = {
+  success?: string | boolean;
+  error?: string;
+}

@@ -1,6 +1,5 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { useLeaveDetails } from "@/hooks/useMentorLeave";
-import { formatDate, getStatusTextColor } from "@/lib/utils";
+import { cn, formatDate, getStatusTextColor } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
@@ -11,15 +10,15 @@ export default function TeamLeaveDetailScreen() {
 
   if (isLoading) {
     return (
-      <MobileLayout className="bg-white flex items-center justify-center h-full">
+      <div className="bg-white flex items-center justify-center h-full">
         <Loader2 className="animate-spin text-[#592AC7]" size={40} />
-      </MobileLayout>
+      </div>
     );
   }
 
   if (!leave) {
     return (
-      <MobileLayout className="bg-white flex flex-col items-center justify-center h-full">
+      <div className="items-center justify-center ">
         <p className="text-gray-500 font-gilroy text-lg">Leave not found</p>
         <button
           onClick={() => navigate({ to: ".." })}
@@ -27,12 +26,12 @@ export default function TeamLeaveDetailScreen() {
         >
           Go Back
         </button>
-      </MobileLayout>
+      </div>
     );
   }
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0 border-gray-100">
         <button
@@ -107,7 +106,10 @@ export default function TeamLeaveDetailScreen() {
               Status
             </h3>
             <p
-              className={`text-[18px] mt-1 font-gilroy font-bold ${getStatusTextColor(leave.status)}`} // ✅ Uses Utils
+              className={cn(
+                "text-[18px] mt-1 font-gilroy font-bold",
+                getStatusTextColor(leave.status),
+              )}
             >
               {leave.status}
             </p>
@@ -136,6 +138,6 @@ export default function TeamLeaveDetailScreen() {
           )}
         </div>
       </div>
-    </MobileLayout>
+    </>
   );
 }

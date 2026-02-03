@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 // Import the auto-generated route tree
 import { App } from "./App";
 import "./index.css";
+import { queryClient } from "./lib/react-query";
 import { routeTree } from "./routeTree.gen"; // <-- This file appears after running 'pnpm dev'
 
 export const router = createRouter({ routeTree });
@@ -16,8 +17,6 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const queryClient = new QueryClient();
-
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
@@ -26,6 +25,6 @@ if (!rootElement.innerHTML) {
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 }

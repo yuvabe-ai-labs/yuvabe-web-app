@@ -1,6 +1,5 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { useTeamLeaveHistory } from "@/hooks/useMentorLeave";
-import { formatDate, getLeaveStatusBadgeStyles } from "@/lib/utils"; 
+import { cn, formatDate, getLeaveStatusBadgeStyles } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
@@ -9,7 +8,7 @@ export default function TeamLeaveHistoryScreen() {
   const { data: leaves, isLoading } = useTeamLeaveHistory();
 
   return (
-    <MobileLayout className="bg-white flex flex-col h-full">
+    <>
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0 border-gray-100">
         <button
           onClick={() => navigate({ to: ".." })}
@@ -54,11 +53,11 @@ export default function TeamLeaveHistoryScreen() {
                       {item.user_name}
                     </span>
                     <span
-                      className="px-3 py-1 rounded-full text-[12px] font-bold font-gilroy"
-                      style={{
-                        backgroundColor: statusStyle.bg,
-                        color: statusStyle.color,
-                      }}
+                      className={cn(
+                        "px-3 py-1 rounded-full text-[12px] font-bold font-gilroy",
+                        `bg-[${statusStyle.bg}]`,
+                        `text-[${statusStyle.color}]`,
+                      )}
                     >
                       {item.status}
                     </span>
@@ -85,7 +84,6 @@ export default function TeamLeaveHistoryScreen() {
                     {formatDate(
                       item.updated_at ? item.updated_at.slice(0, 10) : "",
                     )}{" "}
-                    
                   </p>
                 </div>
               );
@@ -93,6 +91,6 @@ export default function TeamLeaveHistoryScreen() {
           </div>
         )}
       </div>
-    </MobileLayout>
+    </>
   );
 }
