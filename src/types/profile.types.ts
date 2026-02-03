@@ -5,5 +5,5 @@ export interface UpdateProfilePayload {
   dob?: string | null;
   current_password?: string | null;
   new_password?: string | null;
-  nickname?: string;
+  nick_name?: string;
 }
