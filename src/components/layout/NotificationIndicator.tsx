@@ -8,8 +8,6 @@ const NotificationIndicator = () => {
     useNotificationStore();
   const { mutate: registerDevice } = useRegisterDevice();
 
-  console.log("Permission", permission);
-
   // 1. If Granted: Always Hide
   if (permission === "granted") return null;
 

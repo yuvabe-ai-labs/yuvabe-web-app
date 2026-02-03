@@ -1,8 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
-import { SplashScreen } from "@/components/layout/SplashScreen";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { useUserProfile } from "@/hooks/useHomeQueries";
 import { useLogout } from "@/hooks/useLogout";
 import { MentorIcon, TeamIcon } from "@/lib/utils/custom-icons";
@@ -17,45 +12,39 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { useEffect } from "react";
+import { ProfileSkeleton } from "./ProfileSkeleton";
 
 export default function ProfileScreen() {
   const navigate = useNavigate();
   const { user, setUser, isLogoutLoading } = useUserStore();
   const { mutate: logout } = useLogout();
 
-  // 1. Fetch Data
+  // 1. Fetch Data (Ensures data exists even if user refreshes page)
   const { data: profileData, isLoading } = useUserProfile();
 
-  // 2. Sync to Store
   useEffect(() => {
     if (profileData?.data) {
       setUser(profileData.data);
+      console.log(profileData.data);
     }
   }, [profileData, setUser]);
 
-  const name = user?.name || "User";
-  const email = user?.email || "example@yuvabe.com";
-  const nickname = user?.nickname;
-  const teamName = user?.team_name || "—";
+  const name = user?.name;
+  const email = user?.email;
+  const nickname = user?.nick_name;
+  const teamName = user?.team_name;
   const leadLabel = user?.lead_label || "Mentor";
-  const leadName = user?.lead_name || user?.mentor_name || "—";
+  const leadName = user?.lead_name || user?.mentor_name;
   const profileSrc = user?.profile_picture;
 
   const handleLogout = () => {
     logout();
   };
 
-  if (isLoading) {
-    return (
-      <MobileLayout className="bg-white flex items-center justify-center h-full">
-        <SplashScreen />
-      </MobileLayout>
-    );
-  }
-
   return (
-    <MobileLayout className="bg-[#F2F5F9] flex flex-col h-full overflow-y-auto">
+    <>
       {/* 🔵 GRADIENT HEADER */}
+      {/* Replaces <Svg> gradient */}
       <div
         className="relative h-40 w-full shrink-0 px-5 pb-6"
         style={{
@@ -63,34 +52,34 @@ export default function ProfileScreen() {
         }}
       >
         {/* Back Button */}
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={() => navigate({ to: ".." })}
-          className="absolute top-4 left-4 z-10 hover:bg-white/20 text-white rounded-full h-10 w-10"
+          className="absolute top-4 left-4 p-1 z-10 hover:bg-white/20 rounded-full transition-colors"
         >
-          <ChevronLeft size={32} strokeWidth={2.5} />
-        </Button>
+          <ChevronLeft size={32} color="#fff" strokeWidth={2.5} />
+        </button>
       </div>
 
-      <div className="flex-1 pb-10 flex flex-col">
-        {/* PROFILE CARD */}
-        <Card className="mx-5 -mt-12.5 border-[#592AC7] bg-white shadow-sm relative z-20 rounded-2xl">
-          <CardContent className="p-5 flex items-center">
-            {/* Shadcn Avatar */}
-            <Avatar className="w-16.25 h-16.25 mr-5 border border-gray-100 bg-[#e6e6e6]">
-              <AvatarImage
-                src={profileSrc || undefined}
-                className="object-cover"
-              />
-              <AvatarFallback className="bg-[#e6e6e6]">
+      <div className="flex-1 pb-10">
+        {isLoading ? (
+          <ProfileSkeleton />
+        ) : (
+          <div className="mx-5 -mt-12.5 bg-white rounded-2xl p-5 border border-[#592AC7] shadow-sm flex items-center relative z-20">
+            <div className="w-16.25 h-16.25 rounded-full bg-[#e6e6e6] flex items-center justify-center mr-5 overflow-hidden border border-gray-100 shrink-0">
+              {profileSrc ? (
+                <img
+                  src={profileSrc}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
                 <UserIcon
                   size={34}
                   className="text-[#592AC7]"
                   strokeWidth={2.5}
                 />
-              </AvatarFallback>
-            </Avatar>
+              )}
+            </div>
 
             {/* Text Details */}
             <div className="flex-1 min-w-0">
@@ -98,7 +87,6 @@ export default function ProfileScreen() {
                 {name}
                 {nickname && (
                   <span className="text-gray-500 font-normal text-lg">
-                    {" "}
                     ({nickname})
                   </span>
                 )}
@@ -129,54 +117,50 @@ export default function ProfileScreen() {
                 </span>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* ⚙️ EDIT PROFILE BUTTON */}
+          </div>
+        )}
+        {/* ⚙️ SECTIONS (Edit Profile) */}
         <div className="mx-5 mt-5 bg-white rounded-xl border border-[#592AC7] overflow-hidden">
-          <Button
-            variant="ghost"
+          <button
             onClick={() => navigate({ to: "/profile/edit-profile" })}
-            className="w-full flex items-center justify-between px-5 py-6 h-auto hover:bg-gray-50 rounded-none group"
+            className="w-full flex items-center px-5 py-5.5 border-b border-[#EEE] active:bg-gray-50 transition-colors"
           >
-            <div className="flex items-center">
-              <Pencil size={20} className="text-black mr-3" strokeWidth={2} />
-              <span className="text-[17px] font-bold text-[#1A1A1A] font-gilroy">
-                Edit Profile
-              </span>
-            </div>
+            <Pencil size={20} className="text-black mr-3" strokeWidth={2} />
+            <span className="flex-1 text-left text-[17px] font-bold text-[#1A1A1A] font-gilroy">
+              Edit Profile
+            </span>
             <ChevronRight size={22} className="text-black" strokeWidth={2} />
-          </Button>
+          </button>
         </div>
 
         {/* 🔴 LOGOUT BUTTON */}
-        {/* Using mt-auto to push to bottom, or stick with mt-90 if specific spacing needed */}
-        <div className="px-5 mt-auto mb-5 pt-20">
-          <Button
+        <div className="px-5 mt-90">
+          <button
             onClick={handleLogout}
-            className="w-full h-12 rounded-xl bg-[#FF383C] hover:bg-[#FF383C]/90 shadow-sm text-[16px] font-semibold font-gilroy"
+            className="w-full flex items-center justify-center py-3.75 bg-[#FF383C] rounded-xl active:bg-red-600 transition-colors shadow-sm"
           >
+            {/* Flip icon horizontally to match RN design */}
             <LogOut
               size={18}
-              className="transform -scale-x-100 mr-2"
+              className="text-white transform -scale-x-100 mr-2"
               strokeWidth={2}
             />
-            Logout
-          </Button>
+            <span className="text-[16px] font-semibold text-white font-gilroy">
+              Logout
+            </span>
+          </button>
         </div>
-
-        {/* LOGOUT OVERLAY */}
         {isLogoutLoading && (
           <div className="absolute inset-0 bg-black/35 flex items-center justify-center z-50">
-            <Card className="p-6 shadow-xl flex flex-col items-center w-37.5 border-none">
+            <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center w-37.5">
               <Loader2 className="animate-spin text-primary mb-3" size={32} />
-              <span className="text-black text-[16px] font-gilroy">
+              <span className="text-text-primary text-[16px]">
                 Logging out...
               </span>
-            </Card>
+            </div>
           </div>
         )}
       </div>
-    </MobileLayout>
+    </>
   );
 }

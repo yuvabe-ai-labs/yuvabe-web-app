@@ -18,7 +18,6 @@ export const useUserProfilePayslip = () => {
   } = useQuery({
     queryKey: ["user-profile"],
     queryFn: async () => {
-      console.log("Fetching user profile...");
       const res = await userService.fetchUser();
 
       if (res.user) {
@@ -32,7 +31,6 @@ export const useUserProfilePayslip = () => {
 
   useEffect(() => {
     if (fetchedUser?.id && user?.id !== fetchedUser.id) {
-      console.log("Syncing user to store...");
       setUser(fetchedUser);
     }
   }, [fetchedUser, user?.id, setUser]);

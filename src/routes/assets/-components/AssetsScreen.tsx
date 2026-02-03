@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import { useAssets } from "@/hooks/useAssets";
 import { getAssetIcon } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
@@ -10,7 +9,7 @@ export default function AssetsScreen() {
   const { data: assets, isLoading, isError, refetch } = useAssets();
 
   return (
-    <MobileLayout>
+    <>
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10">
         <button
           onClick={() => navigate({ to: "/" })}
@@ -61,8 +60,7 @@ export default function AssetsScreen() {
               return (
                 <div
                   key={item.id}
-                  className="w-[95%] mx-auto bg-white py-5 px-4.5 rounded-[18px] flex flex-row items-center border border-[#FFCA2D] shadow-sm transition-transform active:scale-[0.98]"
-                  style={{ boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }} // Custom IOS-like shadow
+                  className="w-[95%] mx-auto bg-white py-5 px-4.5 rounded-[18px] flex flex-row items-center border border-[#FFCA2D] shadow-sm transition-transform active:scale-[0.98] shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
                 >
                   {/* Icon Wrapper */}
                   <div className="w-12.5 h-12.5 p-0 ml-3 flex justify-center items-center mr-4.5">
@@ -91,6 +89,6 @@ export default function AssetsScreen() {
           </div>
         )}
       </div>
-    </MobileLayout>
+    </>
   );
 }
