@@ -4,7 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 
 export const useGmailConnect = () => {
   return useMutation({
-    mutationFn: (userId: string) => payslipService.getGmailConnectUrl(userId),
+    mutationFn: ({ userId, fromPath }: { userId: string; fromPath: string }) =>
+      payslipService.getGmailConnectUrl(userId, fromPath),
   });
 };
 

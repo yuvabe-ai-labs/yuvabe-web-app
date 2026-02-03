@@ -12,11 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PendingLeavesIndexRouteImport } from './routes/pending-leaves/index'
 import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
+import { Route as LunchPreferenceIndexRouteImport } from './routes/lunch-preference/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as LegalIndexRouteImport } from './routes/legal/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
 import { Route as LeaveHistoryIndexRouteImport } from './routes/leave-history/index'
 import { Route as AssetsIndexRouteImport } from './routes/assets/index'
 import { Route as MentorApprovalLeaveIdRouteImport } from './routes/mentor-approval/$leaveId'
+import { Route as LegalTermsRouteImport } from './routes/legal/terms'
+import { Route as LegalPrivacyRouteImport } from './routes/legal/privacy'
 import { Route as LeaveDetailsLeaveIdRouteImport } from './routes/leave-details/$leaveId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -34,9 +38,19 @@ const PayslipIndexRoute = PayslipIndexRouteImport.update({
   path: '/payslip/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LunchPreferenceIndexRoute = LunchPreferenceIndexRouteImport.update({
+  id: '/lunch-preference/',
+  path: '/lunch-preference/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalIndexRoute = LegalIndexRouteImport.update({
+  id: '/legal/',
+  path: '/legal/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeaveRequestIndexRoute = LeaveRequestIndexRouteImport.update({
@@ -59,6 +73,16 @@ const MentorApprovalLeaveIdRoute = MentorApprovalLeaveIdRouteImport.update({
   path: '/mentor-approval/$leaveId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/legal/terms',
+  path: '/legal/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/legal/privacy',
+  path: '/legal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LeaveDetailsLeaveIdRoute = LeaveDetailsLeaveIdRouteImport.update({
   id: '/leave-details/$leaveId',
   path: '/leave-details/$leaveId',
@@ -68,22 +92,30 @@ const LeaveDetailsLeaveIdRoute = LeaveDetailsLeaveIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/leave-details/$leaveId': typeof LeaveDetailsLeaveIdRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
+  '/legal': typeof LegalIndexRoute
   '/login': typeof LoginIndexRoute
+  '/lunch-preference': typeof LunchPreferenceIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/leave-details/$leaveId': typeof LeaveDetailsLeaveIdRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
+  '/legal': typeof LegalIndexRoute
   '/login': typeof LoginIndexRoute
+  '/lunch-preference': typeof LunchPreferenceIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
 }
@@ -91,11 +123,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/leave-details/$leaveId': typeof LeaveDetailsLeaveIdRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/assets/': typeof AssetsIndexRoute
   '/leave-history/': typeof LeaveHistoryIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
+  '/legal/': typeof LegalIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/lunch-preference/': typeof LunchPreferenceIndexRoute
   '/payslip/': typeof PayslipIndexRoute
   '/pending-leaves/': typeof PendingLeavesIndexRoute
 }
@@ -104,33 +140,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/leave-details/$leaveId'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/mentor-approval/$leaveId'
     | '/assets'
     | '/leave-history'
     | '/leave-request'
+    | '/legal'
     | '/login'
+    | '/lunch-preference'
     | '/payslip'
     | '/pending-leaves'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/leave-details/$leaveId'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/mentor-approval/$leaveId'
     | '/assets'
     | '/leave-history'
     | '/leave-request'
+    | '/legal'
     | '/login'
+    | '/lunch-preference'
     | '/payslip'
     | '/pending-leaves'
   id:
     | '__root__'
     | '/'
     | '/leave-details/$leaveId'
+    | '/legal/privacy'
+    | '/legal/terms'
     | '/mentor-approval/$leaveId'
     | '/assets/'
     | '/leave-history/'
     | '/leave-request/'
+    | '/legal/'
     | '/login/'
+    | '/lunch-preference/'
     | '/payslip/'
     | '/pending-leaves/'
   fileRoutesById: FileRoutesById
@@ -138,11 +186,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LeaveDetailsLeaveIdRoute: typeof LeaveDetailsLeaveIdRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalTermsRoute: typeof LegalTermsRoute
   MentorApprovalLeaveIdRoute: typeof MentorApprovalLeaveIdRoute
   AssetsIndexRoute: typeof AssetsIndexRoute
   LeaveHistoryIndexRoute: typeof LeaveHistoryIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
+  LegalIndexRoute: typeof LegalIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  LunchPreferenceIndexRoute: typeof LunchPreferenceIndexRoute
   PayslipIndexRoute: typeof PayslipIndexRoute
   PendingLeavesIndexRoute: typeof PendingLeavesIndexRoute
 }
@@ -170,11 +222,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PayslipIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lunch-preference/': {
+      id: '/lunch-preference/'
+      path: '/lunch-preference'
+      fullPath: '/lunch-preference'
+      preLoaderRoute: typeof LunchPreferenceIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login/': {
       id: '/login/'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/': {
+      id: '/legal/'
+      path: '/legal'
+      fullPath: '/legal'
+      preLoaderRoute: typeof LegalIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leave-request/': {
@@ -205,6 +271,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentorApprovalLeaveIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/legal/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/leave-details/$leaveId': {
       id: '/leave-details/$leaveId'
       path: '/leave-details/$leaveId'
@@ -218,11 +298,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LeaveDetailsLeaveIdRoute: LeaveDetailsLeaveIdRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalTermsRoute: LegalTermsRoute,
   MentorApprovalLeaveIdRoute: MentorApprovalLeaveIdRoute,
   AssetsIndexRoute: AssetsIndexRoute,
   LeaveHistoryIndexRoute: LeaveHistoryIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
+  LegalIndexRoute: LegalIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  LunchPreferenceIndexRoute: LunchPreferenceIndexRoute,
   PayslipIndexRoute: PayslipIndexRoute,
   PendingLeavesIndexRoute: PendingLeavesIndexRoute,
 }
