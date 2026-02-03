@@ -10,9 +10,7 @@ export const useAuthBootstrap = () => {
     const initAuth = async () => {
       try {
         const data = await userService.fetchUser();
-
         setUser(data.user);
-        console.log("Auth Bootstrap", data);
       } catch (error) {
         console.error("Auth Bootstrap", error);
         resetUser();

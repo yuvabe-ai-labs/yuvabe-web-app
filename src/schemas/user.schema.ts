@@ -23,34 +23,29 @@ export const editProfileSchema = z
   .superRefine((data, ctx) => {
     const { currentPassword, newPassword, confirmPassword } = data;
 
-    if (currentPassword && !newPassword) {
+    // 1. If trying to change password, current password is required
+    if (newPassword && !currentPassword) {
       ctx.addIssue({
-        path: ["newPassword"],
-        message: "New password is required",
+        path: ["currentPassword"],
+        message: "Current password is required to set a new one",
         code: "custom",
       });
     }
 
-    if (confirmPassword && !newPassword) {
-      ctx.addIssue({
-        path: ["newPassword"],
-        message: "New password is required",
-        code: "custom",
-      });
-    }
-
-    if (newPassword && !confirmPassword) {
-      ctx.addIssue({
-        path: ["confirmPassword"],
-        message: "Confirm password is required",
-        code: "custom",
-      });
-    }
-
-    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+    // 2. New password and Confirm must match
+    if (newPassword !== confirmPassword) {
       ctx.addIssue({
         path: ["confirmPassword"],
         message: "Passwords do not match",
+        code: "custom",
+      });
+    }
+
+    // 3. If confirming, you need the new password
+    if (confirmPassword && !newPassword) {
+      ctx.addIssue({
+        path: ["newPassword"],
+        message: "Please enter a new password",
         code: "custom",
       });
     }

@@ -50,7 +50,6 @@ export const notificationService = {
     const device_token = await getWebDeviceToken();
     if (!device_token) return;
 
-    console.log("Sending token to backend...");
     const res = await api.post("/notifications/register-device", {
       device_token,
     });

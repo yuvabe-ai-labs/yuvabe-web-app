@@ -11,7 +11,6 @@ export const userService = {
 
   fetchUser: async () => {
     const response = await api.get("/auth/home");
-    console.log(response.data.dob);
     return response.data.data;
   },
 

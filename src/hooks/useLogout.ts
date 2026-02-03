@@ -13,7 +13,6 @@ export const useLogout = () => {
       setLogoutLoading(true);
       try {
         await notificationService.logoutDevice();
-        console.log("Device token removed from backend");
       } catch (error) {
         console.error(
           "Failed to remove device token (continuing logout):",

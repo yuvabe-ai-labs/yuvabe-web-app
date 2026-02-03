@@ -28,7 +28,6 @@ export default function HomeScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       registerDevice();
-      console.log("Registering device for notifications");
     });
 
     return () => clearTimeout(timer);
