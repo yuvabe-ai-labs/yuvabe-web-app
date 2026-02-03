@@ -1,13 +1,3 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,16 +14,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, Loader2 } from "lucide-react";
+import { ConfirmLunchDialog } from "./ConfirmLunchDialog";
+import { ConnectGmailSheet } from "./ConnectGmailSheet";
 import { useLunchPreferenceLogic } from "./useLunchPreferenceLogic";
 
 export default function LunchPreferenceScreen() {
@@ -202,76 +187,23 @@ export default function LunchPreferenceScreen() {
         </div>
       </Form>
 
-      {/* CONFIRMATION DIALOG */}
-      <AlertDialog
+      <ConfirmLunchDialog
         open={state.showConfirmDialog}
         onOpenChange={actions.setShowConfirmDialog}
-      >
-        <AlertDialogContent className="w-[90%] rounded-xl font-gilroy">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-center">
-              Confirm Lunch Opt-Out
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-[15px]">
-              {actions.getConfirmText()}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-row gap-3">
-            <AlertDialogCancel className="flex-1 mt-0">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                actions.setShowConfirmDialog(false);
-                actions.handleSubmit();
-              }}
-              className="flex-1 bg-[#592AC7]"
-            >
-              Confirm
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        confirmText={actions.getConfirmText()}
+        onConfirm={() => {
+          actions.setShowConfirmDialog(false);
+          actions.handleSubmit();
+        }}
+      />
 
       {/* GMAIL SHEET (Added back from old code) */}
-      <Sheet
+      <ConnectGmailSheet
         open={state.showGmailSheet}
         onOpenChange={actions.setShowGmailSheet}
-      >
-        <SheetContent
-          side="bottom"
-          className="rounded-t-[20px] pb-8 font-gilroy"
-        >
-          <SheetHeader className="text-left mb-6">
-            <SheetTitle>Connect Gmail Account</SheetTitle>
-            <SheetDescription>
-              To notify the lunch manager, we need to connect your Gmail
-              account.
-            </SheetDescription>
-          </SheetHeader>
-          <div className="space-y-3">
-            <Button
-              onClick={actions.handleConnectGmail}
-              disabled={state.connectingGmail}
-              className="w-full py-6 bg-[#5B21B6] text-white rounded-xl"
-            >
-              {state.connectingGmail ? (
-                <Loader2 className="animate-spin mr-2" />
-              ) : (
-                "Connect Gmail"
-              )}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => actions.setShowGmailSheet(false)}
-              className="w-full py-6 rounded-xl"
-            >
-              Cancel
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
+        onConnect={actions.handleConnectGmail}
+        loading={state.connectingGmail}
+      />
     </>
   );
 }
