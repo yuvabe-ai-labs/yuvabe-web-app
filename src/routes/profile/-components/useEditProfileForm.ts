@@ -1,7 +1,6 @@
 import { useUpdateProfile } from "@/hooks/useUserProfile";
 import { editProfileSchema, type EditProfileForm } from "@/schemas/user.schema";
 import { useUserStore } from "@/store/user.store";
-import type { User } from "@/types/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
@@ -27,7 +26,7 @@ export function useEditProfileForm() {
   const form = useForm<EditProfileForm>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      nickname: user?.nickname || "",
+      nick_name: user?.nick_name || "",
       name: user?.name || "",
       email: user?.email || "",
       team: user?.team_name || "",
@@ -57,19 +56,12 @@ export function useEditProfileForm() {
         email: data.email,
         team: data.team,
         dob: data.dob,
+        nick_name: data.nick_name,
         current_password: data.currentPassword || null,
         new_password: data.newPassword || null,
       };
 
       await updateProfile(payload);
-
-      // 🔥 MANUALLY UPDATE THE STORE
-      // Even if the API doesn't support nickname yet,
-      // this keeps it in the app's memory for the current session.
-      useUserStore.getState().setUser({
-        ...user, // Keep existing data
-        nickname: data.nickname, // Apply the new nickname from the form
-      } as User);
 
       navigate({ to: ".." });
     } catch (e) {

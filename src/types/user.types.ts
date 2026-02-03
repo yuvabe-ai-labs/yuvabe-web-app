@@ -23,7 +23,7 @@ export type User = {
 
   lead_label?: string;
   lead_name?: string;
-  nickname?: string;
+  nick_name?: string;
 };
 
 export interface FormFieldProps {

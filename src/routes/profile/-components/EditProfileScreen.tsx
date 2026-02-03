@@ -1,20 +1,25 @@
 import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
   Camera,
   ChevronDown,
   ChevronLeft,
   Loader2,
   User as UserIcon,
 } from "lucide-react";
-import { FormField, PasswordField } from "./EditProfileFields";
+import { PasswordField } from "./EditProfileFields";
 import { useEditProfileForm } from "./useEditProfileForm";
 
 export default function EditProfileScreen() {
   const {
-    form: {
-      register,
-      handleSubmit,
-      formState: { errors },
-    },
+    form,
     isLoading,
     fileInputRef,
     previewImage,
@@ -80,107 +85,173 @@ export default function EditProfileScreen() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <h2 className="text-[20px] font-bold text-[#1A1A1A] font-gilroy">
-            Personal Details
-          </h2>
+        <div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <h2 className="text-[20px] font-bold text-[#1A1A1A] font-gilroy">
+                Personal Details
+              </h2>
 
-          <FormField label="Nick Name" error={errors.nickname?.message}>
-            <input
-              {...register("nickname")}
-              placeholder="Enter nickname"
-              className="w-full h-12.5 px-4 rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] outline-none focus:border-[#592AC7] font-gilroy"
-            />
-          </FormField>
-
-          <FormField label="Full Name" error={errors.name?.message}>
-            <input
-              {...register("name")}
-              readOnly
-              className="w-full h-12.5 px-4 rounded-xl border border-[#E5E7EB] bg-[#F3F4F6] text-[#6B7280] cursor-not-allowed font-gilroy"
-            />
-          </FormField>
-
-          <FormField label="Email address" error={errors.email?.message}>
-            <input
-              {...register("email")}
-              readOnly
-              className="w-full h-12.5 px-4 rounded-xl border border-[#E5E7EB] bg-[#F3F4F6] text-[#6B7280] cursor-not-allowed font-gilroy"
-            />
-          </FormField>
-
-          <FormField label="Team" error={errors.team?.message}>
-            <input
-              {...register("team")}
-              readOnly
-              className="w-full h-12.5 px-4 rounded-xl border border-[#E5E7EB] bg-[#F3F4F6] text-[#6B7280] cursor-not-allowed font-gilroy"
-            />
-          </FormField>
-
-          <FormField label="Date of Birth" error={errors.dob?.message}>
-            <input
-              type="date"
-              {...register("dob")}
-              className="w-full h-12.5 px-4 rounded-xl border border-[#E5E7EB] bg-white outline-none focus:border-[#592AC7] uppercase font-gilroy"
-            />
-          </FormField>
-
-          <div className="border-t border-gray-200 pt-5 mt-5">
-            <button
-              type="button"
-              onClick={() => setShowPasswordSection(!showPasswordSection)}
-              className="w-full flex items-center justify-between py-2 group"
-            >
-              <span className="text-[16px] font-bold text-[#1A1A1A] group-hover:text-[#592AC7] font-gilroy">
-                Change Password
-              </span>
-              <ChevronDown
-                size={20}
-                className={`transition-transform duration-300 ${showPasswordSection ? "rotate-180" : ""}`}
+              {/* Nickname using Shadcn */}
+              <FormField
+                control={form.control}
+                name="nick_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[14px] font-semibold text-[#666]">
+                      Nick Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter nickname"
+                        {...field}
+                        className="h-12.5 rounded-xl"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </button>
 
-            <div
-              className={`overflow-hidden transition-all duration-300 ${showPasswordSection ? "max-h-125 mt-4" : "max-h-0"}`}
-            >
-              <div className="space-y-4">
-                <PasswordField
-                  label="Current Password"
-                  show={showCurrentPass}
-                  setShow={setShowCurrentPass}
-                  registration={register("currentPassword")}
-                  error={errors.currentPassword?.message}
-                />
-                <PasswordField
-                  label="New Password"
-                  show={showNewPass}
-                  setShow={setShowNewPass}
-                  registration={register("newPassword")}
-                  error={errors.newPassword?.message}
-                />
-                <PasswordField
-                  label="Confirm New Password"
-                  show={showConfirmPass}
-                  setShow={setShowConfirmPass}
-                  registration={register("confirmPassword")}
-                  error={errors.confirmPassword?.message}
-                />
+              {/* Full Name (Read Only) */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[14px] font-semibold text-[#666]">
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        readOnly
+                        {...field}
+                        className="h-12.5 rounded-xl bg-[#F3F4F6] cursor-not-allowed"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[14px] font-semibold text-[#666]">
+                      Email address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        readOnly
+                        {...field}
+                        className="h-12.5 rounded-xl bg-[#F3F4F6] cursor-not-allowed"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="team"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[14px] font-semibold text-[#666]">
+                      Team
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        readOnly
+                        {...field}
+                        className="h-12.5 rounded-xl bg-[#F3F4F6] cursor-not-allowed"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Date of Birth */}
+              <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[14px] font-semibold text-[#666]">
+                      Date of Birth
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        {...field}
+                        className="h-12.5 rounded-xl uppercase"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Password Accordion */}
+              <div className="border-t border-gray-200 pt-5 mt-5">
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordSection(!showPasswordSection)}
+                  className="w-full flex items-center justify-between py-2"
+                >
+                  <span className="text-[16px] font-bold text-[#1A1A1A] font-gilroy">
+                    Change Password
+                  </span>
+                  <ChevronDown
+                    size={20}
+                    className={`transition-transform ${showPasswordSection ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${showPasswordSection ? "max-h-125 mt-4" : "max-h-0"}`}
+                >
+                  <div className="space-y-4">
+                    <PasswordField
+                      control={form.control}
+                      name="currentPassword"
+                      label="Current Password"
+                      show={showCurrentPass}
+                      setShow={setShowCurrentPass}
+                    />
+                    <PasswordField
+                      control={form.control}
+                      name="newPassword"
+                      label="New Password"
+                      show={showNewPass}
+                      setShow={setShowNewPass}
+                    />
+                    <PasswordField
+                      control={form.control}
+                      name="confirmPassword"
+                      label="Confirm New Password"
+                      show={showConfirmPass}
+                      setShow={setShowConfirmPass}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-4 rounded-xl bg-[#592AC7] text-white font-semibold hover:bg-[#4c249f] disabled:bg-[#8a65e6] mt-8 shadow-sm"
-          >
-            {isLoading ? (
-              <Loader2 className="animate-spin mx-auto" />
-            ) : (
-              <span className="font-gilroy">Save Changes</span>
-            )}
-          </button>
-        </form>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 rounded-xl bg-[#592AC7] text-white font-semibold"
+              >
+                {isLoading ? (
+                  <Loader2 className="animate-spin mx-auto" />
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
+            </form>
+          </Form>
+        </div>
       </div>
     </div>
   );

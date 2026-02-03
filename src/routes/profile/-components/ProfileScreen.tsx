@@ -1,4 +1,3 @@
-import { SplashScreen } from "@/components/layout/SplashScreen";
 import { useUserProfile } from "@/hooks/useHomeQueries";
 import { useLogout } from "@/hooks/useLogout";
 import { MentorIcon, TeamIcon } from "@/lib/utils/custom-icons";
@@ -25,17 +24,14 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     if (profileData?.data) {
-      setUser({
-        ...profileData.data,
-        // If the API nickname is empty, try to keep the one already in the store
-        nickname: profileData.data.nickname || user?.nickname,
-      });
+      setUser(profileData.data);
+      console.log(profileData.data);
     }
-  }, [profileData, setUser, user?.nickname]);
+  }, [profileData, setUser]);
 
   const name = user?.name;
   const email = user?.email;
-  const nickname = user?.nickname;
+  const nickname = user?.nick_name;
   const teamName = user?.team_name;
   const leadLabel = user?.lead_label || "Mentor";
   const leadName = user?.lead_name || user?.mentor_name;
@@ -44,14 +40,6 @@ export default function ProfileScreen() {
   const handleLogout = () => {
     logout();
   };
-
-  if (isLoading) {
-    return (
-      <>
-        <SplashScreen />
-      </>
-    );
-  }
 
   return (
     <>
@@ -99,7 +87,6 @@ export default function ProfileScreen() {
                 {name}
                 {nickname && (
                   <span className="text-gray-500 font-normal text-lg">
-                    {" "}
                     ({nickname})
                   </span>
                 )}

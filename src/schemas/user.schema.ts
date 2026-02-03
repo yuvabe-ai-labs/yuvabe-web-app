@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const editProfileSchema = z
   .object({
-    nickname: z.string().optional(),
+    nick_name: z.string().optional(),
 
     name: z
       .string()
