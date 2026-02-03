@@ -1,3 +1,5 @@
+import type { UpdateProfilePayload } from "@/types/profile.types";
+import type { User } from "@/types/user.types";
 import api from "../lib/axios-client";
 
 export const userService = {
@@ -10,5 +12,19 @@ export const userService = {
   fetchUser: async () => {
     const response = await api.get("/auth/home");
     return response.data.data;
+  },
+
+  updateProfile: async (payload: UpdateProfilePayload): Promise<User> => {
+    const response = await api.put("/profile/update-profile", payload);
+    return response.data.data.user;
+  },
+
+  uploadProfileImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post("/profile/upload-image", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data.url;
   },
 };

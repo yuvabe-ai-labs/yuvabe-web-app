@@ -40,7 +40,6 @@ export const usePayslipLogic = () => {
 
     if (isSuccess || error) {
       if (isSuccess) {
-        console.log("Successfully connected gmail");
 
         // Use a static ID to prevent the toast from being dismissed
         // during the navigation re-render
