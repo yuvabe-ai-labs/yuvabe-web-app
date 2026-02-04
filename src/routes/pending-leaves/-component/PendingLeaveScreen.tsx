@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { usePendingLeaves } from "@/hooks/useLeave";
+import { usePendingLeaves } from "@/hooks/useMentorLeave";
 import { cn, formatDate } from "@/lib/utils";
 import { LeaveType } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";

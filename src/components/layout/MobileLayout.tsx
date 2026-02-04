@@ -35,7 +35,7 @@ export default function MobileLayout({
         {/* 3. SCROLLABLE CONTENT
             - This ensures the scrollbar is inside the phone, not the window
         */}
-        <div className={cn("flex-1 overflow-y-auto no-scrollbar", {className})}>
+        <div className={cn("flex-1 overflow-y-auto no-scrollbar", className)}>
           {children}
         </div>
       </div>

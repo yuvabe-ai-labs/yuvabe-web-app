@@ -53,9 +53,9 @@ export default function HomeScreen() {
       <Sheet open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
         <SheetContent
           side="right"
-          className="w-[75%] sm:w-100 bg-white p-0 border-l shadow-xl"
+          className="w-[75%] h-full bg-white p-0 border-l shadow-xl"
         >
-          <div className="flex flex-col gap-4 h-full">
+          <div className="flex flex-col h-full">
             <NotificationScreen onClose={() => setIsNotificationOpen(false)} />
           </div>
         </SheetContent>
