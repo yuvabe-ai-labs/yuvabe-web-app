@@ -1,5 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
-import { SplashScreen } from "@/components/layout/SplashScreen";
 import { useUserProfile } from "@/hooks/useHomeQueries";
 import { useLogout } from "@/hooks/useLogout";
 import { MentorIcon, TeamIcon } from "@/lib/utils/custom-icons";
@@ -14,6 +12,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { useEffect } from "react";
+import { ProfileSkeleton } from "./ProfileSkeleton";
 
 export default function ProfileScreen() {
   const navigate = useNavigate();
@@ -23,35 +22,27 @@ export default function ProfileScreen() {
   // 1. Fetch Data (Ensures data exists even if user refreshes page)
   const { data: profileData, isLoading } = useUserProfile();
 
-  // 2. Sync to Store
   useEffect(() => {
     if (profileData?.data) {
       setUser(profileData.data);
+      console.log(profileData.data);
     }
   }, [profileData, setUser]);
 
-  const name = user?.name || "User";
-  const email = user?.email || "example@yuvabe.com";
-  const nickname = user?.nickname;
-  const teamName = user?.team_name || "—";
+  const name = user?.name;
+  const email = user?.email;
+  const nickname = user?.nick_name;
+  const teamName = user?.team_name;
   const leadLabel = user?.lead_label || "Mentor";
-  const leadName = user?.lead_name || user?.mentor_name || "—";
+  const leadName = user?.lead_name || user?.mentor_name;
   const profileSrc = user?.profile_picture;
 
   const handleLogout = () => {
     logout();
   };
 
-  if (isLoading) {
-    return (
-      <MobileLayout className="bg-white flex items-center justify-center h-full">
-        <SplashScreen />
-      </MobileLayout>
-    );
-  }
-
   return (
-    <MobileLayout className="bg-[#F2F5F9] flex flex-col h-full overflow-y-auto">
+    <>
       {/* 🔵 GRADIENT HEADER */}
       {/* Replaces <Svg> gradient */}
       <div
@@ -70,62 +61,64 @@ export default function ProfileScreen() {
       </div>
 
       <div className="flex-1 pb-10">
-        <div className="mx-5 -mt-12.5 bg-white rounded-2xl p-5 border border-[#592AC7] shadow-sm flex items-center relative z-20">
-          <div className="w-16.25 h-16.25 rounded-full bg-[#e6e6e6] flex items-center justify-center mr-5 overflow-hidden border border-gray-100 shrink-0">
-            {profileSrc ? (
-              <img
-                src={profileSrc}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <UserIcon
-                size={34}
-                className="text-[#592AC7]"
-                strokeWidth={2.5}
-              />
-            )}
-          </div>
-
-          {/* Text Details */}
-          <div className="flex-1 min-w-0">
-            <h2 className="text-[22px] font-bold text-[#1A1A1A] font-gilroy truncate">
-              {name}
-              {nickname && (
-                <span className="text-gray-500 font-normal text-lg">
-                  {" "}
-                  ({nickname})
-                </span>
+        {isLoading ? (
+          <ProfileSkeleton />
+        ) : (
+          <div className="mx-5 -mt-12.5 bg-white rounded-2xl p-5 border border-[#592AC7] shadow-sm flex items-center relative z-20">
+            <div className="w-16.25 h-16.25 rounded-full bg-[#e6e6e6] flex items-center justify-center mr-5 overflow-hidden border border-gray-100 shrink-0">
+              {profileSrc ? (
+                <img
+                  src={profileSrc}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <UserIcon
+                  size={34}
+                  className="text-[#592AC7]"
+                  strokeWidth={2.5}
+                />
               )}
-            </h2>
-            <p className="text-[15px] text-[#6C757D] font-medium font-gilroy mt-1 truncate">
-              {email}
-            </p>
-
-            {/* Team */}
-            <div className="flex items-center mt-2.5">
-              <TeamIcon className="text-black mr-2 shrink-0" />
-              <span className="text-[14px] font-medium text-[#555] font-gilroy w-17.5">
-                Team:
-              </span>
-              <span className="text-[14px] font-semibold text-black font-gilroy truncate flex-1">
-                {teamName}
-              </span>
             </div>
 
-            {/* Mentor / Lead */}
-            <div className="flex items-center mt-1.5">
-              <MentorIcon className="text-black mr-2 shrink-0" />
-              <span className="text-[14px] font-medium text-[#555] font-gilroy w-17.5">
-                {leadLabel}:
-              </span>
-              <span className="text-[14px] font-semibold text-black font-gilroy truncate flex-1">
-                {leadName}
-              </span>
+            {/* Text Details */}
+            <div className="flex-1 min-w-0">
+              <h2 className="text-[22px] font-bold text-[#1A1A1A] font-gilroy truncate">
+                {name}
+                {nickname && (
+                  <span className="text-gray-500 font-normal text-lg">
+                    ({nickname})
+                  </span>
+                )}
+              </h2>
+              <p className="text-[15px] text-[#6C757D] font-medium font-gilroy mt-1 truncate">
+                {email}
+              </p>
+
+              {/* Team */}
+              <div className="flex items-center mt-2.5">
+                <TeamIcon className="text-black mr-2 shrink-0" />
+                <span className="text-[14px] font-medium text-[#555] font-gilroy w-17.5">
+                  Team:
+                </span>
+                <span className="text-[14px] font-semibold text-black font-gilroy truncate flex-1">
+                  {teamName}
+                </span>
+              </div>
+
+              {/* Mentor / Lead */}
+              <div className="flex items-center mt-1.5">
+                <MentorIcon className="text-black mr-2 shrink-0" />
+                <span className="text-[14px] font-medium text-[#555] font-gilroy w-17.5">
+                  {leadLabel}:
+                </span>
+                <span className="text-[14px] font-semibold text-black font-gilroy truncate flex-1">
+                  {leadName}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-
+        )}
         {/* ⚙️ SECTIONS (Edit Profile) */}
         <div className="mx-5 mt-5 bg-white rounded-xl border border-[#592AC7] overflow-hidden">
           <button
@@ -168,6 +161,6 @@ export default function ProfileScreen() {
           </div>
         )}
       </div>
-    </MobileLayout>
+    </>
   );
 }

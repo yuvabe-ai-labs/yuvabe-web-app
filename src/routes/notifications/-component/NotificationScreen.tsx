@@ -1,4 +1,3 @@
-import MobileLayout from "@/components/layout/MobileLayout";
 import {
   useMarkNotificationRead,
   useNotificationsQuery,
@@ -51,10 +50,8 @@ export default function NotificationScreen({
     }
   };
 
-  const Container = isSheetMode ? "div" : MobileLayout;
-
   return (
-    <Container className="bg-white flex flex-col h-full">
+    <div className="bg-white flex flex-col h-full w-full">
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0  border-gray-100">
         <button
@@ -121,6 +118,6 @@ export default function NotificationScreen({
           </div>
         )}
       </div>
-    </Container>
+    </div>
   );
 }

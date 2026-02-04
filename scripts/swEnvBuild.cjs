@@ -22,7 +22,6 @@ const outputPath = path.join(__dirname, "..", "public", "swEnv.js");
 
 try {
   fs.writeFileSync(outputPath, content);
-  console.log("Success: Created public/swEnv.js with env vars.");
 } catch (error) {
   console.error("Error creating swEnv.js:", error);
   process.exit(1);
