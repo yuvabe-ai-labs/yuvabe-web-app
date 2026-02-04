@@ -1,5 +1,5 @@
-import { useLeaveDetails } from "@/hooks/useMentorLeave";
-import { cn, formatDate, getStatusTextColor } from "@/lib/utils";
+import { useLeaveDetails } from "@/hooks/useLeave";
+import { cn, formatDate } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 
@@ -106,10 +106,16 @@ export default function TeamLeaveDetailScreen() {
               Status
             </h3>
             <p
-              className={cn(
-                "text-[18px] mt-1 font-gilroy font-bold",
-                getStatusTextColor(leave.status),
-              )}
+              className={cn("text-[18px] mt-1 font-gilroy font-bold", {
+                "text-[#166534]": leave.status === "Approved",
+                "text-[#DC2626]": leave.status === "Rejected",
+                "text-[#E53935]": leave.status === "Cancelled",
+                "text-[#EA580C]": ![
+                  "Approved",
+                  "Rejected",
+                  "Cancelled",
+                ].includes(leave.status),
+              })}
             >
               {leave.status}
             </p>

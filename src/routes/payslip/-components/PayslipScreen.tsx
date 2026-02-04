@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, Loader2, RefreshCw } from "lucide-react";
+import { PayslipSkeleton } from "./PayslipSkeleton";
 import { usePayslipLogic } from "./usePaslipLogic";
 
 export default function PayslipScreen() {
   const { state, actions, form } = usePayslipLogic();
 
-  if (state.isLoading) return <SplashScreen />;
+  if (state.isLoading) return <PayslipSkeleton />;
 
   if (state.isError) {
     return (

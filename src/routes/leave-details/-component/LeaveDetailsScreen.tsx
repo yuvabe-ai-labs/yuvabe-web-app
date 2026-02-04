@@ -1,8 +1,9 @@
 import { useLeaveDetails } from "@/hooks/useLeave";
-import { cn, formatDate, getFontColor } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { router } from "@/main";
 import { useParams } from "@tanstack/react-router";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { LeaveDetailsSkeleton } from "./LeaveDetailsSkeleton";
 
 export default function LeaveDetailsScreen() {
   // const navigate = useNavigate();
@@ -12,14 +13,7 @@ export default function LeaveDetailsScreen() {
   const { data: leave, isLoading } = useLeaveDetails(leaveId);
 
   if (isLoading) {
-    return (
-      <>
-        <div className="flex flex-col items-center justify-center h-full">
-          <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-          <p className="text-gray-500 font-gilroy">Loading leave details...</p>
-        </div>
-      </>
-    );
+    return <LeaveDetailsSkeleton />;
   }
 
   if (!leave) {
@@ -102,15 +96,21 @@ export default function LeaveDetailsScreen() {
           </div>
 
           {/* Status */}
-          <div className="mb-5">
-            <h3 className="text-[16px] font-semibold text-black font-gilroy">
+          <div className="mt-5">
+            <h3 className="text-[16px] font-bold text-black font-gilroy">
               Status
             </h3>
             <p
-              className={cn(
-                "text-[18px] mt-1 font-bold font-gilroy",
-                getFontColor(leave.status),
-              )}
+              className={cn("text-[18px] mt-1 font-gilroy font-bold", {
+                "text-[#166534]": leave.status === "Approved",
+                "text-[#DC2626]": leave.status === "Rejected",
+                "text-[#E53935]": leave.status === "Cancelled",
+                "text-[#EA580C]": ![
+                  "Approved",
+                  "Rejected",
+                  "Cancelled",
+                ].includes(leave.status),
+              })}
             >
               {leave.status}
             </p>
