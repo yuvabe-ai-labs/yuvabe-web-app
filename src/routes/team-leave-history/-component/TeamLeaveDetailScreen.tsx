@@ -1,7 +1,8 @@
 import { useLeaveDetails } from "@/hooks/useLeave";
 import { cn, formatDate } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { TeamLeaveDetailSkeleton } from "./TeamLeaveDetailSkeleton";
 
 export default function TeamLeaveDetailScreen() {
   const navigate = useNavigate();
@@ -9,11 +10,7 @@ export default function TeamLeaveDetailScreen() {
   const { data: leave, isLoading } = useLeaveDetails(leaveId);
 
   if (isLoading) {
-    return (
-      <div className="bg-white flex items-center justify-center h-full">
-        <Loader2 className="animate-spin text-[#592AC7]" size={40} />
-      </div>
-    );
+    return <TeamLeaveDetailSkeleton />;
   }
 
   if (!leave) {
@@ -41,7 +38,7 @@ export default function TeamLeaveDetailScreen() {
           <ChevronLeft size={28} className="text-black" />
         </button>
         <div className="flex-1 text-center pr-7">
-          <h1 className="text-[18px] font-bold text-[#000] font-gilroy">
+          <h1 className="text-[18px] font-bold text-black font-gilroy">
             Leave Details
           </h1>
         </div>
@@ -75,7 +72,7 @@ export default function TeamLeaveDetailScreen() {
             <h3 className="text-[16px] font-bold text-black font-gilroy">
               Reason for Leave
             </h3>
-            <p className="text-[18px] mt-1 text-black font-gilroy font-normal break-words">
+            <p className="text-[18px] mt-1 text-black font-gilroy font-normal wrap-break-word">
               {leave.reason}
             </p>
           </div>
