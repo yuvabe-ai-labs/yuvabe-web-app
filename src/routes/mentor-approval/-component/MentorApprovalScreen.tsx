@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { MentorApprovalSkeleton } from "./MentorScreenSkeleton";
 
 export default function MentorApprovalScreen() {
   const navigate = useNavigate();
@@ -64,12 +65,7 @@ export default function MentorApprovalScreen() {
   }
 
   if (loadingDetails) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-        <p className="text-gray-500 font-gilroy">Loading details...</p>
-      </div>
-    );
+    return <MentorApprovalSkeleton />;
   }
 
   return (

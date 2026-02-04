@@ -6,7 +6,8 @@ import { useUserStore } from "@/store/user.store";
 import type { NotificationItem } from "@/types/notification.types";
 import { UserRole } from "@/types/user.types";
 import { useNavigate } from "@tanstack/react-router";
-import { BellOff, ChevronLeft, Loader2 } from "lucide-react";
+import { BellOff, ChevronLeft } from "lucide-react";
+import { NotificationSkeleton } from "./NotificationSkeleton";
 
 interface NotificationScreenProps {
   onClose?: () => void;
@@ -51,7 +52,7 @@ export default function NotificationScreen({
   };
 
   return (
-    <div className="bg-white flex flex-col h-full w-full">
+    <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0  border-gray-100">
         <button
@@ -70,9 +71,7 @@ export default function NotificationScreen({
       {/* CONTENT */}
       <div className="flex-1 overflow-y-auto px-4 py-4 pb-24">
         {isLoading ? (
-          <div className="flex items-center justify-center mt-20">
-            <Loader2 className="animate-spin text-[#007BFF]" size={40} />
-          </div>
+          <NotificationSkeleton />
         ) : !notifications || notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20">
             <BellOff size={50} className="text-gray-300 mb-4" />
@@ -118,6 +117,6 @@ export default function NotificationScreen({
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }

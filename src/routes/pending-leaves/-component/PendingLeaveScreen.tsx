@@ -5,7 +5,8 @@ import { usePendingLeaves } from "@/hooks/useMentorLeave";
 import { cn, formatDate } from "@/lib/utils";
 import { LeaveType } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
+import { ChevronLeft, CloudOff } from "lucide-react";
+import { PendingLeavesSkeleton } from "./PendingSkeleton";
 
 export default function PendingLeavesScreen() {
   const navigate = useNavigate();
@@ -34,12 +35,7 @@ export default function PendingLeavesScreen() {
       {/* CONTENT LIST */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center mt-20">
-            <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-            <p className="text-gray-500 font-gilroy">
-              Loading pending leaves...
-            </p>
-          </div>
+          <PendingLeavesSkeleton />
         ) : !leaves || leaves.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20">
             <CloudOff
