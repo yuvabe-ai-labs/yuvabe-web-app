@@ -5,16 +5,16 @@ import {
   useLeaveDetails,
   useMentorDecision,
   useUserLeaveBalance,
-} from "@/hooks/useMentorLeave";
+} from "@/hooks/useLeave";
+import { formatDate } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { format, isValid, parseISO } from "date-fns";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { MentorApprovalSkeleton } from "./MentorScreenSkeleton";
 
 export default function MentorApprovalScreen() {
   const navigate = useNavigate();
-  // Get ID from URL params
   const { leaveId } = useParams({ from: "/mentor-approval/$leaveId" });
 
   const [rejectComment, setRejectComment] = useState("");
@@ -30,8 +30,6 @@ export default function MentorApprovalScreen() {
   const { data: balance, isLoading: loadingBalance } = useUserLeaveBalance(
     leave?.user_id || "",
   );
-
-  // 3. Mutation for Actions
   const { mutate: submitDecision, isPending } = useMentorDecision();
 
   const handleApprove = () => {
@@ -52,15 +50,6 @@ export default function MentorApprovalScreen() {
     );
   };
 
-  const toReadableDate = (dateString?: string) => {
-    if (!dateString) return "--";
-
-    const date = parseISO(dateString);
-    if (!isValid(date)) return "--";
-
-    return format(date, "d MMM yyyy");
-  };
-
   if (isLeaveError) {
     return (
       <div className="flex flex-col items-center justify-center h-full">
@@ -76,12 +65,7 @@ export default function MentorApprovalScreen() {
   }
 
   if (loadingDetails) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-        <p className="text-gray-500 font-gilroy">Loading details...</p>
-      </div>
-    );
+    return <MentorApprovalSkeleton />;
   }
 
   return (
@@ -173,9 +157,9 @@ export default function MentorApprovalScreen() {
               Leave Date
             </h3>
             <p className="text-[17px] text-black/80 font-gilroy">
-              {toReadableDate(leave?.from_date)}{" "}
+              {formatDate(leave?.from_date)}{" "}
               <span className="text-gray-400 mx-1">→</span>{" "}
-              {toReadableDate(leave?.to_date)}
+              {formatDate(leave?.to_date)}
             </p>
           </div>
 

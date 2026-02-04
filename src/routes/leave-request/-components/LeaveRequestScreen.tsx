@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useLeaveBalance, useRequestLeave } from "@/hooks/useLeave";
-import { LEAVE_LABEL_MAP } from "@/lib/utils";
+import { cn, LEAVE_LABEL_MAP } from "@/lib/utils";
 import type { LeaveRequestFormValues } from "@/schemas/leave.schema";
 import { leaveRequestSchema } from "@/schemas/leave.schema";
 import { LeaveType } from "@/types/leave.types";
@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { LeaveRequestSkeleton } from "./LeaveRequestSkeleton";
 
 export default function LeaveRequestScreen() {
   const navigate = useNavigate();
@@ -70,6 +71,10 @@ export default function LeaveRequestScreen() {
       },
     );
   };
+
+  if (balanceLoading) {
+    return <LeaveRequestSkeleton />;
+  }
 
   return (
     <>
@@ -160,7 +165,6 @@ export default function LeaveRequestScreen() {
                 </FormItem>
               )}
             />
-
             {/* DATES ROW */}
             <div className="flex gap-4">
               <div className="flex-1">
@@ -209,7 +213,6 @@ export default function LeaveRequestScreen() {
                 />
               </div>
             </div>
-
             {/* REASON INPUT */}
             <FormField
               control={form.control}
@@ -230,19 +233,15 @@ export default function LeaveRequestScreen() {
                 </FormItem>
               )}
             />
-
-            {/* SUBMIT BUTTON */}
             <Button
               type="submit"
               disabled={submitLoading || !form.formState.isValid}
-              className={`
-                w-full py-6 mt-4 rounded-xl text-[16px] font-semibold font-gilroy transition-all
-                ${
-                  !form.formState.isValid || submitLoading
-                    ? "bg-[#BDA0FF] hover:bg-[#BDA0FF] cursor-not-allowed text-white/80"
-                    : "bg-[#592AC7] hover:bg-[#592AC7]/90 text-white"
-                }
-              `}
+              className={cn(
+                "w-full py-6 mt-4 rounded-xl text-[16px] font-semibold font-gilroy transition-all",
+                submitLoading || !form.formState.isValid
+                  ? "bg-[#BDA0FF] hover:bg-[#BDA0FF] cursor-not-allowed text-white/80"
+                  : "bg-[#592AC7] hover:bg-[#592AC7]/90 text-white",
+              )}
             >
               {submitLoading ? (
                 <Loader2 className="animate-spin mr-2" />

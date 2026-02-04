@@ -1,3 +1,5 @@
+import type { UseFormRegisterReturn } from "react-hook-form";
+
 export const UserRole = {
   ADMIN: "admin",
   MENTOR: "mentor",
@@ -18,4 +20,22 @@ export type User = {
   mentor_name?: string;
   dob?: string | null;
   profile_picture?: string | null;
+
+  lead_label?: string;
+  lead_name?: string;
+  nick_name?: string;
 };
+
+export interface FormFieldProps {
+  label: string;
+  children: React.ReactNode;
+  error?: string;
+}
+
+export interface PasswordFieldProps {
+  label: string;
+  show: boolean;
+  setShow: (show: boolean) => void;
+  registration: UseFormRegisterReturn;
+  error?: string;
+}

@@ -1,8 +1,5 @@
 import { leaveService } from "@/services/leave.service";
-import {
-  MentorDecisionStatus,
-  type MentorDecisionPayload,
-} from "@/types/leave.types";
+import type { MentorDecisionPayload } from "@/types/leave.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -16,21 +13,30 @@ function getErrorMessage(error: unknown): string {
 export const usePendingLeaves = () => {
   return useQuery({
     queryKey: ["pending-leaves"],
-    queryFn: () => leaveService.fetchPendingLeaves(),
+    queryFn: async () => {
+      const data = await leaveService.fetchPendingLeaves();
+      // Sort by updated_at descending (newest first)
+      return data.sort(
+        (a, b) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+      );
+    },
   });
 };
 
 export const useLeaveDetails = (leaveId: string) => {
+  const isValidId = !!leaveId && leaveId !== "undefined" && leaveId !== "null";
   return useQuery({
     queryKey: ["leave-details", leaveId],
     queryFn: () => leaveService.fetchLeaveDetails(leaveId),
+    enabled: isValidId,
   });
 };
 
-export const useUserLeaveBalance = (userId: string) => {
+export const useUserLeaveBalance = (userId: string | undefined) => {
   return useQuery({
     queryKey: ["user-leave-balance", userId],
-    queryFn: () => leaveService.fetchUserBalance(userId),
+    queryFn: () => leaveService.fetchUserBalance(userId!),
     enabled: !!userId,
   });
 };
@@ -48,14 +54,27 @@ export const useMentorDecision = () => {
     }) => leaveService.submitMentorDecision(leaveId, payload),
     onSuccess: (_, variables) => {
       const action =
-        variables.payload.status === MentorDecisionStatus.APPROVED
-          ? "approved"
-          : "rejected";
+        variables.payload.status === "Approved" ? "approved" : "rejected";
       toast.success(`Leave request ${action}`);
       queryClient.invalidateQueries({ queryKey: ["pending-leaves"] });
     },
     onError: (error: unknown) => {
       toast.error(getErrorMessage(error));
     },
+  });
+};
+
+export const useTeamLeaveHistory = () => {
+  return useQuery({
+    queryKey: ["team-leave-history"],
+    queryFn: leaveService.fetchTeamLeaveHistory,
+  });
+};
+
+export const useTeamLeaveDetails = (leaveId: string) => {
+  return useQuery({
+    queryKey: ["leave-details", leaveId],
+    queryFn: () => leaveService.getLeaveDetails(leaveId),
+    enabled: !!leaveId,
   });
 };

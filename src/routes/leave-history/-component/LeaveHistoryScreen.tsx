@@ -11,12 +11,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCancelLeave, useMyLeaveHistory } from "@/hooks/useLeaveHistory";
-import { cn, formatDate, getStatusBadgeClasses } from "@/lib/utils";
+import { useCancelLeave, useMyLeaveHistory } from "@/hooks/useLeave";
+import { cn, formatDate } from "@/lib/utils";
 import type { LeaveHistoryDTO } from "@/types/leave.types";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, CloudOff, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { LeaveHistorySkeleton } from "./LeaveHistorySkeleton";
 
 export default function LeaveHistoryScreen() {
   const navigate = useNavigate();
@@ -58,10 +59,7 @@ export default function LeaveHistoryScreen() {
       {/* LIST CONTENT */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center mt-20">
-            <Loader2 className="animate-spin text-gray-400 mb-2" size={32} />
-            <p className="text-gray-500 font-gilroy">Loading history...</p>
-          </div>
+          <LeaveHistorySkeleton />
         ) : !leaves || leaves.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20">
             <CloudOff
@@ -105,7 +103,18 @@ export default function LeaveHistoryScreen() {
                       <Badge
                         className={cn(
                           "px-3.5 py-1 rounded-[20px] text-[13px] font-semibold font-gilroy text-white hover:opacity-90 border-none shadow-none",
-                          getStatusBadgeClasses(item.status),
+                          {
+                            "bg-[#4CAF50]": item.status === "Approved",
+                            "bg-[#FFA000]": item.status === "Pending",
+                            "bg-[#3F1ABF]": item.status === "Cancelled",
+                            "bg-[#FF3B30]": item.status === "Rejected",
+                            "bg-[#999999]": ![
+                              "Approved",
+                              "Pending",
+                              "Cancelled",
+                              "Rejected",
+                            ].includes(item.status),
+                          },
                         )}
                       >
                         {item.status}
