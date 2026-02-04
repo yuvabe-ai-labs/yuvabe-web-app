@@ -45,12 +45,7 @@ export default function ProfileScreen() {
     <>
       {/* 🔵 GRADIENT HEADER */}
       {/* Replaces <Svg> gradient */}
-      <div
-        className="relative h-40 w-full shrink-0 px-5 pb-6"
-        style={{
-          background: "linear-gradient(180deg, #592AC7 0%, #CCB6FF 100%)",
-        }}
-      >
+      <div className="relative h-40 w-full shrink-0 px-5 pb-6 bg-[linear-gradient(180deg,#592AC7_0%,#CCB6FF_100%)]">
         {/* Back Button */}
         <button
           onClick={() => navigate({ to: ".." })}

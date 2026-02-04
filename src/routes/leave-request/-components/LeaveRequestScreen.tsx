@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { LeaveRequestSkeleton } from "./LeaveRequestSkeleton";
 
 export default function LeaveRequestScreen() {
   const navigate = useNavigate();
@@ -70,6 +71,10 @@ export default function LeaveRequestScreen() {
       },
     );
   };
+
+  if (balanceLoading) {
+    return <LeaveRequestSkeleton />;
+  }
 
   return (
     <>

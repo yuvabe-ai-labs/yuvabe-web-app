@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button";
 import { useAssets } from "@/hooks/useAssets";
 import { getAssetIcon } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { AssetsSkeleton } from "./AssetSkeleton";
 
 export default function AssetsScreen() {
   const navigate = useNavigate();
@@ -10,15 +12,20 @@ export default function AssetsScreen() {
 
   return (
     <>
-      <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10">
-        <button
-          onClick={() => navigate({ to: "/" })}
-          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+      <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-50 shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            console.log("clicked");
+            navigate({ to: "/" });
+          }}
+          className="-ml-2 hover:bg-gray-100 rounded-full"
         >
           <ChevronLeft size={28} className="text-black" />
-        </button>
+        </Button>
 
-        <div className="flex-1 flex justify-center -ml-9">
+        <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-semibold text-black font-gilroy">
             My Assets
           </h1>
@@ -26,12 +33,9 @@ export default function AssetsScreen() {
       </div>
 
       {/* CONTENT */}
-      <div className="px-5 mt-4 pb-10 min-h-125">
+      <div className="flex-1 overflow-y-auto px-5 pb-10">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center mt-20">
-            <Loader2 className="animate-spin text-primary mb-2" size={32} />
-            <p className="text-gray-500 font-gilroy">Loading assets...</p>
-          </div>
+          <AssetsSkeleton />
         ) : isError ? (
           <div className="flex flex-col items-center justify-center mt-10">
             <p className="text-[#777] font-medium text-[16px] mb-4 font-gilroy">
@@ -60,15 +64,16 @@ export default function AssetsScreen() {
               return (
                 <div
                   key={item.id}
-                  className="w-[95%] mx-auto bg-white py-5 px-4.5 rounded-[18px] flex flex-row items-center border border-[#FFCA2D] shadow-sm transition-transform active:scale-[0.98] shadow-[0_4px_6px_rgba(0,0,0,0.05)]"
+                  className="w-[95%] mx-auto bg-white py-5 px-4.5 rounded-[18px] flex flex-row items-center border border-[#FFCA2D] shadow-sm transition-transform active:scale-[0.98]"
                 >
                   {/* Icon Wrapper */}
-                  <div className="w-12.5 h-12.5 p-0 ml-3 flex justify-center items-center mr-4.5">
+                  <div className="shrink-0 w-12 h-12 flex justify-center items-center ml-1">
+                    {" "}
                     <IconComponent className="w-30 h-30 " />
                   </div>
 
                   {/* Text Details */}
-                  <div className="flex-1 ml-5">
+                  <div className="flex-1 ml-5 min-w-0">
                     <h2 className="text-[18px] font-bold text-[#222] font-gilroy">
                       {item.asset_id}
                     </h2>

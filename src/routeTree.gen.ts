@@ -10,15 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TeamLeaveHistoryIndexRouteImport } from './routes/team-leave-history/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as PendingLeavesIndexRouteImport } from './routes/pending-leaves/index'
 import { Route as PayslipIndexRouteImport } from './routes/payslip/index'
+import { Route as NotificationsIndexRouteImport } from './routes/notifications/index'
 import { Route as LunchPreferenceIndexRouteImport } from './routes/lunch-preference/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as LegalIndexRouteImport } from './routes/legal/index'
 import { Route as LeaveRequestIndexRouteImport } from './routes/leave-request/index'
 import { Route as LeaveHistoryIndexRouteImport } from './routes/leave-history/index'
 import { Route as AssetsIndexRouteImport } from './routes/assets/index'
+import { Route as TeamLeaveHistoryLeaveIdRouteImport } from './routes/team-leave-history/$leaveId'
 import { Route as ProfileEditProfileRouteImport } from './routes/profile/edit-profile'
 import { Route as MentorApprovalLeaveIdRouteImport } from './routes/mentor-approval/$leaveId'
 import { Route as LegalTermsRouteImport } from './routes/legal/terms'
@@ -28,6 +31,11 @@ import { Route as LeaveDetailsLeaveIdRouteImport } from './routes/leave-details/
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamLeaveHistoryIndexRoute = TeamLeaveHistoryIndexRouteImport.update({
+  id: '/team-leave-history/',
+  path: '/team-leave-history/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
@@ -43,6 +51,11 @@ const PendingLeavesIndexRoute = PendingLeavesIndexRouteImport.update({
 const PayslipIndexRoute = PayslipIndexRouteImport.update({
   id: '/payslip/',
   path: '/payslip/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsIndexRoute = NotificationsIndexRouteImport.update({
+  id: '/notifications/',
+  path: '/notifications/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LunchPreferenceIndexRoute = LunchPreferenceIndexRouteImport.update({
@@ -73,6 +86,11 @@ const LeaveHistoryIndexRoute = LeaveHistoryIndexRouteImport.update({
 const AssetsIndexRoute = AssetsIndexRouteImport.update({
   id: '/assets/',
   path: '/assets/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamLeaveHistoryLeaveIdRoute = TeamLeaveHistoryLeaveIdRouteImport.update({
+  id: '/team-leave-history/$leaveId',
+  path: '/team-leave-history/$leaveId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileEditProfileRoute = ProfileEditProfileRouteImport.update({
@@ -108,15 +126,18 @@ export interface FileRoutesByFullPath {
   '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/profile/edit-profile': typeof ProfileEditProfileRoute
+  '/team-leave-history/$leaveId': typeof TeamLeaveHistoryLeaveIdRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/legal': typeof LegalIndexRoute
   '/login': typeof LoginIndexRoute
   '/lunch-preference': typeof LunchPreferenceIndexRoute
+  '/notifications': typeof NotificationsIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
   '/profile': typeof ProfileIndexRoute
+  '/team-leave-history': typeof TeamLeaveHistoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -125,15 +146,18 @@ export interface FileRoutesByTo {
   '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/profile/edit-profile': typeof ProfileEditProfileRoute
+  '/team-leave-history/$leaveId': typeof TeamLeaveHistoryLeaveIdRoute
   '/assets': typeof AssetsIndexRoute
   '/leave-history': typeof LeaveHistoryIndexRoute
   '/leave-request': typeof LeaveRequestIndexRoute
   '/legal': typeof LegalIndexRoute
   '/login': typeof LoginIndexRoute
   '/lunch-preference': typeof LunchPreferenceIndexRoute
+  '/notifications': typeof NotificationsIndexRoute
   '/payslip': typeof PayslipIndexRoute
   '/pending-leaves': typeof PendingLeavesIndexRoute
   '/profile': typeof ProfileIndexRoute
+  '/team-leave-history': typeof TeamLeaveHistoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,15 +167,18 @@ export interface FileRoutesById {
   '/legal/terms': typeof LegalTermsRoute
   '/mentor-approval/$leaveId': typeof MentorApprovalLeaveIdRoute
   '/profile/edit-profile': typeof ProfileEditProfileRoute
+  '/team-leave-history/$leaveId': typeof TeamLeaveHistoryLeaveIdRoute
   '/assets/': typeof AssetsIndexRoute
   '/leave-history/': typeof LeaveHistoryIndexRoute
   '/leave-request/': typeof LeaveRequestIndexRoute
   '/legal/': typeof LegalIndexRoute
   '/login/': typeof LoginIndexRoute
   '/lunch-preference/': typeof LunchPreferenceIndexRoute
+  '/notifications/': typeof NotificationsIndexRoute
   '/payslip/': typeof PayslipIndexRoute
   '/pending-leaves/': typeof PendingLeavesIndexRoute
   '/profile/': typeof ProfileIndexRoute
+  '/team-leave-history/': typeof TeamLeaveHistoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -162,15 +189,18 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/mentor-approval/$leaveId'
     | '/profile/edit-profile'
+    | '/team-leave-history/$leaveId'
     | '/assets'
     | '/leave-history'
     | '/leave-request'
     | '/legal'
     | '/login'
     | '/lunch-preference'
+    | '/notifications'
     | '/payslip'
     | '/pending-leaves'
     | '/profile'
+    | '/team-leave-history'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -179,15 +209,18 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/mentor-approval/$leaveId'
     | '/profile/edit-profile'
+    | '/team-leave-history/$leaveId'
     | '/assets'
     | '/leave-history'
     | '/leave-request'
     | '/legal'
     | '/login'
     | '/lunch-preference'
+    | '/notifications'
     | '/payslip'
     | '/pending-leaves'
     | '/profile'
+    | '/team-leave-history'
   id:
     | '__root__'
     | '/'
@@ -196,15 +229,18 @@ export interface FileRouteTypes {
     | '/legal/terms'
     | '/mentor-approval/$leaveId'
     | '/profile/edit-profile'
+    | '/team-leave-history/$leaveId'
     | '/assets/'
     | '/leave-history/'
     | '/leave-request/'
     | '/legal/'
     | '/login/'
     | '/lunch-preference/'
+    | '/notifications/'
     | '/payslip/'
     | '/pending-leaves/'
     | '/profile/'
+    | '/team-leave-history/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -214,15 +250,18 @@ export interface RootRouteChildren {
   LegalTermsRoute: typeof LegalTermsRoute
   MentorApprovalLeaveIdRoute: typeof MentorApprovalLeaveIdRoute
   ProfileEditProfileRoute: typeof ProfileEditProfileRoute
+  TeamLeaveHistoryLeaveIdRoute: typeof TeamLeaveHistoryLeaveIdRoute
   AssetsIndexRoute: typeof AssetsIndexRoute
   LeaveHistoryIndexRoute: typeof LeaveHistoryIndexRoute
   LeaveRequestIndexRoute: typeof LeaveRequestIndexRoute
   LegalIndexRoute: typeof LegalIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
   LunchPreferenceIndexRoute: typeof LunchPreferenceIndexRoute
+  NotificationsIndexRoute: typeof NotificationsIndexRoute
   PayslipIndexRoute: typeof PayslipIndexRoute
   PendingLeavesIndexRoute: typeof PendingLeavesIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
+  TeamLeaveHistoryIndexRoute: typeof TeamLeaveHistoryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team-leave-history/': {
+      id: '/team-leave-history/'
+      path: '/team-leave-history'
+      fullPath: '/team-leave-history'
+      preLoaderRoute: typeof TeamLeaveHistoryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile/': {
@@ -253,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/payslip'
       fullPath: '/payslip'
       preLoaderRoute: typeof PayslipIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications/': {
+      id: '/notifications/'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lunch-preference/': {
@@ -295,6 +348,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team-leave-history/$leaveId': {
+      id: '/team-leave-history/$leaveId'
+      path: '/team-leave-history/$leaveId'
+      fullPath: '/team-leave-history/$leaveId'
+      preLoaderRoute: typeof TeamLeaveHistoryLeaveIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile/edit-profile': {
@@ -342,15 +402,18 @@ const rootRouteChildren: RootRouteChildren = {
   LegalTermsRoute: LegalTermsRoute,
   MentorApprovalLeaveIdRoute: MentorApprovalLeaveIdRoute,
   ProfileEditProfileRoute: ProfileEditProfileRoute,
+  TeamLeaveHistoryLeaveIdRoute: TeamLeaveHistoryLeaveIdRoute,
   AssetsIndexRoute: AssetsIndexRoute,
   LeaveHistoryIndexRoute: LeaveHistoryIndexRoute,
   LeaveRequestIndexRoute: LeaveRequestIndexRoute,
   LegalIndexRoute: LegalIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   LunchPreferenceIndexRoute: LunchPreferenceIndexRoute,
+  NotificationsIndexRoute: NotificationsIndexRoute,
   PayslipIndexRoute: PayslipIndexRoute,
   PendingLeavesIndexRoute: PendingLeavesIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
+  TeamLeaveHistoryIndexRoute: TeamLeaveHistoryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

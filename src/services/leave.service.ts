@@ -91,6 +91,16 @@ export const leaveService = {
     }
   },
 
+  fetchTeamLeaveHistory: async (): Promise<LeaveDetailsDTO[]> => {
+    const response = await api.get("/profile/mentor/team-leaves");
+    return response.data.data;
+  },
+
+  getLeaveDetails: async (leaveId: string): Promise<LeaveDetailsDTO> => {
+    const response = await api.get(`/profile/leave/${leaveId}`);
+    return response.data.data;
+  },
+
   cancelLeave: async (leaveId: string) => {
     try {
       const res = await api.post(`/profile/leave/${leaveId}/cancel`);

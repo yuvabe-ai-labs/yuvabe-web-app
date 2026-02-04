@@ -1,6 +1,7 @@
 import { ENV } from "@/config/env";
 import { messaging } from "@/config/firebase";
 import api from "@/lib/axios-client";
+import type { NotificationItem } from "@/types/notification.types";
 import { getToken } from "firebase/messaging";
 
 const getWebDeviceToken = async () => {
@@ -21,7 +22,7 @@ const getWebDeviceToken = async () => {
     }
 
     const swRegistration = await navigator.serviceWorker.register(
-      "/firebase-messaging-sw.js"
+      "/firebase-messaging-sw.js",
     );
 
     await navigator.serviceWorker.ready;
@@ -42,7 +43,7 @@ export const notificationService = {
   registerDevice: async () => {
     if (typeof window !== "undefined" && !window.isSecureContext) {
       console.warn(
-        "Skipping registration: Not a secure context (HTTPS/Localhost required)"
+        "Skipping registration: Not a secure context (HTTPS/Localhost required)",
       );
       return;
     }
@@ -63,5 +64,16 @@ export const notificationService = {
     await api.post("/notifications/logout", {
       device_token,
     });
+  },
+};
+
+export const notificationFetchService = {
+  fetchNotifications: async (): Promise<NotificationItem[]> => {
+    const response = await api.get("/profile/notifications");
+    return response.data.data;
+  },
+
+  markAsRead: async (id: string): Promise<void> => {
+    await api.post(`/notifications/${id}/mark-read`);
   },
 };

@@ -111,3 +111,18 @@ export const useMentorDecision = () => {
     },
   });
 };
+
+export const useTeamLeaveHistory = () => {
+  return useQuery({
+    queryKey: ["team-leave-history"],
+    queryFn: leaveService.fetchTeamLeaveHistory,
+  });
+};
+
+export const useTeamLeaveDetails = (leaveId: string) => {
+  return useQuery({
+    queryKey: ["leave-details", leaveId],
+    queryFn: () => leaveService.getLeaveDetails(leaveId),
+    enabled: !!leaveId,
+  });
+};

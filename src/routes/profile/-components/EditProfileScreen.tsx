@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { PasswordField } from "./EditProfileFields";
 import { useEditProfileForm } from "./useEditProfileForm";
+import { cn } from "@/lib/utils";
 
 export default function EditProfileScreen() {
   const {
@@ -38,12 +39,7 @@ export default function EditProfileScreen() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <div
-        className="relative h-40 w-full shrink-0 px-5 pb-6"
-        style={{
-          background: "linear-gradient(180deg, #592AC7 0%, #CCB6FF 100%)",
-        }}
-      >
+      <div className="relative h-40 w-full shrink-0 px-5 pb-6 bg-[linear-gradient(180deg,#592AC7_0%,#CCB6FF_100%)]">
         <button
           onClick={() => navigate({ to: ".." })}
           className="absolute top-4 left-4 p-1 z-10 hover:bg-white/20 rounded-full transition-colors"
@@ -205,12 +201,20 @@ export default function EditProfileScreen() {
                   </span>
                   <ChevronDown
                     size={20}
-                    className={`transition-transform ${showPasswordSection ? "rotate-180" : ""}`}
+                    className={cn(
+                      "transition-transform duration-300",
+                      showPasswordSection && "rotate-180",
+                    )}
                   />
                 </button>
 
                 <div
-                  className={`overflow-hidden transition-all duration-300 ${showPasswordSection ? "max-h-125 mt-4" : "max-h-0"}`}
+                  className={cn(
+                    "overflow-hidden transition-all duration-300",
+                    showPasswordSection
+                      ? "max-h-125 mt-4 opacity-100"
+                      : "max-h-0 opacity-0",
+                  )}
                 >
                   <div className="space-y-4">
                     <PasswordField

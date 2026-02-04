@@ -1,6 +1,10 @@
-import { notificationService } from "@/services/notification.service";
+import {
+  notificationFetchService,
+  notificationService,
+} from "@/services/notification.service";
 import { useNotificationStore } from "@/store/notification.store";
-import { useMutation } from "@tanstack/react-query";
+import type { NotificationItem } from "@/types/notification.types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useRegisterDevice = () => {
   const { markPromptAttempted, checkPermission } = useNotificationStore();
@@ -21,6 +25,45 @@ export const useRegisterDevice = () => {
     },
     onSettled: () => {
       markPromptAttempted();
+    },
+  });
+};
+
+export const useNotificationsQuery = () => {
+  return useQuery({
+    queryKey: ["notifications"],
+    queryFn: notificationFetchService.fetchNotifications,
+  });
+};
+export const useMarkNotificationRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: notificationFetchService.markAsRead,
+    onMutate: async (notificationId) => {
+      await queryClient.cancelQueries({ queryKey: ["notifications"] });
+
+      const previousNotifications = queryClient.getQueryData<
+        NotificationItem[]
+      >(["notifications"]);
+
+      queryClient.setQueryData<NotificationItem[]>(["notifications"], (old) => {
+        if (!old) return [];
+        return old.map((n) =>
+          n.id === notificationId ? { ...n, is_read: true } : n,
+        );
+      });
+
+      return { previousNotifications };
+    },
+    onError: (_err, _newTodo, context) => {
+      queryClient.setQueryData(
+        ["notifications"],
+        context?.previousNotifications,
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };
