@@ -14,7 +14,7 @@ function RootComponent() {
         <Outlet />
         <Toaster position="top-center" richColors />
       </MobileLayout>
-      <TanStackRouterDevtools />
+      {import.meta.env.DEV && <TanStackRouterDevtools />}
     </div>
   );
 }
