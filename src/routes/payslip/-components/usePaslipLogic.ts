@@ -40,7 +40,6 @@ export const usePayslipLogic = () => {
 
     if (isSuccess || error) {
       if (isSuccess) {
-
         // Use a static ID to prevent the toast from being dismissed
         // during the navigation re-render
         toast.success("Gmail connected successfully!", {
@@ -101,7 +100,10 @@ export const usePayslipLogic = () => {
   const handleConnectGmail = async () => {
     if (!user?.id) return toast.error("User profile failed to load.");
     try {
-      const res = await getGmailUrl(user.id);
+      const res = await getGmailUrl({
+        userId: user.id,
+        fromPath: "/payslip",
+      });
       window.location.href = res.auth_url;
     } catch (e) {
       toast.error("Connection Failed", { description: (e as Error)?.message });

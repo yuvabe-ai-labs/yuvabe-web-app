@@ -3,6 +3,7 @@ import {
   useNotificationsQuery,
 } from "@/hooks/useNotifications";
 import { useUserStore } from "@/store/user.store";
+import { LeaveStatus } from "@/types/leave.types";
 import type { NotificationItem } from "@/types/notification.types";
 import { UserRole } from "@/types/user.types";
 import { useNavigate } from "@tanstack/react-router";
@@ -25,21 +26,38 @@ export default function NotificationScreen({
   const { mutate: markRead } = useMarkNotificationRead();
 
   const handleNotificationClick = (item: NotificationItem) => {
+    // 1. Mark as read immediately
     if (!item.is_read) {
       markRead(item.id);
     }
 
-    if (user?.role === UserRole.MENTOR || user?.role === UserRole.SUB_MENTOR) {
-      navigate({
-        to: "/team-leave-history/$leaveId",
-        params: { leaveId: item.id },
-      });
+    const isMentor =
+      user?.role === UserRole.MENTOR || user?.role === UserRole.SUB_MENTOR;
+    console.log("item type", item.type);
+    if (isMentor) {
+      const hasFinalStatus =
+        item.type === LeaveStatus.APPROVED ||
+        item.type === LeaveStatus.REJECTED ||
+        item.type === LeaveStatus.CANCELLED;
+
+      if (hasFinalStatus) {
+        navigate({
+          to: "/team-leave-history/$leaveId",
+          params: { leaveId: item.id },
+        });
+      } else {
+        navigate({
+          to: "/mentor-approval/$leaveId",
+          params: { leaveId: item.id },
+        });
+      }
     } else {
       navigate({
         to: "/leave-details/$leaveId",
         params: { leaveId: item.id },
       });
     }
+
     if (isSheetMode && onClose) onClose();
   };
 

@@ -12,6 +12,7 @@ import { useLogin } from "@/hooks/useAuth";
 import { YBSymbol } from "@/lib/utils/custom-icons";
 import { signInSchema, type SignInSchemaType } from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -104,6 +105,25 @@ export default function LoginScreen() {
           >
             {isPending ? <Loader2 className="animate-spin mr-2" /> : "Sign In"}
           </Button>
+          <div className="pt-4 text-center text-[12px] font-gilroy text-gray-500 leading-relaxed">
+            By continuing, you agree to our{" "}
+            <Link
+              to="/legal/terms"
+              target="_blank"
+              className="underline hover:text-gray-800 transition-colors"
+            >
+              Terms of Service
+            </Link>{" "}
+            and acknowledge our{" "}
+            <Link
+              to="/legal/privacy"
+              target="_blank"
+              className="underline hover:text-gray-800 transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </div>
         </form>
       </Form>
     </div>
