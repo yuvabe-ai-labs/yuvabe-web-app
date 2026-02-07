@@ -7,8 +7,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import {
-  Camera,
   ChevronDown,
   ChevronLeft,
   Loader2,
@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { PasswordField } from "./EditProfileFields";
 import { useEditProfileForm } from "./useEditProfileForm";
-import { cn } from "@/lib/utils";
 
 export default function EditProfileScreen() {
   const {
@@ -37,6 +36,8 @@ export default function EditProfileScreen() {
     onSubmit,
   } = useEditProfileForm();
 
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="relative h-40 w-full shrink-0 px-5 pb-6 bg-[linear-gradient(180deg,#592AC7_0%,#CCB6FF_100%)]">
@@ -49,8 +50,10 @@ export default function EditProfileScreen() {
       </div>
 
       <div className="flex-1 px-5 pb-10">
+        {/* 📸 PROFILE IMAGE SECTION */}
         <div className="-mt-12.5 flex flex-col items-center mb-6 relative z-10">
-          <div className="relative">
+          <div className="flex flex-col items-center">
+            {/* Circle Container */}
             <div className="w-27.5 h-27.5 rounded-full bg-white p-1 shadow-md">
               <div className="w-full h-full rounded-full bg-gray-100 overflow-hidden flex items-center justify-center border border-gray-200">
                 {previewImage ? (
@@ -64,13 +67,18 @@ export default function EditProfileScreen() {
                 )}
               </div>
             </div>
+
+            {/* Text Button instead of Camera Icon */}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-1 right-1 bg-[#592AC7] p-2 rounded-full text-white shadow-sm hover:bg-[#451d9e] transition-colors"
+              className="mt-3 group"
             >
-              <Camera size={18} />
+              <span className="text-[14px] font-bold text-[#592AC7] font-gilroy group-hover:text-[#451d9e] transition-colors">
+                Change Image
+              </span>
             </button>
+
             <input
               type="file"
               ref={fileInputRef}
@@ -80,7 +88,6 @@ export default function EditProfileScreen() {
             />
           </div>
         </div>
-
         <div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -181,7 +188,9 @@ export default function EditProfileScreen() {
                       <Input
                         type="date"
                         {...field}
-                        className="h-12.5 rounded-xl uppercase"
+                        // 👇 This effectively disables all future dates
+                        max={today}
+                        className="h-12.5 rounded-xl uppercase block w-full"
                       />
                     </FormControl>
                     <FormMessage />

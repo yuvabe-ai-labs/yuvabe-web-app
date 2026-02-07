@@ -1,5 +1,6 @@
+import { LogoutConfirmDialog } from "@/components/layout/LogutConfirmDialog";
 import { useUserProfile } from "@/hooks/useHomeQueries";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogoutWithConfirmation } from "@/hooks/useLogoutConfirmation";
 import { MentorIcon, TeamIcon } from "@/lib/utils/custom-icons";
 import { useUserStore } from "@/store/user.store";
 import { useNavigate } from "@tanstack/react-router";
@@ -17,10 +18,12 @@ import { ProfileSkeleton } from "./ProfileSkeleton";
 export default function ProfileScreen() {
   const navigate = useNavigate();
   const { user, setUser, isLogoutLoading } = useUserStore();
-  const { mutate: logout } = useLogout();
 
   // 1. Fetch Data (Ensures data exists even if user refreshes page)
   const { data: profileData, isLoading } = useUserProfile();
+
+  const { triggerLogout, showConfirm, setShowConfirm, logout } =
+    useLogoutWithConfirmation();
 
   useEffect(() => {
     if (profileData?.data) {
@@ -36,10 +39,6 @@ export default function ProfileScreen() {
   const leadLabel = user?.lead_label || "Mentor";
   const leadName = user?.lead_name || user?.mentor_name;
   const profileSrc = user?.profile_picture;
-
-  const handleLogout = () => {
-    logout();
-  };
 
   return (
     <>
@@ -131,7 +130,7 @@ export default function ProfileScreen() {
         {/* 🔴 LOGOUT BUTTON */}
         <div className="px-5 mt-90">
           <button
-            onClick={handleLogout}
+            onClick={triggerLogout}
             className="w-full flex items-center justify-center py-3.75 bg-[#FF383C] rounded-xl active:bg-red-600 transition-colors shadow-sm"
           >
             {/* Flip icon horizontally to match RN design */}
@@ -145,6 +144,11 @@ export default function ProfileScreen() {
             </span>
           </button>
         </div>
+        <LogoutConfirmDialog
+          isOpen={showConfirm}
+          onOpenChange={setShowConfirm}
+          onConfirm={logout}
+        />
         {isLogoutLoading && (
           <div className="absolute inset-0 bg-black/35 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center w-37.5">
