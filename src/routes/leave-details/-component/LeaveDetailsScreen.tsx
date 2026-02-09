@@ -1,12 +1,12 @@
 import { useLeaveDetails } from "@/hooks/useLeave";
 import { cn, formatDate } from "@/lib/utils";
 import { router } from "@/main";
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { LeaveDetailsSkeleton } from "./LeaveDetailsSkeleton";
 
 export default function LeaveDetailsScreen() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // Get the ID from the URL params
   const { leaveId } = useParams({ from: "/leave-details/$leaveId" });
 
@@ -39,7 +39,7 @@ export default function LeaveDetailsScreen() {
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0 border-b border-gray-100">
         <button
-          onClick={() => router.history.back()}
+          onClick={() => navigate({ to: "/leave-history" })}
           className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
         >
           <ChevronLeft size={28} className="text-black" />

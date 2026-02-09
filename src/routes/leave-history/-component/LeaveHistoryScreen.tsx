@@ -133,7 +133,7 @@ export default function LeaveHistoryScreen() {
 
                     {/* APPROVED BY */}
                     <p className="mt-2.5 text-[14px] text-black font-gilroy">
-                      Approved by: {item.mentor_name || "—"}
+                      Reviewed by: {item.mentor_name || "—"}
                     </p>
 
                     {/* UPDATED ON */}
