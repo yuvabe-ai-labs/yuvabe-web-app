@@ -40,6 +40,7 @@ export const usePayslipLogic = () => {
 
     if (isSuccess || error) {
       if (isSuccess) {
+        console.log("Showing Success Toast");
         // Use a static ID to prevent the toast from being dismissed
         // during the navigation re-render
         toast.success("Gmail connected successfully!", {
@@ -65,6 +66,7 @@ export const usePayslipLogic = () => {
           search: (prev: PayslipSearch) => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { success: _, error: __, ...rest } = prev;
+            if (success) console.log("Removing success from URL");
             return rest;
           },
           replace: true,

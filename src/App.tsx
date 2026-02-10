@@ -1,6 +1,7 @@
 import { useAuthBootstrap } from "@/hooks/useAuthBootstrap";
 import { useUserStore } from "@/store/user.store";
 import { RouterProvider } from "@tanstack/react-router";
+import { Toaster } from "sonner";
 import NotificationIndicator from "./components/layout/NotificationIndicator";
 import { SplashScreen } from "./components/layout/SplashScreen";
 import { useForegroundNotifications } from "./hooks/useForegroundNotifications";
@@ -24,6 +25,7 @@ export function App() {
 
   return (
     <>
+      <Toaster position="top-center" richColors />
       <div>
         <div className="z-50 shrink-0">
           <NotificationIndicator />
