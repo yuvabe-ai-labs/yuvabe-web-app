@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { useAssets } from "@/hooks/useAssets";
 import { getAssetIcon } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
@@ -13,17 +12,13 @@ export default function AssetsScreen() {
   return (
     <>
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-50 shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            console.log("clicked");
-            navigate({ to: "/" });
-          }}
-          className="-ml-2 hover:bg-gray-100 rounded-full"
+        <button
+          onClick={() => navigate({ to: "/" })}
+          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          type="button"
         >
           <ChevronLeft size={28} className="text-black" />
-        </Button>
+        </button>
 
         <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-semibold text-black font-gilroy">

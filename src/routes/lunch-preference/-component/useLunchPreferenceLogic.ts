@@ -48,7 +48,6 @@ export const useLunchPreferenceLogic = () => {
 
     if (isSuccess || error) {
       if (isSuccess) {
-
         // Use a static ID to prevent the toast from being dismissed
         // during the navigation re-render
         toast.success("Gmail connected successfully!", {
@@ -105,13 +104,16 @@ export const useLunchPreferenceLogic = () => {
       toast.success("Success", { description: "Lunch opt-out request sent!" });
       navigate({ to: "/" });
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<{ detail: string }>;
       if (error.response?.status === 428) {
         setPendingSubmit(true);
         setShowGmailSheet(true); // This opens the sheet
         toast.info("Authorization Required", {
           description: "Please connect Gmail to proceed.",
         });
+      } else if (error.response?.data?.detail) {
+        // This will display: "Already sent a request for: 2024-02-10"
+        toast.error(error.response.data.detail);
       } else {
         toast.error("Request Failed");
       }

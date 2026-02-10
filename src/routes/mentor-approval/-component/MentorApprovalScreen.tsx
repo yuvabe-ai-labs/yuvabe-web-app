@@ -8,8 +8,8 @@ import {
 } from "@/hooks/useLeave";
 import { formatDate } from "@/lib/utils";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { ChevronLeft, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { AlertCircle, ChevronLeft, Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { MentorApprovalSkeleton } from "./MentorScreenSkeleton";
 
@@ -31,6 +31,20 @@ export default function MentorApprovalScreen() {
     leave?.user_id || "",
   );
   const { mutate: submitDecision, isPending } = useMentorDecision();
+
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
+  const isPastLeave = useMemo(() => {
+    if (!leave?.to_date) return false;
+
+    const today = new Date();
+    // Reset time to midnight for accurate date comparison
+    today.setHours(0, 0, 0, 0);
+
+    const leaveEnd = new Date(leave.to_date);
+
+    // If leave end date is before today, it is a past leave
+    return leaveEnd < today;
+  }, [leave?.to_date]);
 
   const handleApprove = () => {
     submitDecision(
@@ -72,14 +86,13 @@ export default function MentorApprovalScreen() {
     <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate({ to: "/pending-leaves" })}
-          className="-ml-2 hover:bg-gray-100 rounded-full"
+        <button
+          onClick={() => navigate({ to: "/" })}
+          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          type="button"
         >
           <ChevronLeft size={28} className="text-black" />
-        </Button>
+        </button>
 
         <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-semibold text-black font-gilroy">
@@ -90,6 +103,21 @@ export default function MentorApprovalScreen() {
 
       {/* CONTENT SCROLLABLE AREA */}
       <div className="flex-1 overflow-y-auto px-6 pb-4">
+        {isPastLeave && (
+          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+            <AlertCircle className="text-amber-600 shrink-0 mt-0.5" size={20} />
+            <div>
+              <h4 className="font-semibold text-amber-900 font-gilroy text-sm">
+                Action Unavailable
+              </h4>
+              <p className="text-amber-700 text-xs mt-1 font-gilroy">
+                This leave request is for a past date (
+                {formatDate(leave?.to_date)}). You cannot approve or reject it
+                anymore.
+              </p>
+            </div>
+          </div>
+        )}
         {/* LEAVE BALANCE CARDS */}
         <div className="flex gap-4 mb-8 pt-5">
           {/* Sick Leave Card */}
@@ -180,6 +208,7 @@ export default function MentorApprovalScreen() {
               placeholder="Enter reason if rejecting..."
               value={rejectComment}
               onChange={(e) => setRejectComment(e.target.value)}
+              disabled={isPastLeave}
               className="w-full border-[#CFCFCF] bg-white rounded-xl p-3.5 text-[16px] font-gilroy focus-visible:ring-1 focus-visible:ring-primary min-h-25 resize-none"
             />
           </div>
@@ -191,7 +220,7 @@ export default function MentorApprovalScreen() {
         <div className="flex gap-3">
           <Button
             onClick={handleApprove}
-            disabled={isPending}
+            disabled={isPending || isPastLeave}
             className="flex-1 bg-[#2E8B57] hover:bg-[#2E8B57]/90 text-white h-auto py-3.5 rounded-xl text-[18px] font-semibold font-gilroy transition-all"
           >
             {isPending ? <Loader2 className="animate-spin mr-2" /> : "Approve"}
@@ -199,7 +228,7 @@ export default function MentorApprovalScreen() {
 
           <Button
             onClick={handleReject}
-            disabled={isPending}
+            disabled={isPending || isPastLeave}
             variant="destructive"
             className="flex-1 bg-[#D94343] hover:bg-[#D94343]/90 text-white h-auto py-3.5 rounded-xl text-[18px] font-semibold font-gilroy transition-all"
           >

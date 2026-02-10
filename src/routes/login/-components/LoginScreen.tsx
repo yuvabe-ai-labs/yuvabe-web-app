@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,11 +23,24 @@ export default function LoginScreen() {
 
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onTouched",
+    reValidateMode: "onChange",
   });
 
   const onSubmit = (data: SignInSchemaType) => {
+    console.log("Form is valid! Data:", data);
     login(data);
   };
+
+  const onInvalid = (errors: FieldValues) => {
+    console.log("Form Validation Failed:", errors);
+  };
+
+  console.log("Current Form Errors:", form.formState.errors);
 
   return (
     <div className="flex h-full flex-col justify-center p-8">
@@ -45,7 +58,11 @@ export default function LoginScreen() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit, onInvalid)}
+          className="space-y-4"
+          noValidate
+        >
           {/* Email */}
           <FormField
             control={form.control}
@@ -59,7 +76,9 @@ export default function LoginScreen() {
                     className="h-12.5 rounded-xl pl-4 pr-12 text-[14px] font-gilroy"
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.email?.message}
+                </FormMessage>
               </FormItem>
             )}
           />
@@ -70,24 +89,28 @@ export default function LoginScreen() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormControl>
-                  <div className="relative">
+                <div className="relative">
+                  <FormControl>
                     <Input
                       {...field}
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       className="h-12.5 rounded-xl pl-4 pr-12 text-[14px] font-gilroy"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-primary hover:opacity-80 focus:outline-none"
-                    >
-                      {showPassword ? <Eye /> : <EyeOff />}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage />
+                  </FormControl>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-primary"
+                  >
+                    {showPassword ? <Eye /> : <EyeOff />}
+                  </button>
+                </div>
+
+                <FormMessage>
+                  {form.formState.errors.password?.message}
+                </FormMessage>
               </FormItem>
             )}
           />
@@ -105,6 +128,10 @@ export default function LoginScreen() {
           >
             {isPending ? <Loader2 className="animate-spin mr-2" /> : "Sign In"}
           </Button>
+
+          {/* <Button type="submit" disabled={isPending}>
+            Sign In ({Object.keys(form.formState.errors).length} errors)
+          </Button> */}
           <div className="pt-4 text-center text-[12px] font-gilroy text-gray-500 leading-relaxed">
             By continuing, you agree to our{" "}
             <Link

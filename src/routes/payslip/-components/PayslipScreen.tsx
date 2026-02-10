@@ -11,12 +11,21 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import type { PayslipRequestSchemaType } from "@/schemas/payslip.schema";
 import { ChevronLeft, Loader2, RefreshCw } from "lucide-react";
+import type { FieldErrors } from "react-hook-form";
 import { PayslipSkeleton } from "./PayslipSkeleton";
 import { usePayslipLogic } from "./usePaslipLogic";
 
 export default function PayslipScreen() {
   const { state, actions, form } = usePayslipLogic();
+
+  // FIX: Cast errors to 'any' to bypass TypeScript strictness on Discriminated Unions.
+  // This allows us to access 'start_month'/'end_month' even though they don't exist in the "3_months" mode.
+  const errors = form.formState.errors as FieldErrors<
+    Extract<PayslipRequestSchemaType, { mode: "manual" }>
+  >;
+  const currentMonth = new Date().toISOString().slice(0, 7);
 
   if (state.isLoading) return <PayslipSkeleton />;
 
@@ -35,13 +44,13 @@ export default function PayslipScreen() {
     <div className="flex flex-col h-screen bg-white">
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 sticky top-0 z-10 bg-white">
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={() => actions.navigate({ to: "/" })}
+          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          type="button"
         >
-          <ChevronLeft size={28} />
-        </Button>
+          <ChevronLeft size={28} className="text-black" />
+        </button>
         <h1 className="flex-1 text-center pr-7 text-[18px] font-bold text-[#475569]">
           Request Payslip
         </h1>
@@ -97,32 +106,67 @@ export default function PayslipScreen() {
         <h2 className="text-[16px] font-bold text-[#1F2937] mb-3">
           Choose custom date
         </h2>
-        <div className="flex gap-3.5">
-          <div className="flex-1">
-            <Label className="text-[13px] text-[#6B7280]">From</Label>
+        <div className="flex gap-3.5 items-start">
+          {/* FROM FIELD */}
+          <div className="flex-1 space-y-1.5">
+            <Label
+              className={cn(
+                "text-[13px]",
+                errors.start_month ? "text-red-500" : "text-[#6B7280]",
+              )}
+            >
+              From
+            </Label>
             <Input
               type="month"
+              max={currentMonth}
               {...form.register("start_month", {
                 onChange: () => form.setValue("mode", "manual"),
               })}
               className={cn(
                 state.currentMode === "manual" &&
                   "border-[#5B21B6] ring-1 ring-[#5B21B6]",
+                errors.start_month &&
+                  "border-red-500 ring-red-500 focus-visible:ring-red-500",
               )}
             />
+            {/* ERROR MESSAGE DISPLAY */}
+            {errors.start_month && (
+              <p className="text-[11px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">
+                {errors.start_month.message}
+              </p>
+            )}
           </div>
-          <div className="flex-1">
-            <Label className="text-[13px] text-[#6B7280]">To</Label>
+
+          {/* TO FIELD */}
+          <div className="flex-1 space-y-1.5">
+            <Label
+              className={cn(
+                "text-[13px]",
+                errors.end_month ? "text-red-500" : "text-[#6B7280]",
+              )}
+            >
+              To
+            </Label>
             <Input
               type="month"
+              max={currentMonth}
               {...form.register("end_month", {
                 onChange: () => form.setValue("mode", "manual"),
               })}
               className={cn(
                 state.currentMode === "manual" &&
                   "border-[#5B21B6] ring-1 ring-[#5B21B6]",
+                errors.end_month &&
+                  "border-red-500 ring-red-500 focus-visible:ring-red-500",
               )}
             />
+            {/* ERROR MESSAGE DISPLAY */}
+            {errors.end_month && (
+              <p className="text-[11px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">
+                {errors.end_month.message}
+              </p>
+            )}
           </div>
         </div>
       </div>

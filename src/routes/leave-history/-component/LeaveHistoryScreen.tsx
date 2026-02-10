@@ -40,14 +40,13 @@ export default function LeaveHistoryScreen() {
     <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={() => navigate({ to: "/" })}
-          className="-ml-2 hover:bg-gray-100 rounded-full"
+          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          type="button"
         >
           <ChevronLeft size={28} className="text-black" />
-        </Button>
+        </button>
 
         <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-semibold text-black font-gilroy">
@@ -133,7 +132,7 @@ export default function LeaveHistoryScreen() {
 
                     {/* APPROVED BY */}
                     <p className="mt-2.5 text-[14px] text-black font-gilroy">
-                      Approved by: {item.mentor_name || "—"}
+                      Reviewed by: {item.mentor_name || "—"}
                     </p>
 
                     {/* UPDATED ON */}

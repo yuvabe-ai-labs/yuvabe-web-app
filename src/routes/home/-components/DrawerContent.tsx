@@ -1,4 +1,5 @@
-import { useLogout } from "@/hooks/useLogout";
+import { LogoutConfirmDialog } from "@/components/layout/LogutConfirmDialog";
+import { useLogoutWithConfirmation } from "@/hooks/useLogoutConfirmation";
 import {
   Asset,
   LeaveHistory,
@@ -23,15 +24,12 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
   const role = user?.role;
   const isMentor = role === UserRole.MENTOR || role === UserRole.SUB_MENTOR;
 
-   const { mutate: logout } = useLogout();
+  const { triggerLogout, showConfirm, setShowConfirm, logout } =
+    useLogoutWithConfirmation();
 
   const handleNavigation = (path: string) => {
     onClose();
     navigate({ to: path });
-  };
-
-  const handleLogout = () => {
-    logout();
   };
 
   // Added h-full explicitly to ensure it fills the SheetContent
@@ -115,7 +113,7 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
       {/* 3. Logout Footer */}
       <div className="p-5 border-t border-[#eee]">
         <button
-          onClick={handleLogout}
+          onClick={triggerLogout}
           className="flex items-center w-full py-2"
         >
           <LogOut size={20} className="text-[#d9534f]" strokeWidth={2} />
@@ -124,6 +122,11 @@ export default function DrawerContent({ onClose }: DrawerContentProps) {
           </span>
         </button>
       </div>
+      <LogoutConfirmDialog
+        isOpen={showConfirm}
+        onOpenChange={setShowConfirm}
+        onConfirm={logout}
+      />
 
       {/* 4. Logout Loading Overlay */}
       {isLogoutLoading && (

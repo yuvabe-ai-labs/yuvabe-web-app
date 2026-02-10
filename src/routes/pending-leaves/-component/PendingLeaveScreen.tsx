@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePendingLeaves } from "@/hooks/useMentorLeave";
 import { cn, formatDate } from "@/lib/utils";
@@ -16,14 +15,13 @@ export default function PendingLeavesScreen() {
     <>
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 bg-white sticky top-0 z-10 shrink-0">
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={() => navigate({ to: "/" })}
-          className="-ml-2 hover:bg-gray-100 rounded-full"
+          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          type="button"
         >
           <ChevronLeft size={28} className="text-black" />
-        </Button>
+        </button>
 
         <div className="flex-1 text-center pr-7">
           <h1 className="text-[18px] font-semibold text-black font-gilroy">

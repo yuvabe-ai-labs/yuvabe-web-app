@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
@@ -8,15 +7,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { ConfirmLunchDialog } from "./ConfirmLunchDialog";
 import { ConnectGmailSheet } from "./ConnectGmailSheet";
 import { useLunchPreferenceLogic } from "./useLunchPreferenceLogic";
@@ -30,13 +25,13 @@ export default function LunchPreferenceScreen() {
         <div className="flex flex-col h-full bg-white relative">
           {/* HEADER */}
           <div className="flex items-center px-4 py-4 sticky top-0 z-10 bg-white">
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
               onClick={() => actions.navigate({ to: "/" })}
+              className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+              type="button"
             >
-              <ChevronLeft size={28} />
-            </Button>
+              <ChevronLeft size={28} className="text-black" />
+            </button>
             <h1 className="flex-1 text-center pr-7 text-[18px] font-bold font-gilroy text-[#374151]">
               Lunch Preference
             </h1>
@@ -75,92 +70,89 @@ export default function LunchPreferenceScreen() {
             <Label className="text-[14px] text-[#6B7280] mb-2 block font-gilroy">
               I don’t want lunch from
             </Label>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               {/* START DATE */}
               <FormField
                 control={form.control}
                 name="startDate"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col flex-1">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "h-12 pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value ?? undefined}
-                          onSelect={(date) => {
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type="date"
+                          className="h-12 text-[16px] border-[#E5E7EB] focus:ring-[#5B21B6] block w-full appearance-none bg-transparent"
+                          value={
+                            field.value ? format(field.value, "yyyy-MM-dd") : ""
+                          }
+                          min={format(new Date(), "yyyy-MM-dd")}
+                          onChange={(e) => {
+                            const date = e.target.value
+                              ? new Date(e.target.value)
+                              : null;
                             field.onChange(date);
                             form.setValue("selectedMode", "range");
                           }}
-                          disabled={(date) =>
-                            date < new Date(new Date().setHours(0, 0, 0, 0))
-                          }
-                          autoFocus
                         />
-                      </PopoverContent>
-                    </Popover>
+                        {/* Visual Overlay for Start Date */}
+                        {field.value && (
+                          <div className="absolute inset-0 left-3 flex items-center pointer-events-none bg-white w-[calc(100%-40px)]">
+                            <span className="text-[16px] text-[#374151]">
+                              {format(field.value, "dd/MM/yyyy")}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* END DATE (Repeat similar structure for endDate) */}
+              <Label className="text-[14px] text-[#6B7280] font-gilroy">
+                To
+              </Label>
+
+              {/* END DATE (To) */}
               <FormField
                 control={form.control}
                 name="endDate"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col flex-1">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "h-12 pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value ?? undefined}
-                          onSelect={(date) => {
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type="date"
+                          className="h-12 text-[16px] border-[#E5E7EB] focus:ring-[#5B21B6] block w-full appearance-none bg-transparent"
+                          value={
+                            field.value ? format(field.value, "yyyy-MM-dd") : ""
+                          }
+                          min={
+                            form.getValues("startDate")
+                              ? format(
+                                  form.getValues("startDate") as Date,
+                                  "yyyy-MM-dd",
+                                )
+                              : format(new Date(), "yyyy-MM-dd")
+                          }
+                          onChange={(e) => {
+                            const date = e.target.value
+                              ? new Date(e.target.value)
+                              : null;
                             field.onChange(date);
                             form.setValue("selectedMode", "range");
                           }}
-                          disabled={(date) =>
-                            date < (form.getValues("startDate") || new Date())
-                          }
-                          autoFocus
                         />
-                      </PopoverContent>
-                    </Popover>
+                        {/* Visual Overlay for End Date - ADDED THIS PART */}
+                        {field.value && (
+                          <div className="absolute inset-0 left-3 flex items-center pointer-events-none bg-white w-[calc(100%-40px)]">
+                            <span className="text-[16px] text-[#374151]">
+                              {format(field.value, "dd/MM/yyyy")}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
