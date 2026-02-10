@@ -25,13 +25,13 @@ export default function LunchPreferenceScreen() {
         <div className="flex flex-col h-full bg-white relative">
           {/* HEADER */}
           <div className="flex items-center px-4 py-4 sticky top-0 z-10 bg-white">
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
               onClick={() => actions.navigate({ to: "/" })}
+              className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+              type="button"
             >
-              <ChevronLeft size={28} />
-            </Button>
+              <ChevronLeft size={28} className="text-black" />
+            </button>
             <h1 className="flex-1 text-center pr-7 text-[18px] font-bold font-gilroy text-[#374151]">
               Lunch Preference
             </h1>

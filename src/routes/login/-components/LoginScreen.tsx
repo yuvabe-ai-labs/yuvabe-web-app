@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,12 +27,17 @@ export default function LoginScreen() {
       email: "",
       password: "",
     },
-    mode: "onChange",
+    mode: "onTouched",
+    reValidateMode: "onChange",
   });
 
   const onSubmit = (data: SignInSchemaType) => {
     console.log("Form is valid! Data:", data);
     login(data);
+  };
+
+  const onInvalid = (errors: FieldValues) => {
+    console.log("Form Validation Failed:", errors);
   };
 
   console.log("Current Form Errors:", form.formState.errors);
@@ -54,7 +59,7 @@ export default function LoginScreen() {
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit, onInvalid)}
           className="space-y-4"
           noValidate
         >
@@ -71,7 +76,9 @@ export default function LoginScreen() {
                     className="h-12.5 rounded-xl pl-4 pr-12 text-[14px] font-gilroy"
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.email?.message}
+                </FormMessage>
               </FormItem>
             )}
           />
@@ -101,7 +108,9 @@ export default function LoginScreen() {
                   </button>
                 </div>
 
-                <FormMessage />
+                <FormMessage>
+                  {form.formState.errors.password?.message}
+                </FormMessage>
               </FormItem>
             )}
           />

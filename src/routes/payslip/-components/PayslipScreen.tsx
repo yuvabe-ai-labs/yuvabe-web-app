@@ -44,13 +44,13 @@ export default function PayslipScreen() {
     <div className="flex flex-col h-screen bg-white">
       {/* HEADER */}
       <div className="flex items-center px-4 py-4 sticky top-0 z-10 bg-white">
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={() => actions.navigate({ to: "/" })}
+          className="p-1 -ml-1 hover:bg-gray-100 rounded-full transition-colors"
+          type="button"
         >
-          <ChevronLeft size={28} />
-        </Button>
+          <ChevronLeft size={28} className="text-black" />
+        </button>
         <h1 className="flex-1 text-center pr-7 text-[18px] font-bold text-[#475569]">
           Request Payslip
         </h1>
