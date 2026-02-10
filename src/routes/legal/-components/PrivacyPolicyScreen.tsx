@@ -8,7 +8,7 @@ export default function PrivacyPolicyScreen() {
     <>
       {/* Header */}
       <div className="flex items-center px-4 py-4 sticky top-0 bg-white z-10 border-b border-gray-100">
-        <button onClick={() => navigate({ to: ".." })} className="p-1 -ml-1">
+        <button onClick={() => navigate({ to: "/login" })} className="p-1 -ml-1">
           <ChevronLeft size={28} />
         </button>
         <h1 className="flex-1 text-center text-[18px] font-bold font-gilroy">
