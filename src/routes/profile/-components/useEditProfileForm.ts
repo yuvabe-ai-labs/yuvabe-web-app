@@ -3,6 +3,7 @@ import { editProfileSchema, type EditProfileForm } from "@/schemas/user.schema";
 import { useUserStore } from "@/store/user.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
+import { format } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -51,11 +52,19 @@ export function useEditProfileForm() {
   // Inside useEditProfileForm.ts
   const onSubmit = async (data: EditProfileForm) => {
     try {
+      let finalDob = null;
+      if (data.dob) {
+        const dateObj = new Date(data.dob);
+
+        if (!isNaN(dateObj.getTime())) {
+          finalDob = format(dateObj, "yyyy-MM-dd");
+        }
+      }
       const payload = {
         name: data.name,
         email: data.email,
         team: data.team,
-        dob: data.dob,
+        dob: finalDob,
         nick_name: data.nick_name,
         current_password: data.currentPassword || null,
         new_password: data.newPassword || null,
