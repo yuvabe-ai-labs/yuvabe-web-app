@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -7,13 +9,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import {
+  CalendarIcon,
   ChevronDown,
   ChevronLeft,
   Loader2,
   User as UserIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { PasswordField } from "./EditProfileFields";
 import { useEditProfileForm } from "./useEditProfileForm";
 
@@ -36,7 +46,7 @@ export default function EditProfileScreen() {
     onSubmit,
   } = useEditProfileForm();
 
-  const today = new Date().toISOString().split("T")[0];
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -176,23 +186,63 @@ export default function EditProfileScreen() {
               />
 
               {/* Date of Birth */}
+              {/* Date of Birth with Shadcn Calendar */}
               <FormField
                 control={form.control}
                 name="dob"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel className="text-[14px] font-semibold text-[#666]">
                       Date of Birth
                     </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="date"
-                        {...field}
-                        // 👇 This effectively disables all future dates
-                        max={today}
-                        className="h-12.5 rounded-xl uppercase block w-full"
-                      />
-                    </FormControl>
+                    <Popover
+                      open={isCalendarOpen}
+                      onOpenChange={setIsCalendarOpen}
+                    >
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "h-12.5 w-full rounded-xl pl-3 text-left font-normal border-gray-200",
+                              !field.value && "text-muted-foreground",
+                            )}
+                          >
+                            {field.value ? (
+                              format(new Date(field.value), "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto h-auto p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={
+                            field.value ? new Date(field.value) : undefined
+                          }
+                          defaultMonth={
+                            field.value ? new Date(field.value) : new Date()
+                          }
+                          onSelect={(date) => {
+                            if (date) {
+                              field.onChange(format(date, "yyyy-MM-dd"));
+                              setIsCalendarOpen(false);
+                            }
+                          }}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          captionLayout="dropdown"
+                          className="rounded-lg w-60 h-auto border"
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}

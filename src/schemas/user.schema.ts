@@ -14,7 +14,25 @@ export const editProfileSchema = z
 
     email: z.email("Enter a valid email"),
     team: z.string().optional(),
-    dob: z.string().min(1, "Date of Birth is required"),
+    dob: z
+      .string()
+      .min(1, "Date of Birth is required")
+      .refine(
+        (dateString) => {
+          const birthDate = new Date(dateString);
+          const today = new Date();
+          const ageCutoff = new Date(
+            today.getFullYear() - 18,
+            today.getMonth(),
+            today.getDate(),
+          );
+
+          return birthDate <= ageCutoff;
+        },
+        {
+          message: "You must be at least 18 years old",
+        },
+      ),
 
     currentPassword: z.string().optional(),
     newPassword: z
