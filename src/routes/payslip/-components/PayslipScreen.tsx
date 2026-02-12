@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import type { PayslipRequestSchemaType } from "@/schemas/payslip.schema";
-import { ChevronLeft, Loader2, RefreshCw } from "lucide-react";
+import { Calendar, ChevronLeft, Loader2, RefreshCw } from "lucide-react";
 import type { FieldErrors } from "react-hook-form";
 import { PayslipSkeleton } from "./PayslipSkeleton";
 import { usePayslipLogic } from "./usePaslipLogic";
@@ -117,19 +117,26 @@ export default function PayslipScreen() {
             >
               From
             </Label>
-            <Input
-              type="month"
-              max={currentMonth}
-              {...form.register("start_month", {
-                onChange: () => form.setValue("mode", "manual"),
-              })}
-              className={cn(
-                state.currentMode === "manual" &&
-                  "border-[#5B21B6] ring-1 ring-[#5B21B6]",
-                errors.start_month &&
-                  "border-red-500 ring-red-500 focus-visible:ring-red-500",
-              )}
-            />
+            <div className="relative">
+              <Input
+                type="month"
+                max={currentMonth}
+                {...form.register("start_month", {
+                  onChange: () => form.setValue("mode", "manual"),
+                })}
+                className={cn(
+                  state.currentMode === "manual" &&
+                    "border-[#5B21B6] ring-1 ring-[#5B21B6]",
+                  errors.start_month &&
+                    "border-red-500 ring-red-500 focus-visible:ring-red-500",
+                  "appearance-none",
+                )}
+              />
+              <Calendar
+                size={18}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
+            </div>
             {/* ERROR MESSAGE DISPLAY */}
             {errors.start_month && (
               <p className="text-[11px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">
@@ -148,19 +155,26 @@ export default function PayslipScreen() {
             >
               To
             </Label>
-            <Input
-              type="month"
-              max={currentMonth}
-              {...form.register("end_month", {
-                onChange: () => form.setValue("mode", "manual"),
-              })}
-              className={cn(
-                state.currentMode === "manual" &&
-                  "border-[#5B21B6] ring-1 ring-[#5B21B6]",
-                errors.end_month &&
-                  "border-red-500 ring-red-500 focus-visible:ring-red-500",
-              )}
-            />
+            <div className="relative">
+              <Input
+                type="month"
+                max={currentMonth}
+                {...form.register("end_month", {
+                  onChange: () => form.setValue("mode", "manual"),
+                })}
+                className={cn(
+                  state.currentMode === "manual" &&
+                    "border-[#5B21B6] ring-1 ring-[#5B21B6]",
+                  errors.end_month &&
+                    "border-red-500 ring-red-500 focus-visible:ring-red-500",
+                  "appearance-none",
+                )}
+              />
+              <Calendar
+                size={18}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+              />
+            </div>
             {/* ERROR MESSAGE DISPLAY */}
             {errors.end_month && (
               <p className="text-[11px] font-medium text-red-500 animate-in fade-in slide-in-from-top-1">

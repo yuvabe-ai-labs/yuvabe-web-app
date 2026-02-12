@@ -37,7 +37,7 @@ export default function HomeScreen() {
   }, [registerDevice]);
 
   return (
-    <div className="overflow-hidden ">
+    <div className="overflow-hidden appearance-none">
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen} modal={true}>
         <SheetContent
           side="left"
