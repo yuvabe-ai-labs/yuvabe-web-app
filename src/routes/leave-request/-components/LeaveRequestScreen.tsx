@@ -23,7 +23,7 @@ import { leaveRequestSchema } from "@/schemas/leave.schema";
 import { LeaveType } from "@/types/leave.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { Calendar, ChevronLeft, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { LeaveRequestSkeleton } from "./LeaveRequestSkeleton";
 
@@ -165,9 +165,9 @@ export default function LeaveRequestScreen() {
                 </FormItem>
               )}
             />
-            {/* DATES ROW */}
+
             <div className="flex gap-4">
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <FormField
                   control={form.control}
                   name="from_date"
@@ -176,21 +176,29 @@ export default function LeaveRequestScreen() {
                       <FormLabel className="text-[15px] font-semibold text-black font-gilroy">
                         From
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          min={new Date().toISOString().split("T")[0]}
-                          className="w-full h-auto py-3.5 px-3 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black focus-visible:ring-0 focus-visible:border-black block bg-white"
-                          {...field}
+
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            type="date"
+                            min={new Date().toISOString().split("T")[0]}
+                            className="w-full h-auto py-3 pl-3 pr-10 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black focus-visible:ring-0 focus-visible:border-black block bg-white appearance-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <Calendar
+                          size={18}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                         />
-                      </FormControl>
+                      </div>
                       <FormMessage className="font-gilroy pl-1" />
                     </FormItem>
                   )}
                 />
               </div>
 
-              <div className="flex-1">
+              {/* TO DATE */}
+              <div className="flex-1 min-w-0">
                 <FormField
                   control={form.control}
                   name="to_date"
@@ -199,14 +207,21 @@ export default function LeaveRequestScreen() {
                       <FormLabel className="text-[15px] font-semibold text-black font-gilroy">
                         To
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          min={fromDateValue}
-                          className="w-full h-auto py-3.5 px-3 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black focus-visible:ring-0 focus-visible:border-black block bg-white"
-                          {...field}
+
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            type="date"
+                            min={fromDateValue}
+                            className="w-full h-auto py-3 pl-3 pr-10 rounded-xl border-[#E5E5E5] text-[15px] font-gilroy text-black focus-visible:ring-0 focus-visible:border-black block bg-white appearance-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <Calendar
+                          size={18}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                         />
-                      </FormControl>
+                      </div>
                       <FormMessage className="font-gilroy pl-1" />
                     </FormItem>
                   )}

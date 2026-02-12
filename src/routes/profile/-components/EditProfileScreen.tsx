@@ -220,6 +220,7 @@ export default function EditProfileScreen() {
                       <PopoverContent
                         className="w-auto h-auto p-0"
                         align="start"
+                        sideOffset={4}
                       >
                         <Calendar
                           mode="single"
@@ -239,7 +240,7 @@ export default function EditProfileScreen() {
                             date > new Date() || date < new Date("1900-01-01")
                           }
                           captionLayout="dropdown"
-                          className="rounded-lg w-60 h-auto border"
+                          className="rounded-lg border w-60 h-80"
                         />
                       </PopoverContent>
                     </Popover>

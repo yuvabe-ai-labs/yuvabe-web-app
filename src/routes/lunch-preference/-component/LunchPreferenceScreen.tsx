@@ -82,7 +82,7 @@ export default function LunchPreferenceScreen() {
                       {/* Actual Input (Invisible but clickable) */}
                       <Input
                         type="date"
-                        className="h-12 w-full text-transparent bg-transparent border-[#E5E7EB] focus:ring-[#5B21B6] z-10 relative cursor-pointer"
+                        className="h-12 w-full text-transparent bg-transparent border-[#E5E7EB] focus:ring-[#5B21B6] z-10 relative cursor-pointer appearance-none"
                         value={
                           field.value ? format(field.value, "yyyy-MM-dd") : ""
                         }
@@ -97,7 +97,7 @@ export default function LunchPreferenceScreen() {
                       />
 
                       {/* Visual Overlay (Text + Icon) */}
-                      <div className="absolute inset-0 px-3 flex items-center justify-between pointer-events-none border border-[#E5E7EB] rounded-md bg-white">
+                      <div className="absolute inset-0 px-3 flex items-center justify-between pointer-events-none border border-[#E5E7EB] rounded-md bg-white ">
                         <span
                           className={cn(
                             "text-[15px]",
@@ -131,7 +131,7 @@ export default function LunchPreferenceScreen() {
                       {/* Actual Input (Invisible but clickable) */}
                       <Input
                         type="date"
-                        className="h-12 w-full text-transparent bg-transparent border-[#E5E7EB] focus:ring-[#5B21B6] z-10 relative cursor-pointer"
+                        className="h-12 w-full text-transparent bg-transparent border-[#E5E7EB] focus:ring-[#5B21B6] z-10 relative cursor-pointer appearance-none"
                         value={
                           field.value ? format(field.value, "yyyy-MM-dd") : ""
                         }
